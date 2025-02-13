@@ -1,26 +1,26 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# quarto.tabset
+# qtab
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/sayuks/quarto.tabset/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/quarto.tabset/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/sayuks/qtab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/qtab/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/sayuks/quarto.tabset/graph/badge.svg)](https://app.codecov.io/gh/sayuks/quarto.tabset)
-[![lint.yaml](https://github.com/sayuks/quarto.tabset/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quarto.tabset/actions/workflows/lint.yaml)
+coverage](https://codecov.io/gh/sayuks/qtab/graph/badge.svg)](https://app.codecov.io/gh/sayuks/qtab)
+[![lint.yaml](https://github.com/sayuks/qtab/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/qtab/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
-The goal of quarto.tabset is to …
+The goal of qtab is to …
 
 ## Installation
 
-You can install the development version of quarto.tabset from
+You can install the development version of qtab from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("sayuks/quarto.tabset")
+pak::pak("sayuks/qtab")
 ```
 
 ## Example
@@ -28,7 +28,7 @@ pak::pak("sayuks/quarto.tabset")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(quarto.tabset)
+library(qtab)
 ## basic example code
 ```
 

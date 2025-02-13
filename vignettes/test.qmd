@@ -1,7 +1,7 @@
 ## demo
 
 ```{r}
-library(quarto.tabset)
+library(qtab)
 
 df_sample <- data.frame(
   group1 = factor(c(rep("A", 3), rep("B", 3))),
@@ -15,6 +15,6 @@ df_sample <- data.frame(
 ```{r}
 #| results: asis
 
-quarto_tabset(df_sample, c(group1, group2), c(var1, var2, var3))
+qtab(df_sample, c(group1, group2), c(var1, var2, var3))
 ```
 

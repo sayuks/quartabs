@@ -62,10 +62,10 @@
 #' # write `#| results: asis` at the beginning of the chunk.
 #'
 #' # Basic usage
-#' quarto_tabset(df, c(group1, group2), c(var1, var2, var3))
+#' qtab(df, c(group1, group2), c(var1, var2, var3))
 #'
 #' # Here is an example of the `layout` argument.
-#' quarto_tabset(
+#' qtab(
 #'   df,
 #'   c(group1, group2),
 #'   c(var1, var2, var3),
@@ -73,14 +73,14 @@
 #' )
 #'
 #' # Use heading instead of tabset
-#' quarto_tabset(
+#' qtab(
 #'   df,
 #'   c(group1, group2),
 #'   c(var1, var2, var3),
 #'   heading_levels = c(2, 3)
 #' )
 #' @export
-quarto_tabset <- function(
+qtab <- function(
   data,
   tabset_vars,
   output_vars,

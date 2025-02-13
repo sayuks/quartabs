@@ -7,6 +7,6 @@
 # * https://testthat.r-lib.org/articles/special-files.html
 
 library(testthat)
-library(quarto.tabset)
+library(qtab)
 
-test_check("quarto.tabset")
+test_check("qtab")

@@ -1,4 +1,4 @@
-Package: quarto.tabset
+Package: qtab
 Title: What the Package Does (One Line, Title Case)
 Version: 0.0.0.9000
 Authors@R: 
@@ -15,5 +15,5 @@ Suggests:
     tibble,
     utils
 Config/testthat/edition: 3
-URL: https://github.com/sayuks/quarto.tabset
-BugReports: https://github.com/sayuks/quarto.tabset/issues
+URL: https://github.com/sayuks/qtab
+BugReports: https://github.com/sayuks/qtab/issues
