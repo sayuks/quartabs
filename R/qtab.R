@@ -45,6 +45,8 @@
 #'    text. In addition, considering the chapter format,
 #'    it is preferable to gradually increase the level, as in 1, 2 and 3.
 #'    * If the element is NA, tabset is displayed.
+#' @param pills use pills or not
+#' @param  tabset_width "default" / "fill" / "justified"
 #' @return `NULL` invisibly. This function is called for its side effect.
 #' @examples
 #' # sample data
@@ -85,8 +87,28 @@ qtab <- function(
   tabset_vars,
   output_vars,
   layout = NULL,
-  heading_levels = NULL
+  heading_levels = NULL,
+  pills = FALSE,
+  tabset_width = "default"
 ) {
+  stopifnot(
+    "`pills` must be a `TRUE` or `FALSE`" = isTRUE(pills) || isFALSE(pills)
+  )
+
+  tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
+
+  tabset_div <- "::: {.panel-tabset}"
+
+  if (pills) {
+    tabset_div <- paste(tabset_div, ".nav-pills")
+  }
+
+  if (tabset_width %in% c("fill", "justified")) {
+    tabset_div <- sprintf("%s .nav-%s", tabset_div, tabset_width)
+  }
+
+  tabset_div <- paste(tabset_div, "\n\n")
+
   l <- do.call(
     validate_data,
     list(
@@ -117,7 +139,7 @@ qtab <- function(
       # Check if this row contains a tabset1_start column
       if (is.na(heading_levels[1]) && tabset_master[[i, "tabset1_start"]]) {
         # Add a panel-tabset div
-        cat("::: {.panel-tabset} \n\n")
+        cat(tabset_div)
       }
 
       # Loop through each tabset column starting from the second one
@@ -144,7 +166,7 @@ qtab <- function(
 
               # Print a panel-tabset div if the heading_level is NA
               if (is.na(heading_levels[j])) {
-                cat("::: {.panel-tabset} \n\n")
+                cat(tabset_div)
               }
             }
           }
@@ -215,7 +237,7 @@ qtab <- function(
     }
   )
 
-  invisible()
+  return(invisible())
 }
 
 #' @noRd
@@ -227,7 +249,7 @@ validate_data <- function(
   heading_levels = NULL
 ) {
   stopifnot(
-    "`data` must be a data frame" =
+    "`data` must be a data frame." =
       is.data.frame(data),
     "`data` must have one or more rows." =
       nrow(data) >= 1,
@@ -241,7 +263,7 @@ validate_data <- function(
         length(layout) == 1,
       "`layout` must be character." =
         is.character(layout),
-      '`layout` must begin with at least three or more repetitions of ":"' =
+      '`layout` must begin with at least three or more repetitions of ":".' =
         grepl("^:{3,}", layout)
     )
   }
@@ -305,7 +327,7 @@ validate_data <- function(
 
   stopifnot(
     "The number of columns specified in `tabset_vars`
-      and the length of `heading_levels` must be the same." =
+    and the length of `heading_levels` must be the same." =
       length(heading_levels) == len_tab
   )
 
@@ -321,7 +343,8 @@ validate_data <- function(
     "`output_vars` must be of length 1 or more." =
       length(output_names) > 0,
 
-    "There must not be variables that are included in both `tabset_vars` and `output_vars`." = # nolint line_length_lintr
+    "There must not be variables that are included in both
+    `tabset_vars` and `output_vars`." =
       length(intersect(tabset_names, output_names)) == 0
   )
 
