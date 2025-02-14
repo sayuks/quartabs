@@ -1,4 +1,4 @@
-^quarto\.tabset\.Rproj$
+^.*\.Rproj$
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^cran-comments\.md$
@@ -7,4 +7,5 @@
 ^docs$
 ^altdoc$
 ^_quarto$
-vignettes/
+^vignettes$
+^sandbox$

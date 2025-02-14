@@ -82,32 +82,18 @@
 #'   heading_levels = c(2, 3)
 #' )
 #' @export
-qtab <- function(
-  data,
-  tabset_vars,
-  output_vars,
-  layout = NULL,
-  heading_levels = NULL,
-  pills = FALSE,
-  tabset_width = "default"
-) {
+qtab <- function(data,
+                 tabset_vars,
+                 output_vars,
+                 layout = NULL,
+                 heading_levels = NULL,
+                 pills = FALSE,
+                 tabset_width = "default") {
   stopifnot(
     "`pills` must be a `TRUE` or `FALSE`" = isTRUE(pills) || isFALSE(pills)
   )
 
   tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
-
-  tabset_div <- "::: {.panel-tabset}"
-
-  if (pills) {
-    tabset_div <- paste(tabset_div, ".nav-pills")
-  }
-
-  if (tabset_width %in% c("fill", "justified")) {
-    tabset_div <- sprintf("%s .nav-%s", tabset_div, tabset_width)
-  }
-
-  tabset_div <- paste(tabset_div, "\n\n")
 
   l <- do.call(
     validate_data,
@@ -126,128 +112,142 @@ qtab <- function(
   len_tab <- length(tabset_names)
 
   data <- prep_data(data, tabset_names, output_names)
+  tabset_master <- get_tabset_master(data, tabset_names)
 
-  tabset_master <- get_tabset_master(
+  # For each row of the data, print the tabset and output panels
+  lapply(seq_len(nrow(data)), function(i) {
+    print_row_tabsets(
+      data,
+      i,
+      tabset_names,
+      tabset_master,
+      heading_levels,
+      len_tab,
+      output_names,
+      layout
+    )
+  })
+
+  invisible()
+}
+
+# Function to print tabsets and outputs for a single row
+print_row_tabsets <- function(data,
+                              i,
+                              tabset_names,
+                              tabset_master,
+                              heading_levels,
+                              len_tab,
+                              output_names,
+                              layout) {
+  handle_tabset_start(
     data,
-    tabset_names
+    i,
+    tabset_master,
+    heading_levels,
+    1
   )
+  handle_nested_tabsets(
+    data,
+    i,
+    tabset_names,
+    tabset_master,
+    heading_levels,
+    len_tab
+  )
+  print_outputs(
+    data,
+    i,
+    tabset_names,
+    heading_levels,
+    len_tab,
+    output_names,
+    layout
+  )
+  handle_tabset_end(
+    i,
+    tabset_master,
+    len_tab,
+    heading_levels
+  )
+}
 
-  # For each row of the data, print the tabset and output panels ----
-  lapply(
-    seq_len(nrow(data)),
-    function(i) {
-      # Check if this row contains a tabset1_start column
-      if (is.na(heading_levels[1]) && tabset_master[[i, "tabset1_start"]]) {
-        # Add a panel-tabset div
-        cat(tabset_div)
-      }
+# Function to handle the start of a tabset
+handle_tabset_start <- function(data, i, tabset_master, heading_levels, idx) {
+  if (is.na(heading_levels[idx]) &&
+        tabset_master[[i, paste0("tabset", idx, "_start")]]) {
+    cat("::: {.panel-tabset} \n\n")
+  }
+}
 
-      # Loop through each tabset column starting from the second one
-      if (len_tab >= 2) {
-        lapply(
-          2:len_tab,
-          function(j) {
-            # Check if this row contains a column
-            # for the start of the current tabset
-            if (tabset_master[[i, paste0("tabset", j, "_start")]]) {
-
-              # Print the heading
-              heading_level <- heading_levels[j - 1]
-
-              if (is.na(heading_level)) {
-                heading_level <- j - 1
-              }
-
-              cat(
-                strrep("#", heading_level),
-                data[[i, tabset_names[j - 1]]],
-                "\n\n"
-              )
-
-              # Print a panel-tabset div if the heading_level is NA
-              if (is.na(heading_levels[j])) {
-                cat(tabset_div)
-              }
-            }
-          }
+# Function to handle nested tabsets
+handle_nested_tabsets <- function(data,
+                                  i,
+                                  tabset_names,
+                                  tabset_master,
+                                  heading_levels,
+                                  len_tab) {
+  if (len_tab >= 2) {
+    lapply(2:len_tab, function(j) {
+      if (tabset_master[[i, paste0("tabset", j, "_start")]]) {
+        heading_level <- ifelse(
+          is.na(heading_levels[j - 1]),
+          j - 1,
+          heading_levels[j - 1]
         )
-      }
-
-      heading_level <- heading_levels[len_tab]
-
-      if (is.na(heading_level)) {
-        heading_level <- len_tab
-      }
-
-      # Print the current tab heading
-      # (The output is displayed in this tabset/heading)
-      cat(
-        strrep("#", heading_level),
-        data[[i, tabset_names[len_tab]]],
-        "\n\n"
-      )
-
-      # Print the layout if it exists
-      if (!is.null(layout)) {
-        cat(layout, "\n\n")
-      }
-
-      # Print the outputs
-      lapply(
-        seq_along(output_names),
-        function(j) {
-          out_col <- data[[i, output_names[j]]]
-
-          # add [[1]] at the end because figures and tables
-          # are stored as lists in columns
-          out <- out_col[[1]]
-
-          # Use `print()` for list-type columns (), otherwise use `cat()`.
-          # Using `cat()` avoids unnecessary prefixes
-          # such as "[1]" in the output.
-          if (is.list(out_col)) {
-            print(out)
-          } else {
-            cat(out)
-          }
-
-          cat("\n\n")
+        cat(strrep("#", heading_level), data[[i, tabset_names[j - 1]]], "\n\n")
+        if (is.na(heading_levels[j])) {
+          cat("::: {.panel-tabset} \n\n")
         }
-      )
-
-      # Close layout-div if layout exists
-      if (!is.null(layout)) {
-        cat(sub("^(:+).*", "\\1", layout), "\n\n")
       }
+    })
+  }
+}
 
-      # Loop through each tabset column in reverse order.
-      # (To close from the inner tabset.)
-      lapply(
-        rev(seq_len(len_tab)),
-        function(j) {
-          # Check if this row contains a column
-          # for the end of the current tabset
-          if (is.na(heading_levels[j]) &&
-                tabset_master[[i, paste0("tabset", j, "_end")]]) {
-            # Close the panel-tabset div
-            cat("::: \n\n")
-          }
-        }
-      )
-    }
+# Function to print the outputs
+print_outputs <- function(data,
+                          i,
+                          tabset_names,
+                          heading_levels,
+                          len_tab,
+                          output_names,
+                          layout) {
+  heading_level <- ifelse(
+    is.na(heading_levels[len_tab]),
+    len_tab,
+    heading_levels[len_tab]
   )
+  cat(strrep("#", heading_level), data[[i, tabset_names[len_tab]]], "\n\n")
+  if (!is.null(layout)) cat(layout, "\n\n")
 
-  return(invisible())
+  lapply(seq_along(output_names), function(j) {
+    out_col <- data[[i, output_names[j]]]
+    out <- out_col[[1]]
+    if (is.list(out_col)) print(out) else cat(out)
+    cat("\n\n")
+  })
+
+  if (!is.null(layout)) {
+    cat(sub("^(:+).*", "\\1", layout), "\n\n")
+  }
+}
+
+# Function to handle the end of tabsets
+handle_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
+  lapply(rev(seq_len(len_tab)), function(j) {
+    if (is.na(heading_levels[j]) &&
+          tabset_master[[i, paste0("tabset", j, "_end")]]) {
+      cat("::: \n\n")
+    }
+  })
 }
 
 #' @noRd
-validate_data <- function(
-  data,
-  tabset_vars,
-  output_vars,
-  layout = NULL,
-  heading_levels = NULL
-) {
+validate_data <- function(data,
+                          tabset_vars,
+                          output_vars,
+                          layout = NULL,
+                          heading_levels = NULL) {
   stopifnot(
     "`data` must be a data frame." =
       is.data.frame(data),

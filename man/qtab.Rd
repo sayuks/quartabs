@@ -9,7 +9,9 @@ qtab(
   tabset_vars,
   output_vars,
   layout = NULL,
-  heading_levels = NULL
+  heading_levels = NULL,
+  pills = FALSE,
+  tabset_width = "default"
 )
 }
 \arguments{
@@ -41,6 +43,10 @@ it is preferable to gradually increase the level, as in 1, 2 and 3.
 \item If the element is NA, tabset is displayed.
 }
 }}
+
+\item{pills}{use pills or not}
+
+\item{tabset_width}{"default" / "fill" / "justified"}
 }
 \value{
 \code{NULL} invisibly. This function is called for its side effect.
