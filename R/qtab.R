@@ -95,6 +95,8 @@ qtab <- function(data,
 
   tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
 
+  tabset_div <- make_tabset_div(pills, tabset_width)
+
   l <- do.call(
     validate_data,
     list(
@@ -124,7 +126,8 @@ qtab <- function(data,
       heading_levels,
       len_tab,
       output_names,
-      layout
+      layout,
+      tabset_div
     )
   })
 
@@ -139,13 +142,15 @@ print_row_tabsets <- function(data,
                               heading_levels,
                               len_tab,
                               output_names,
-                              layout) {
+                              layout,
+                              tabset_div) {
   handle_tabset_start(
     data,
     i,
     tabset_master,
     heading_levels,
-    1
+    1,
+    tabset_div
   )
   handle_nested_tabsets(
     data,
@@ -153,7 +158,8 @@ print_row_tabsets <- function(data,
     tabset_names,
     tabset_master,
     heading_levels,
-    len_tab
+    len_tab,
+    tabset_div
   )
   print_outputs(
     data,
@@ -172,11 +178,27 @@ print_row_tabsets <- function(data,
   )
 }
 
+
+make_tabset_div <- function(pills, tabset_width) {
+  res <- "::: {.panel-tabset}"
+
+  if (pills) {
+    res <- paste(res, ".nav-pills")
+  }
+
+  if (tabset_width %in% c("fill", "justified")) {
+    res <- sprintf("%s .nav-%s", res, tabset_width)
+  }
+
+  res
+}
+
 # Function to handle the start of a tabset
-handle_tabset_start <- function(data, i, tabset_master, heading_levels, idx) {
+handle_tabset_start <- function(data, i, tabset_master, heading_levels, idx, tabset_div) {
   if (is.na(heading_levels[idx]) &&
         tabset_master[[i, paste0("tabset", idx, "_start")]]) {
-    cat("::: {.panel-tabset} \n\n")
+    cat(tabset_div)
+    cat("\n\n")
   }
 }
 
@@ -186,7 +208,8 @@ handle_nested_tabsets <- function(data,
                                   tabset_names,
                                   tabset_master,
                                   heading_levels,
-                                  len_tab) {
+                                  len_tab,
+                                  tabset_div) {
   if (len_tab >= 2) {
     lapply(2:len_tab, function(j) {
       if (tabset_master[[i, paste0("tabset", j, "_start")]]) {
@@ -195,9 +218,11 @@ handle_nested_tabsets <- function(data,
           j - 1,
           heading_levels[j - 1]
         )
-        cat(strrep("#", heading_level), data[[i, tabset_names[j - 1]]], "\n\n")
+        cat(strrep("#", heading_level), data[[i, tabset_names[j - 1]]])
+        cat("\n\n")
         if (is.na(heading_levels[j])) {
-          cat("::: {.panel-tabset} \n\n")
+          cat(tabset_div)
+          cat("\n\n")
         }
       }
     })
@@ -217,18 +242,31 @@ print_outputs <- function(data,
     len_tab,
     heading_levels[len_tab]
   )
-  cat(strrep("#", heading_level), data[[i, tabset_names[len_tab]]], "\n\n")
-  if (!is.null(layout)) cat(layout, "\n\n")
-
-  lapply(seq_along(output_names), function(j) {
-    out_col <- data[[i, output_names[j]]]
-    out <- out_col[[1]]
-    if (is.list(out_col)) print(out) else cat(out)
-    cat("\n\n")
-  })
+  cat(strrep("#", heading_level), data[[i, tabset_names[len_tab]]])
+  cat("\n\n")
 
   if (!is.null(layout)) {
-    cat(sub("^(:+).*", "\\1", layout), "\n\n")
+    cat(layout)
+    cat("\n\n")
+  }
+
+  lapply(
+    seq_along(output_names),
+    function(j) {
+      out_col <- data[[i, output_names[j]]]
+      out <- out_col[[1]]
+      if (is.list(out_col)) {
+        print(out)
+        } else {
+          cat(out)
+        }
+      cat("\n\n")
+    }
+  )
+
+  if (!is.null(layout)) {
+    cat(sub("^(:+).*", "\\1", layout))
+    cat("\n\n")
   }
 }
 
@@ -237,7 +275,8 @@ handle_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
   lapply(rev(seq_len(len_tab)), function(j) {
     if (is.na(heading_levels[j]) &&
           tabset_master[[i, paste0("tabset", j, "_end")]]) {
-      cat("::: \n\n")
+      cat(":::")
+      cat("\n\n")
     }
   })
 }
