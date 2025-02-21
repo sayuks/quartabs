@@ -144,7 +144,7 @@ print_row_tabsets <- function(data,
                               output_names,
                               layout,
                               tabset_div) {
-  handle_tabset_start(
+  print_tabset_start(
     data,
     i,
     tabset_master,
@@ -152,7 +152,7 @@ print_row_tabsets <- function(data,
     1,
     tabset_div
   )
-  handle_nested_tabsets(
+  print_nested_tabsets(
     data,
     i,
     tabset_names,
@@ -170,7 +170,7 @@ print_row_tabsets <- function(data,
     output_names,
     layout
   )
-  handle_tabset_end(
+  print_tabset_end(
     i,
     tabset_master,
     len_tab,
@@ -193,23 +193,24 @@ make_tabset_div <- function(pills, tabset_width) {
   res
 }
 
-# Function to handle the start of a tabset
-handle_tabset_start <- function(data, i, tabset_master, heading_levels, idx, tabset_div) {
-  if (is.na(heading_levels[idx]) &&
-        tabset_master[[i, paste0("tabset", idx, "_start")]]) {
+# Function to print the start of a tabset
+print_tabset_start <- function(data, i, tabset_master, heading_levels, j, tabset_div) {
+  if (is.na(heading_levels[j]) &&
+        tabset_master[[i, paste0("tabset", j, "_start")]]) {
     cat(tabset_div)
     cat("\n\n")
   }
+  return(invisible())
 }
 
-# Function to handle nested tabsets
-handle_nested_tabsets <- function(data,
-                                  i,
-                                  tabset_names,
-                                  tabset_master,
-                                  heading_levels,
-                                  len_tab,
-                                  tabset_div) {
+# Function to print nested tabsets
+print_nested_tabsets <- function(data,
+                                 i,
+                                 tabset_names,
+                                 tabset_master,
+                                 heading_levels,
+                                 len_tab,
+                                 tabset_div) {
   if (len_tab >= 2) {
     lapply(2:len_tab, function(j) {
       if (tabset_master[[i, paste0("tabset", j, "_start")]]) {
@@ -227,6 +228,8 @@ handle_nested_tabsets <- function(data,
       }
     })
   }
+
+  return(invisible())
 }
 
 # Function to print the outputs
@@ -254,8 +257,10 @@ print_outputs <- function(data,
     seq_along(output_names),
     function(j) {
       out_col <- data[[i, output_names[j]]]
-      out <- out_col[[1]]
-      if (is.list(out_col)) {
+      # out <- out_col[[1]]
+      out <- out_col
+      # if (is.list(out_col)) {
+      if (is.list(out)) {
         print(out)
         } else {
           cat(out)
@@ -268,10 +273,12 @@ print_outputs <- function(data,
     cat(sub("^(:+).*", "\\1", layout))
     cat("\n\n")
   }
+
+  return(invisible())
 }
 
-# Function to handle the end of tabsets
-handle_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
+# Function to print the end of tabsets
+print_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
   lapply(rev(seq_len(len_tab)), function(j) {
     if (is.na(heading_levels[j]) &&
           tabset_master[[i, paste0("tabset", j, "_end")]]) {
@@ -279,6 +286,8 @@ handle_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
       cat("\n\n")
     }
   })
+
+  return(invisible())
 }
 
 #' @noRd
@@ -411,8 +420,8 @@ get_tabset_master <- function(data, tabset_names) {
 
   res <- lapply(
     seq_len(len_tab),
-    function(idx) {
-      gvars <- tabset_names[seq_len(idx) - 1]
+    function(j) {
+      gvars <- tabset_names[seq_len(j) - 1]
 
       l <- if (length(gvars) > 0) {
         split(data, data[gvars])
@@ -425,8 +434,8 @@ get_tabset_master <- function(data, tabset_names) {
         function(df) {
           n <- nrow(df)
           tmp <- data.frame(matrix(ncol = 0, nrow = n))
-          tmp[paste0("tabset", idx, "_start")] <- c(TRUE, rep(FALSE, n - 1))
-          tmp[paste0("tabset", idx, "_end")] <- c(rep(FALSE, n - 1), TRUE)
+          tmp[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
+          tmp[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
           tmp
         }
       )
