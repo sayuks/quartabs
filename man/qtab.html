@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.6.40">
+<meta name="generator" content="quarto-1.6.41">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
@@ -69,7 +69,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="../site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="../site_libs/quarto-html/anchor.min.js"></script>
 <link href="../site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="../site_libs/quarto-html/quarto-syntax-highlighting-549806ee2085284f45b00abea8c6df48.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="../site_libs/quarto-html/quarto-syntax-highlighting-48ffa3e5b9d089919c6712c39e5b00f2.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
 <link href="../site_libs/bootstrap/bootstrap-bd89562929948232a0cfc2a2280e30cc.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
@@ -226,7 +226,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   tabset_vars,
   output_vars,
   layout = NULL,
-  heading_levels = NULL
+  heading_levels = NULL,
+  pills = FALSE,
+  tabset_width = "default"
 )
 </code></pre>
 </section>
@@ -289,6 +291,22 @@ Variables to display in each tabset panel.
 </ul>
 </td>
 </tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="pills">pills</code>
+</td>
+<td>
+use pills or not
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="tabset_width">tabset_width</code>
+</td>
+<td>
+"default" / "fill" / "justified"
+</td>
+</tr>
 </tbody></table>
 </section>
 <section id="details" class="level3">
@@ -343,69 +361,69 @@ Variables to display in each tabset panel.
 <span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># Basic usage</span></span>
 <span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="fu">qtab</span>(df, <span class="fu">c</span>(group1, group2), <span class="fu">c</span>(var1, var2, var3))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>::: {.panel-tabset} 
+<pre><code>::: {.panel-tabset}
 
-# A 
+# A
 
-::: {.panel-tabset} 
+::: {.panel-tabset}
 
-## X 
+## X
 
-0.8800764
+-0.5610703
 
-0.2184649
+0.007405848
 
-0.5561052
+-1.330639
 
-## Y 
+## Y
 
-0.1058275
+0.5832611
 
-0.256026
+1.015482
 
--1.496857
+0.46455
 
-## Z 
+## Z
 
-1.438615
+1.775268
 
--0.8161696
+-0.9977096
 
-0.2839191
+0.3828706
 
-::: 
+:::
 
-# B 
+# B
 
-::: {.panel-tabset} 
+::: {.panel-tabset}
 
-## X 
+## X
 
--0.1722112
+-0.1353965
 
-0.5800779
+0.5235122
 
-0.7488865
+-0.290628
 
-## Y 
+## Y
 
-1.43465
+0.4933458
 
--1.082718
+-0.5951448
 
--1.148308
+1.018253
 
-## Z 
+## Z
 
-0.4822285
+-0.6557679
 
-0.2983223
+1.547734
 
--1.39499
+0.9277682
 
-::: 
+:::
 
-::: </code></pre>
+:::</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Here is an example of the `layout` argument.</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qtab</span>(</span>
@@ -415,93 +433,93 @@ Variables to display in each tabset panel.
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">layout =</span> <span class="st">'::: {layout="[2, 3, 5]"}'</span></span>
 <span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>::: {.panel-tabset} 
+<pre><code>::: {.panel-tabset}
 
-# A 
+# A
 
-::: {.panel-tabset} 
+::: {.panel-tabset}
 
-## X 
+## X
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
-0.8800764
+-0.5610703
 
-0.2184649
+0.007405848
 
-0.5561052
+-1.330639
 
-::: 
+:::
 
-## Y 
+## Y
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
-0.1058275
+0.5832611
 
-0.256026
+1.015482
 
--1.496857
+0.46455
 
-::: 
+:::
 
-## Z 
+## Z
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
-1.438615
+1.775268
 
--0.8161696
+-0.9977096
 
-0.2839191
+0.3828706
 
-::: 
+:::
 
-::: 
+:::
 
-# B 
+# B
 
-::: {.panel-tabset} 
+::: {.panel-tabset}
 
-## X 
+## X
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
--0.1722112
+-0.1353965
 
-0.5800779
+0.5235122
 
-0.7488865
+-0.290628
 
-::: 
+:::
 
-## Y 
+## Y
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
-1.43465
+0.4933458
 
--1.082718
+-0.5951448
 
--1.148308
+1.018253
 
-::: 
+:::
 
-## Z 
+## Z
 
-::: {layout="[2, 3, 5]"} 
+::: {layout="[2, 3, 5]"}
 
-0.4822285
+-0.6557679
 
-0.2983223
+1.547734
 
--1.39499
+0.9277682
 
-::: 
+:::
 
-::: 
+:::
 
-::: </code></pre>
+:::</code></pre>
 </div>
 <div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Use heading instead of tabset</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">qtab</span>(</span>
@@ -511,57 +529,57 @@ Variables to display in each tabset panel.
 <span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">heading_levels =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">3</span>)</span>
 <span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 <div class="cell-output cell-output-stdout">
-<pre><code>## A 
+<pre><code>## A
 
-### X 
+### X
 
-0.8800764
+-0.5610703
 
-0.2184649
+0.007405848
 
-0.5561052
+-1.330639
 
-### Y 
+### Y
 
-0.1058275
+0.5832611
 
-0.256026
+1.015482
 
--1.496857
+0.46455
 
-### Z 
+### Z
 
-1.438615
+1.775268
 
--0.8161696
+-0.9977096
 
-0.2839191
+0.3828706
 
-## B 
+## B
 
-### X 
+### X
 
--0.1722112
+-0.1353965
 
-0.5800779
+0.5235122
 
-0.7488865
+-0.290628
 
-### Y 
+### Y
 
-1.43465
+0.4933458
 
--1.082718
+-0.5951448
 
--1.148308
+1.018253
 
-### Z 
+### Z
 
-0.4822285
+-0.6557679
 
-0.2983223
+1.547734
 
--1.39499</code></pre>
+0.9277682</code></pre>
 </div>
 </div>
 
