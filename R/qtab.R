@@ -119,62 +119,60 @@ qtab <- function(data,
   # For each row of the data, print the tabset and output panels
   lapply(seq_len(nrow(data)), function(i) {
     print_row_tabsets(
-      data,
-      i,
-      tabset_names,
-      tabset_master,
-      heading_levels,
-      len_tab,
-      output_names,
-      layout,
-      tabset_div
+      data = data,
+      heading_levels = heading_levels,
+      layout = layout,
+      i = i,
+      tabset_names = tabset_names,
+      len_tab = len_tab,
+      output_names = output_names,
+      tabset_master = tabset_master,
+      tabset_div = tabset_div
     )
   })
 
-  invisible()
+  return(invisible())
 }
 
 # Function to print tabsets and outputs for a single row
 print_row_tabsets <- function(data,
+                              heading_levels,
+                              layout,
                               i,
                               tabset_names,
-                              tabset_master,
-                              heading_levels,
                               len_tab,
                               output_names,
-                              layout,
+                              tabset_master,
                               tabset_div) {
   print_tabset_start(
-    data,
-    i,
-    tabset_master,
-    heading_levels,
-    1,
-    tabset_div
+    heading_levels = heading_levels,
+    i = i,
+    tabset_master = tabset_master,
+    tabset_div = tabset_div
   )
   print_nested_tabsets(
-    data,
+    data = data,
+    heading_levels = heading_levels,
     i,
-    tabset_names,
-    tabset_master,
-    heading_levels,
-    len_tab,
-    tabset_div
+    tabset_names = tabset_names,
+    len_tab = len_tab,
+    tabset_master = tabset_master,
+    tabset_div = tabset_div
   )
   print_outputs(
-    data,
-    i,
-    tabset_names,
-    heading_levels,
-    len_tab,
-    output_names,
-    layout
+    data = data,
+    heading_levels = heading_levels,
+    layout = layout,
+    i = i,
+    tabset_names = tabset_names,
+    len_tab = len_tab,
+    output_names = output_names
   )
   print_tabset_end(
-    i,
-    tabset_master,
-    len_tab,
-    heading_levels
+    heading_levels = heading_levels,
+    i = i,
+    len_tab = len_tab,
+    tabset_master = tabset_master
   )
 }
 
@@ -194,9 +192,12 @@ make_tabset_div <- function(pills, tabset_width) {
 }
 
 # Function to print the start of a tabset
-print_tabset_start <- function(data, i, tabset_master, heading_levels, j, tabset_div) {
-  if (is.na(heading_levels[j]) &&
-        tabset_master[[i, paste0("tabset", j, "_start")]]) {
+print_tabset_start <- function(heading_levels,
+                               i,
+                               tabset_master,
+                               tabset_div) {
+  if (is.na(heading_levels[1]) &&
+        tabset_master[[i, "tabset1_start"]]) {
     cat(tabset_div)
     cat("\n\n")
   }
@@ -205,11 +206,11 @@ print_tabset_start <- function(data, i, tabset_master, heading_levels, j, tabset
 
 # Function to print nested tabsets
 print_nested_tabsets <- function(data,
+                                 heading_levels,
                                  i,
                                  tabset_names,
-                                 tabset_master,
-                                 heading_levels,
                                  len_tab,
+                                 tabset_master,
                                  tabset_div) {
   if (len_tab >= 2) {
     lapply(2:len_tab, function(j) {
@@ -234,12 +235,12 @@ print_nested_tabsets <- function(data,
 
 # Function to print the outputs
 print_outputs <- function(data,
+                          heading_levels,
+                          layout,
                           i,
                           tabset_names,
-                          heading_levels,
                           len_tab,
-                          output_names,
-                          layout) {
+                          output_names) {
   heading_level <- ifelse(
     is.na(heading_levels[len_tab]),
     len_tab,
@@ -256,12 +257,10 @@ print_outputs <- function(data,
   lapply(
     seq_along(output_names),
     function(j) {
-      out_col <- data[[i, output_names[j]]]
-      # out <- out_col[[1]]
-      out <- out_col
-      # if (is.list(out_col)) {
-      if (is.list(out)) {
-        print(out)
+      out_cell <- data[[i, output_names[j]]]
+      out <- out_cell[[1]]
+      if (is.list(out_cell)) {
+          print(out)
         } else {
           cat(out)
         }
@@ -278,7 +277,10 @@ print_outputs <- function(data,
 }
 
 # Function to print the end of tabsets
-print_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
+print_tabset_end <- function(heading_levels,
+                             i,
+                             len_tab,
+                             tabset_master) {
   lapply(rev(seq_len(len_tab)), function(j) {
     if (is.na(heading_levels[j]) &&
           tabset_master[[i, paste0("tabset", j, "_end")]]) {
@@ -290,7 +292,6 @@ print_tabset_end <- function(i, tabset_master, len_tab, heading_levels) {
   return(invisible())
 }
 
-#' @noRd
 validate_data <- function(data,
                           tabset_vars,
                           output_vars,
@@ -403,7 +404,6 @@ validate_data <- function(data,
   )
 }
 
-#' @noRd
 prep_data <- function(data, tabset_names, output_names) {
   data <- data[, c(tabset_names, output_names)]
   data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
@@ -414,7 +414,6 @@ prep_data <- function(data, tabset_names, output_names) {
   data
 }
 
-#' @noRd
 get_tabset_master <- function(data, tabset_names) {
   len_tab <- length(tabset_names)
 
