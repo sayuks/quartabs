@@ -1,8 +1,20 @@
 test_that("make_tabset_div works correctly", {
-  expect_equal(make_tabset_div(FALSE, "default"), "::: {.panel-tabset}")
-  expect_equal(make_tabset_div(TRUE, "default"), "::: {.panel-tabset} .nav-pills")
-  expect_equal(make_tabset_div(TRUE, "fill"), "::: {.panel-tabset} .nav-pills .nav-fill")
-  expect_equal(make_tabset_div(FALSE, "justified"), "::: {.panel-tabset} .nav-justified")
+  expect_equal(
+    make_tabset_div(FALSE, "default"),
+    "::: {.panel-tabset}"
+  )
+  expect_equal(
+    make_tabset_div(TRUE, "default"),
+    "::: {.panel-tabset} .nav-pills"
+  )
+  expect_equal(
+    make_tabset_div(TRUE, "fill"),
+    "::: {.panel-tabset} .nav-pills .nav-fill"
+  )
+  expect_equal(
+    make_tabset_div(FALSE, "justified"),
+    "::: {.panel-tabset} .nav-justified"
+  )
 })
 
 # Mock data for testing
@@ -72,7 +84,7 @@ test_that("print_nested_tabsets prints nested tabsets correctly", {
         data = mock_data,
         heading_levels = heading_levels,
         i = 1,
-        tabset_names = c("tab1", "tab2"),
+        tabset_names = tabset_names,
         len_tab = len_tab,
         tabset_master = tabset_master,
         tabset_div = tabset_div
@@ -87,7 +99,7 @@ test_that("print_nested_tabsets prints nested tabsets correctly", {
         data = mock_data,
         heading_levels = heading_levels,
         i = 2,
-        tabset_names = c("tab1", "tab2"),
+        tabset_names = tabset_names,
         len_tab = len_tab,
         tabset_master = tabset_master,
         tabset_div = tabset_div

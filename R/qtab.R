@@ -201,7 +201,6 @@ print_tabset_start <- function(heading_levels,
     cat(tabset_div)
     cat("\n\n")
   }
-  return(invisible())
 }
 
 # Function to print nested tabsets
@@ -229,8 +228,7 @@ print_nested_tabsets <- function(data,
       }
     })
   }
-
-  return(invisible())
+  invisible()
 }
 
 # Function to print the outputs
@@ -260,10 +258,10 @@ print_outputs <- function(data,
       out_cell <- data[[i, output_names[j]]]
       out <- out_cell[[1]]
       if (is.list(out_cell)) {
-          print(out)
-        } else {
-          cat(out)
-        }
+        print(out)
+      } else {
+        cat(out)
+      }
       cat("\n\n")
     }
   )
@@ -272,8 +270,6 @@ print_outputs <- function(data,
     cat(sub("^(:+).*", "\\1", layout))
     cat("\n\n")
   }
-
-  return(invisible())
 }
 
 # Function to print the end of tabsets
@@ -288,8 +284,7 @@ print_tabset_end <- function(heading_levels,
       cat("\n\n")
     }
   })
-
-  return(invisible())
+  invisible()
 }
 
 validate_data <- function(data,
