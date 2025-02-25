@@ -22,7 +22,7 @@ mock_data <- data.frame(
   tab1 = c("A", "B"),
   tab2 = c("X", "Y"),
   output1 = c("Result1", "Result2"),
-  output2 = I(list(1:2, c("nested1", "nested2"))),
+  output2 = I(list(1:2, list("nested1", "nested2"))),
   stringsAsFactors = FALSE
 )
 
@@ -191,7 +191,8 @@ test_that("print_outputs prints output correctly", {
       "",
       "Result2",
       "",
-      "nested1",
+      "[1] \"nested1\"",
+      "",
       "",
       ":::",
       ""
@@ -288,7 +289,8 @@ test_that("print_row_tabsets calls the required functions in order", {
       "",
       "Result2",
       "",
-      "nested1",
+      "[1] \"nested1\"",
+      "",
       "",
       ":::",
       "",
