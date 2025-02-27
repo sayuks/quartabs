@@ -89,12 +89,6 @@ qtab <- function(data,
                  heading_levels = NULL,
                  pills = FALSE,
                  tabset_width = "default") {
-  stopifnot(
-    "`pills` must be a `TRUE` or `FALSE`" = isTRUE(pills) || isFALSE(pills)
-  )
-
-  tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
-
   tabset_div <- make_tabset_div(pills, tabset_width)
 
   l <- do.call(
@@ -176,8 +170,13 @@ print_row_tabsets <- function(data,
   )
 }
 
-
 make_tabset_div <- function(pills, tabset_width) {
+  stopifnot(
+    "`pills` must be a `TRUE` or `FALSE`" = isTRUE(pills) || isFALSE(pills)
+  )
+
+  tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
+
   res <- "::: {.panel-tabset}"
 
   if (pills) {
@@ -244,6 +243,7 @@ print_outputs <- function(data,
     len_tab,
     heading_levels[len_tab]
   )
+
   cat(strrep("#", heading_level), data[[i, tabset_names[len_tab]]])
   cat("\n\n")
 
@@ -255,13 +255,15 @@ print_outputs <- function(data,
   lapply(
     seq_along(output_names),
     function(j) {
-      out_cell <- data[[i, output_names[j]]]
-      out <- out_cell[[1]]
-      if (is.list(out_cell)) {
+      out_col <- data[[output_names[j]]]
+      out <- out_col[[i]]
+
+      if (is.list(out_col)) {
         print(out)
       } else {
         cat(out)
       }
+
       cat("\n\n")
     }
   )
@@ -433,7 +435,6 @@ get_tabset_master <- function(data, tabset_names) {
           tmp
         }
       )
-
 
       do.call(rbind, a)
     }
