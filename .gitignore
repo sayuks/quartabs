@@ -9,3 +9,4 @@ _quarto/*
 !_quarto/_freeze/
 docs/
 sandbox/
+vignettes/*.html

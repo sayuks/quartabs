@@ -79,7 +79,7 @@ test_that("print_tabset_start prints tabset div correctly", {
 # Test for print_nested_tabsets
 test_that("print_nested_tabsets prints nested tabsets correctly", {
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_nested_tabsets(
         data = mock_data,
         heading_levels = heading_levels,
@@ -94,7 +94,7 @@ test_that("print_nested_tabsets prints nested tabsets correctly", {
   )
 
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_nested_tabsets(
         data = mock_data,
         heading_levels = heading_levels,
@@ -115,7 +115,7 @@ test_that("print_nested_tabsets prints nested tabsets correctly", {
   heading_levels <- rep_len(NA_integer_, len_tab)
 
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_nested_tabsets(
         data = mock_data,
         i = 1,
@@ -129,7 +129,7 @@ test_that("print_nested_tabsets prints nested tabsets correctly", {
     character()
   )
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_nested_tabsets(
         data = mock_data,
         i = 2,
@@ -209,7 +209,7 @@ test_that("print_outputs prints output correctly", {
 # Test for print_tabset_end
 test_that("print_tabset_end prints tabset end markers", {
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_tabset_end(
         heading_levels = heading_levels,
         i = 1,
@@ -220,7 +220,7 @@ test_that("print_tabset_end prints tabset end markers", {
     c(":::", "")
   )
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_tabset_end(
         heading_levels = heading_levels,
         i = 2,
@@ -235,7 +235,7 @@ test_that("print_tabset_end prints tabset end markers", {
 # Test for print_row_tabsets
 test_that("print_row_tabsets calls the required functions in order", {
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_row_tabsets(
         data = mock_data,
         heading_levels = heading_levels,
@@ -272,7 +272,7 @@ test_that("print_row_tabsets calls the required functions in order", {
   )
 
   expect_equal(
-    capture.output(
+    utils::capture.output(
       print_row_tabsets(
         data = mock_data,
         heading_levels = heading_levels,

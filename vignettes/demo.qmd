@@ -1,0 +1,1004 @@
+---
+title: "Demo: qtab()"
+format: 
+  html:
+    code-tools: true
+    embed-resources: true
+    toc: true
+    toc-location: left
+    toc-expand: true
+author: 
+  - name: Yusuke Sasaki
+date: last-modified
+knitr:
+  opts_chunk:
+    message: false
+---
+
+## Prerequisite 
+
+`qtab()` works in HTML format in .qmd files (not .Rmd files). So you need to be prepared to try the code.
+
+1. Install Quarto.
+
+- In J PERP, RStudio is commonly used for analysis. 
+Recently, Quarto has been bundled with RStudio.
+So, if you are an RStudio user, you do not need to install Quarto separately.
+
+2. Create a new .qmd file.
+    - On RStudio, _File > New File > Quarto Document_
+    - On console, run `jprep.datasets::create_qmd("path/to/new_file.qmd")`
+      - This function opens a new .qmd file containing commonly used yaml.
+
+## Syntax
+
+`qtab()` is useful when you want to display similar results (e.g. figures and tables) for each group using tabsets.
+
+The syntax for the `qtab()` function is as follows:
+
+```{r}
+#| eval: false
+
+qtab(
+  data,
+  tabset_vars,
+  output_vars,
+  layout = NULL,
+  heading_levels = NULL
+)
+```
+
+The parameters:
+
+- `data` - A data frame (tibble) containing the tabset variables and output variables.
+
+- `tabset_vars` - Variables to use as tabset labels.  
+Variables can be specified by [`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html).
+
+- `output_vars` - Variables to display in each tabset panel.  
+Variables can be specified by [`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html).
+
+- `layout` - A character vector of length 1 for specifying layout in tabset panel.
+`layout` must begin with at least three or more repetitions of ":" (e.g. ":::"). 
+
+- `heading_levels` - `NULL` or an integer-ish vector of length equal to 
+the number of columns specified in `tabset_vars`. 
+This controls whether it is partially (or entirely) 
+displayed as normal header instead of tabset.
+
+## Basic usage
+
+Here are basic examples. First, load the libraries used in this demo and create sample data.
+
+```{r}
+#| message: false
+library(qtab)
+library(tibble)
+library(dplyr)
+library(purrr)
+library(tidyr)
+library(knitr)
+library(gt)
+library(DT)
+library(reactable)
+library(flextable)
+library(plotly)
+library(leaflet)
+library(htmltools)
+library(janitor)
+library(tinytable)
+
+set.seed(123)
+
+# sample data
+df1 <- tibble(
+  group1 = c(rep("A", 3), rep("B", 3)),
+  group2 = rep(c("X", "Y", "Z"), 2),
+  id = paste0("id", 1:6),
+  var1 = rnorm(6),
+  var2 = 1:6,
+  var3 = factor(letters[1:6])
+)
+
+df1
+```
+
+### results: asis
+
+::: {.callout-note icon="true"}
+## Don't forget!
+Write `#| results: asis` at the beginning of the chunk or `results='asis'` in the chunk options.
+:::
+
+``` {{r}}
+#| results: asis
+
+df1 |> 
+  qtab(id, var1)
+```
+
+```{r}
+#| results: asis
+#| echo: false
+
+df1 |>
+  qtab(id, var1)
+```
+
+This is equal to the following.
+
+```{r, results='asis'}
+#| echo: fenced
+
+df1 |>
+  qtab(id, var1)
+```
+
+
+:::{.callout-tip appearance='default' icon=true}
+## `cat()` or `print()`
+
+Notice that the above output is not prefixed with "[1]" as in "[1] -0.5604756". This is because `cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
+:::
+
+### `tabset_vars`, `output_vars`
+
+Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(c(group1, group2), c(var1, var2, var3))
+```
+
+Characters or [tidyselect](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) can also be used for `tabset_vars` and `output_vars`.
+
+
+```{r}
+#| results: asis
+
+vars <- c("var1", "var2", "var3")
+
+df1 |>
+  qtab(c("group1", "group2"), vars)
+```
+
+### Factor output
+
+In `qtab()`, `cat()` is used to output for columns that are not list types.
+However, if `cat()` is used, factor is output as an integer. 
+So, if factor is included in `output_vars`, it is converted internally to string.
+
+```{r}
+#| echo: true
+
+x <- factor("a")
+
+# default factor output
+print(x)
+
+# Using `cat()` for factor results in unexpected output
+cat(x)
+
+# `qtab()` converts factor to string and then executes cat() as follows.
+cat(as.character(x))
+```
+
+### `layout`
+
+How can I display the content in a tabset horizontally?
+In quarto, `layout-ncol` can be used.
+
+```{{r}}
+#| results: asis
+#| layout-ncol: 3
+
+df1 |> 
+  qtab(c(group1, group2), c(var1, var2, var3))
+```
+
+```{r}
+#| results: asis
+#| layout-ncol: 3
+#| echo: false
+
+df1 |> 
+  qtab(c(group1, group2), c(var1, var2, var3))
+```
+
+Oops, the entire tabset is now a third of the width.
+We want the content within to be displayed side by side without changing the width of the tabset.
+This is where the `layout` argument comes in handy.
+
+```{r}
+#| results: asis
+
+df1 |> 
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    layout = '::: {layout-ncol=3}'
+  )
+```
+
+For more information about `layout`, see [Custom Layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts). 
+
+:::{.callout-warning}
+The `layout` argument is intended for very simple use cases, so complex layouts may not work.
+:::
+
+### `heading_levels`
+
+Use the `heading_levels` argument if you want the heading to be displayed as 
+normal headings instead of tabsets. 
+`heading_levels` and `tabset_vars` correspond in order.
+Each `tabset_vars` is expressed as the heading of specified in `heading_levels`.
+If the element of `heading_levels` is `NA`, then the element of its 
+`tabset_vars` is represented as tabset.
+
+#### Example 1 
+
+For example, `group1` should be tabset and `group2` should be h4 heading.
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    heading_levels = c(NA, 4)
+  )
+```
+
+#### Example 2 
+
+Conversely, `group1` should be heading 4 and `group2` should be tabset.
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    heading_levels = c(4, NA)
+  )
+```
+
+#### Example 3 
+
+Set `group1` to heading 4 and `group2` to heading 5 (no tabset).
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    heading_levels = c(4, 5)
+  )
+```
+
+#### Example 4 
+
+Although it is preferable for the heading to be progressively larger due to the
+structure of the chapter, but can be the same or progressively smaller.
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    heading_levels = c(5, 4)
+  )
+```
+
+#### Example 5  
+
+`header_levels` can work with `layout`.
+
+```{r}
+#| results: asis
+
+df1 |>
+  qtab(
+    c(group1, group2), 
+    c(var1, var2, var3), 
+    layout = '::: {layout-ncol=3}',
+    heading_levels = c(4, NA)
+  )
+```
+
+## Figures and tables
+
+This section shows more practical examples.
+Use the `mtcars` dataset, grouped by `cyl` and `am`, to create figures and tables showing the relationship between `wt` and `mpg`.
+`qtab()` was originally created to represent figures and tables as tabsets, with nested data frames as input.
+Nesting approach is useful when the same operation is performed on each group.
+
+### `nest() + map()`
+
+We shows how to use `tidyr::nest()` and `purrr::map()` combination.
+
+For more information on the nest, see follows:
+
+- [Nested data](https://tidyr.tidyverse.org/articles/nest.html)
+
+- [23 Model basics](https://r4ds.had.co.nz/model-basics.html)
+
+- [TokyoR#108_NestedDataHandling](https://speakerdeck.com/kilometer/tokyor-number-108-nesteddatahandling)
+
+- [nested dataでggplot](https://qiita.com/kilometer/items/7f99c0a9af6d7ce43485)
+
+```{r}
+# new sample data
+df2 <- mtcars |>
+  # make groups more explicit
+  mutate(
+    cyl = paste("cyl:", cyl),
+    am = paste("am:", am)
+  ) |>
+  # nest
+  nest(.by = c(cyl, am)) |>
+  mutate(
+    # create titles for figures
+    title = paste(cyl, am, sep = ", "),
+    # create scatter plots
+    fig = map2(
+      data,
+      title,
+      \(data, title) {
+        data |>
+          ggplot(aes(wt, mpg)) +
+          geom_point() +
+          labs(title = title)
+      }
+    ),
+    # create tables
+    tbl = map(
+      data,
+      \(data) {
+        data |>
+          select(wt, mpg) |>
+          knitr::kable()
+      }
+    )
+  )
+
+df2
+```
+
+Figures and tables have been created for the `fig` and `tbl` columns respectively.
+Also note that the group variables `cly` and `am` are not ordered in regular ascending order. They are arranged in order of appearance.
+In Next step, specifying `cly` and `am` in `tabset_vars` in `qtab()` automatically executes `arrange(cly, am)` internally.
+So don't worry.
+
+:::{.callout-tip icon=true}
+
+We did not run `arrange(cly, am)` in this example for the sake of example,
+but in practice it is better to run `arrange(cly, am)` in the pipeline to make it easier to identify each group.
+
+```{r}
+df2 |>
+  arrange(cyl, am)
+```
+
+:::
+
+### `nest_by() + list()`
+
+Another method is to use `dplyr::nest_by()` and `list()`. This approach is simpler and more intuitive to write.
+
+For more information, see follows:
+
+- [Row-wise operations](https://dplyr.tidyverse.org/articles/rowwise.html)
+
+```{r}
+df2_rowwise <- mtcars |>
+  # make groups more explicit
+  mutate(
+    cyl = paste("cyl:", cyl),
+    am = paste("am:", am)
+  ) |>
+  # nest
+  nest_by(cyl, am) |>
+  mutate(
+    # create titles for figures
+    title = paste(cyl, am, sep = ", "),
+    # create scatter plots
+    fig = list(
+      data |>
+        ggplot(aes(wt, mpg)) +
+        geom_point() +
+        labs(title = title) 
+      
+    ),
+    # create tables
+    tbl = list(
+      data |>
+        select(wt, mpg) |>
+        knitr::kable()
+    )
+  )
+
+df2_rowwise
+```
+
+This way, the values of other columns in the `list()` can be used freely. 
+(In the `nest() + map()` method, it was necessary to define in advance 
+which columns to use when calling in the `map()`).
+
+The outputs are grouped rowwise and already sorted by `cly` and `am`.
+
+### Figures
+
+In the following, `df2` is used. (Works in the same way in `df2_rowwise`).
+
+```{r}
+#| results: asis
+
+df2 |>
+  qtab(c(cyl, am), fig)
+```
+
+### Tables
+
+```{r}
+#| results: asis
+
+df2 |>
+  qtab(c(cyl, am), tbl)
+```
+
+### Figures and tables
+
+```{r}
+#| results: asis
+
+df2 |>
+  qtab(c(cyl, am), c(fig, tbl))
+```
+
+### layout
+
+Use the `layout` argument to display figure and table side by side with a width of 7:3.
+
+```{r}
+#| results: asis
+
+df2 |>
+  qtab(c(cyl, am), c(fig, tbl), layout = '::: {layout="[7, 3]"}')
+```
+
+## Advanced examples
+
+### Pre-saved figures
+
+<!-- Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `qtab()` as before. -->
+
+<!-- ```{r} -->
+<!-- # directory for saving figures -->
+<!-- dir <- "C:/Users/Yusuke Sasaki/Documents/demo" -->
+
+<!-- # new sample data -->
+<!-- df3 <- df2 |> -->
+<!--   mutate( -->
+<!--     fig_path = file.path( -->
+<!--       dir, -->
+<!--       paste0(janitor::make_clean_names(title), ".png") -->
+<!--       ), -->
+<!--     # To make the return value a character vector, use `map2_chr()` -->
+<!--     fig_path_md = map2_chr( -->
+<!--       fig, -->
+<!--       fig_path, -->
+<!--       \(p, path) { -->
+<!--         p <- p + -->
+<!--           labs( -->
+<!--             subtitle = path -->
+<!--           ) -->
+
+<!--         # save figure -->
+<!--         ggsave(path) -->
+
+<!--         # format path to markdown style -->
+<!--         # caption can be omitted -->
+<!--         return(str_glue("![]({path})")) -->
+<!--       } -->
+<!--     ) -->
+<!--   ) |> -->
+<!--   select(cyl, am, fig_path_md) -->
+
+<!-- df3 -->
+<!-- ``` -->
+
+<!-- Then execute `qtab()` as in basic usage. -->
+
+<!-- ```{r} -->
+<!-- #| results: asis -->
+
+<!-- df3 |> -->
+<!--   qtab(c(cyl, am), fig_path_md) -->
+<!-- ``` -->
+
+
+<!-- :::{.callout-tip} -->
+
+<!-- ## `nest_by() + list({ <some complex code> })` -->
+
+<!-- Replace the above `nest() + map()` method with `rowwise() + list()`. -->
+
+<!-- ```{r} -->
+<!-- #| error: true -->
+
+<!-- # new sample data -->
+<!-- df3_rowwise <- df2_rowwise |> -->
+<!--   mutate( -->
+<!--     fig_path = file.path( -->
+<!--       dir, -->
+<!--       paste0(janitor::make_clean_names(title), ".png") -->
+<!--       ), -->
+<!--     # To make the return value a character vector, use `map2_chr()` -->
+<!--     fig_path_md = list( -->
+<!--         p <- fig + -->
+<!--           labs( -->
+<!--             subtitle = fig_path -->
+<!--           ) -->
+
+<!--         # save figure -->
+<!--         ggsave(fig_path) -->
+
+<!--         # format path to markdown style -->
+<!--         str_glue("![]({fig_path})") -->
+<!--     ) -->
+<!--   ) |> -->
+<!--   select(cyl, am, fig_path_md) -->
+<!-- ``` -->
+
+<!-- An error occurred because we tried to create an intermediate object (`p`) or excute multiple operations that are not connected by a pipe in the `list()`. -->
+
+<!-- In such cases, use `list({ <some complex code> })`. -->
+
+<!-- ```{r} -->
+<!-- df3_rowwise <- df2_rowwise |> -->
+<!--   mutate( -->
+<!--     fig_path = file.path( -->
+<!--       dir, -->
+<!--       paste0(janitor::make_clean_names(title), ".png") -->
+<!--       ), -->
+<!--     # To make the return value a character vector, use `map2_chr()` -->
+<!--     fig_path_md = list({ -->
+<!--         p <- fig + -->
+<!--           labs( -->
+<!--             subtitle = fig_path -->
+<!--           ) -->
+
+<!--         # save figure -->
+<!--         ggsave(fig_path) -->
+
+<!--         # format path to markdown style -->
+<!--         str_glue("![]({fig_path})") -->
+<!--     }) -->
+<!--   ) |> -->
+<!--   select(cyl, am, fig_path_md) -->
+
+<!-- df3_rowwise -->
+<!-- ``` -->
+
+<!-- Then execute `qtab()` as in basic usage. -->
+
+<!-- ```{r} -->
+<!-- #| results: asis -->
+
+<!-- df3_rowwise |> -->
+<!--   qtab(c(cyl, am), fig_path_md) -->
+<!-- ``` -->
+
+<!-- ::: -->
+
+### Plotly
+
+You can use `{plotly}` to create interactive figures.
+
+First, let's create figures using `{plotly}`. Simply apply `plotly::ggplotly()` to the already created ggplot object. Then it is passed to `htmltools::div()`.
+
+```{r}
+df4 <- df2 |>
+  mutate(
+    fig_plotly = map(
+      fig,
+      \(p) {
+        ggplotly(
+          p,
+          height = 700 # make large figure, for example
+        ) |>
+          htmltools::div()
+      }
+    )
+  ) |>
+  select(cyl, am, fig_plotly)
+
+df4
+```
+
+:::{.callout-important  appearance='default' icon=true}
+## Resolve javascript dependencies
+When outputting tables or figures that use javascript (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.), it seems javascript dependencies need to be resolved. The easiest way seems to output them once in a separate chunk.
+
+References:
+
+- [offline plots in for loops - github](https://github.com/plotly/plotly.R/issues/273)
+
+- [Using ggplotly and DT from a for loop in Rmarkdown - stackoverflow](https://stackoverflow.com/questions/60685631/using-ggplotly-and-dt-from-a-for-loop-in-rmarkdown/62599342#62599342)
+
+- [plotly objects are invisible in R Markdown - stackoverflow](https://stackoverflow.com/questions/75992729/plotly-objects-are-invisible-in-r-markdown)
+
+:::
+
+As above, this example prepares a chunk that executes only `plot_ly()`.  Set `#| include: false` so that this chunk and its output will not appear on the report.
+
+```{{r}}
+#| include: false
+
+plot_ly()
+```
+
+```{r}
+#| include: false
+#| echo: false
+
+plot_ly()
+```
+
+Then execute `qtab()` as in basic usage.
+Add `column: page-right` chunk option to increase the size of the figure.
+
+``` {{r}}
+#| results: asis
+#| column: page-right
+
+df4 |>
+  qtab(c(cyl, am), fig_plotly)
+```
+
+```{r}
+#| results: asis
+#| column: page-right
+#| echo: false
+
+df4 |>
+  qtab(c(cyl, am), fig_plotly)
+```
+
+### Leaflet
+
+<!-- Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `qtab()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map. It also serves as an introduction to the functionality of `{jprep.datasets}`, let's create and visualize dummy student addresses for Juku and Kids at the beginning of March. Note that for the purposes of this demo, the period is 2016 to 2023. -->
+
+<!-- `jprep.datasets::main_buildings` contains the main school building for each period for each program. -->
+
+<!-- ```{r} -->
+<!-- sites <- main_buildings |> -->
+<!--   # For demo, remaining up to the beginning of the month of March 2023. -->
+<!--   filter(start_date <= as.Date("2024-03-05")) |>  -->
+<!--   filter(program %in% c("Juku", "Kids")) |> -->
+<!--   filter(site != "Hongo") |> # Not owned by J PREP -->
+<!--   select(program, site, start_date, end_date, lon_site, lat_site) -->
+
+
+<!-- sites |> -->
+<!--   print(n = Inf) -->
+<!-- ``` -->
+
+<!-- The `start_date` and `end_date` indicate when the school building was used as the main location for that site. In particular, Jiyugaoka, Shibuya, and Kichijoji are shown to have moved multiple times. -->
+
+<!-- Assign a color to each site for visualization. -->
+<!-- This is an example of a maximum of 7 sites. -->
+
+<!-- ```{r} -->
+<!-- # Named vectors may not be handled correctly in addCircleMarkers(), -->
+<!-- # which will be used later. So `unname()` is important. -->
+<!-- pal <- unname(palette.colors()[2:8]) -->
+
+<!-- hexs <- sites |> -->
+<!--   distinct(site) |> -->
+<!--   bind_cols(hex = pal) -->
+<!-- ``` -->
+
+<!-- Join to the `site` -->
+
+<!-- ```{r} -->
+<!-- sites_with_hex <- sites |> -->
+<!--   left_join(hexs) -->
+
+<!-- sites_with_hex -->
+<!-- ``` -->
+
+<!-- Get the first date of the academic year. -->
+
+<!-- ```{r} -->
+<!-- yr_starts <- calendar_jprep |> -->
+<!--   slice_min(date, by = c(program, year)) |> -->
+<!--   select(program, year, date) -->
+
+<!-- yr_starts -->
+<!-- ``` -->
+
+<!-- Join main school buildings that existed at the beginning of each academic year. `dplyr::join_by()` is useful. -->
+
+<!-- ```{r} -->
+<!-- yr_starts_site <- -->
+<!--   yr_starts |> -->
+<!--   left_join( -->
+<!--     sites_with_hex, -->
+<!--     join_by( -->
+<!--       program, -->
+<!--       between(date, start_date, end_date) -->
+<!--     ) -->
+<!--   ) |> -->
+<!--   select(program, year, site, hex, lon_site, lat_site) -->
+
+<!-- yr_starts_site -->
+<!-- ``` -->
+
+<!-- How many sites per program each year? -->
+
+<!-- ```{r} -->
+<!-- yr_starts_site |> -->
+<!--   count(program, year) -->
+<!-- ``` -->
+
+<!-- Create 10 dummy student data for each program, year, and site. Let's scatter them randomly around the school building. -->
+
+<!-- ```{r} -->
+<!-- dummy_students <- -->
+<!--   yr_starts_site |> -->
+<!--   mutate( -->
+<!--     data = map2( -->
+<!--       lon_site, -->
+<!--       lat_site, -->
+<!--       \(ln, lt) { -->
+<!--         tibble( -->
+<!--           lon = ln + rnorm(n = 10, sd = .01), -->
+<!--           lat = lt + rnorm(n = 10, sd = .01) -->
+<!--         ) -->
+<!--       } -->
+<!--     ) -->
+<!--   ) |> -->
+<!--   unnest(data) -->
+
+<!-- dummy_students -->
+<!-- ``` -->
+
+<!-- Create a base leaflet. -->
+
+<!-- ```{r} -->
+<!-- p_base <- -->
+<!--   leaflet() |> -->
+<!--   # In this example, make it appear large -->
+<!--   leaflet(width = 1200, height = 1600) |> -->
+<!--   setView(lng = 139.67, lat = 35.6, zoom = 11) |> -->
+<!--   # group: light -->
+<!--   addProviderTiles(providers$CartoDB.Positron, group = "light") |> -->
+<!--   # group: light (Railway highlighted) -->
+<!--   addProviderTiles(providers$CartoDB.Positron, group = "light (Railway highlighted)") |> -->
+<!--   addProviderTiles(providers$OpenRailwayMap, group = "light (Railway highlighted)") -->
+<!-- ``` -->
+
+<!-- Here is the main thing. Create a leaflet for each program and year. -->
+
+<!-- ```{r} -->
+<!-- leaflets <- dummy_students |> -->
+<!--   nest(.by = c(program, year)) |> -->
+<!--   mutate( -->
+<!--     # to display the new year first in tabset -->
+<!--     year = fct_rev(as.character(year)), -->
+<!--     # create leaflet map -->
+<!--     lf = map( -->
+<!--       data, -->
+<!--       \(data) { -->
+<!--         # for site ordering -->
+<!--         data <- data |> -->
+<!--           mutate( -->
+<!--             site = fct_sites(site) -->
+<!--           ) |> -->
+<!--           arrange(site) -->
+
+<!--         # unique sites -->
+<!--         sites <- data |> -->
+<!--           distinct(site, lon_site, lat_site) -->
+
+<!--         p_base |> -->
+<!--           # add markers to each site -->
+<!--           addMarkers( -->
+<!--             data = sites, -->
+<!--             lng = ~lon_site, -->
+<!--             lat = ~lat_site, -->
+<!--             label = ~site -->
+<!--           ) |> -->
+<!--           # each student -->
+<!--           addCircleMarkers( -->
+<!--             data = data, -->
+<!--             lng = ~lon, -->
+<!--             lat = ~lat, -->
+<!--             opacity = 1, -->
+<!--             fillOpacity = .7, -->
+<!--             radius = 4, -->
+<!--             weight = 3, -->
+<!--             color = ~hex, -->
+<!--             label = ~paste(site, lon, lat, sep = "<br>") |> lapply(htmltools::HTML), -->
+<!--             group = ~site -->
+<!--           ) |> -->
+<!--           addLayersControl( -->
+<!--             baseGroups = c("light", "light (Railway highlighted)"), -->
+<!--             overlayGroups = sites$site, -->
+<!--             options = layersControlOptions(collapsed = FALSE) -->
+<!--           ) |> -->
+<!--           htmltools::div() -->
+<!--       } -->
+<!--     ) -->
+<!--   ) -->
+
+<!-- leaflets -->
+<!-- ``` -->
+
+<!-- As described in the plotly section, output only the leaflet in a separate chunk. We plot `p_base` (You think `leaflet()` is also good instead of `p_base`, but it does not work well) -->
+<!-- . Don't forget `#| include: false` to avoid displaying output. -->
+
+<!-- ```{{r}} -->
+<!-- #| include: false -->
+
+<!-- p_base -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| include: false -->
+<!-- #| echo: false -->
+
+<!-- p_base -->
+<!-- ``` -->
+
+<!-- Then execute `qtab()` as in basic usage. -->
+<!-- Add `column: screen-inset` chunk option to see larger at the width of the screen. -->
+
+<!-- ``` {{r}} -->
+<!-- #| results: asis -->
+<!-- #| column: screen-inset -->
+
+<!-- leaflets |> -->
+<!--   qtab(c(program, year), lf) -->
+<!-- ``` -->
+
+<!-- ```{r} -->
+<!-- #| results: asis -->
+<!-- #| column: screen-inset -->
+<!-- #| echo: false -->
+
+<!-- leaflets |> -->
+<!--   qtab(c(program, year), lf) -->
+<!-- ``` -->
+
+### Tables
+
+Here we will show you how to use `qtab()` in a popular package for rendering tables.
+This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `flextable::flextable()`, `DT::datatable()`, `reactable::reactable()` and `tinytable::tt()`.
+
+```{r}
+tables <-
+  df2 |>
+  select(cyl, am, data) |>
+  mutate(
+    kable = map(data, knitr::kable),
+    gt = map(data, gt::gt),
+    gt_interactive = map(gt, gt::opt_interactive),
+    tt = map(data, tinytable::tt),
+    flex = map_chr(
+      data,
+      \(data) {
+        flextable::flextable(data) |>
+          knitr::knit_print()
+      }
+    ),
+    DT = map(
+      data,
+      \(data) {
+        DT::datatable(data) |>
+          htmltools::div()
+      }
+    ),
+    reac = map(
+      data,
+      \(data) {
+        reactable::reactable(data) |>
+          htmltools::div()
+      }
+    ),
+    section_kable = "#### knitr::kable()",
+    section_gt = "#### gt::gt()",
+    section_gt_interactive = "#### gt::gt() |> gt::opt_interactive() (and run in a separate chunk)",
+    section_tt = "#### tinytable::tt()",
+    section_flex = "#### flextable::flextable() |> knitr::knit_print() (using map_chr())",
+    section_DT = "#### DT::datatable() |> htmltools::div() (and run in a separate chunk)",
+    section_reac = "#### reactable::reactable() |> htmltools::div() (and run in a separate chunk)"
+  )
+
+tables
+```
+
+`knitr::kable()`, `gt::gt()`, and `tinytable::tt()` are the simplest.
+
+The output of `flextable::flextable()` is managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
+
+`gt::opt_interactive()`, `{DT}` and `{reactable}` use javascript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
+
+```{{r}}
+#| include: false
+
+gt::gt(mtcars) |> 
+  gt::opt_interactive()
+
+DT::datatable(mtcars)
+
+reactable::reactable(mtcars)
+```
+
+```{r}
+#| include: false
+#| echo: false
+
+gt::gt(mtcars) |> 
+  gt::opt_interactive()
+
+DT::datatable(mtcars)
+
+reactable::reactable(mtcars)
+```
+
+Then execute `qtab()`. To make the results easier to see, sections are also to be added.
+
+```{r}
+#| results: asis
+
+tables |>
+  qtab(
+    c(cyl, am),
+    c(
+      section_kable,
+      kable,
+      section_gt,
+      gt,
+      section_gt_interactive,
+      gt_interactive,
+      section_tt,
+      tt,
+      section_flex,
+      flex,
+      section_DT,
+      DT,
+      section_reac,
+      reac
+    )
+  )
+```
+
+<details><summary>Session Info</summary>
+
+```{r}
+# save the session info as an object
+sess <- sessioninfo::session_info(pkgs = "attached")
+
+# inject the quarto info
+sess$platform$quarto <- paste(
+  quarto::quarto_version(),
+  "@",
+  fs::path_real(quarto::quarto_path())
+  )
+
+# print it out
+sess
+```
+
+</details>

@@ -2,7 +2,7 @@
 % Please edit documentation in R/qtab.R
 \name{qtab}
 \alias{qtab}
-\title{Create tabset panels in quarto markdown}
+\title{Create tabset panels in quarto}
 \usage{
 qtab(
   data,
@@ -17,18 +17,21 @@ qtab(
 \arguments{
 \item{data}{A data frame.}
 
-\item{tabset_vars}{Variables to use as tabset labels.}
+\item{tabset_vars}{Columns to use as tabset labels. Internally passed to the \code{select} argument
+of \code{\link[=subset]{subset()}}. Accepts raw column names, strings, numbers and logical values.}
 
-\item{output_vars}{Variables to display in each tabset panel.}
+\item{output_vars}{Columns to display in each tabset panel. Internally passed to the \code{select}
+argument of \code{\link[=subset]{subset()}}. Accepts raw column names, strings, numbers and
+logical values.}
 
 \item{layout}{\code{NULL} or a character vector of length 1 for specifying layout
 in tabset panel. If not \code{NULL}, \code{layout} must begin with at least three
 or more repetitions of ":" (e.g. ":::").}
 
-\item{heading_levels}{\code{NULL} or a positive integer-ish numeric vector of
-length equal to the number of columns specified in \code{tabset_vars}.
-This controls whether it is partially (or entirely) displayed
-as normal header instead of tabset.
+\item{heading_levels}{\code{NULL} or a vector consisting of natural numbers
+and missing values. The length is equal to the number of columns specified
+in \code{tabset_vars}. This controls whether it is partially (or entirely)
+displayed as normal header instead of tabset.
 \itemize{
 \item If \code{NULL}, all output is tabset.
 \item If a positive integer-ish numeric vector, the elements of the vector
@@ -44,9 +47,13 @@ it is preferable to gradually increase the level, as in 1, 2 and 3.
 }
 }}
 
-\item{pills}{use pills or not}
+\item{pills}{Logical, use pills or not.
+See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills}
+for details. If \code{heading_levels} is specified, this will be ignored.}
 
-\item{tabset_width}{"default" / "fill" / "justified"}
+\item{tabset_width}{Character, one of "default", "fill" and "justified".
+See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills}
+for details. If \code{heading_levels} is specified, this will be ignored.}
 }
 \value{
 \code{NULL} invisibly. This function is called for its side effect.
@@ -66,26 +73,35 @@ Define the order beforehand, e.g. using factor.
 \item \code{output_vars} can also be figures or tables if \code{data} is a tibble.
 \item If factor columns are included in output_vars, they are converted
 internally to character.
-\item When outputting tables or figures that use javascript
-(such as \code{{plotly}}, \code{{leaflet}}, \code{{DT}}, \code{{reactable}}, etc.),
-it seems javascript dependencies need to be resolved.
-A simple solution is to wrap the output in \code{\link[htmltools:builder]{htmltools::div()}}
-and create a dummy plot in another chunk. See the demo page for details.
+\item For columns specified in output_vars, columns of type list are output with
+\code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}
+}
+}
+\section{Limitations}{
+
+\itemize{
 \item The function has an optional argument, \code{layout}, which allows for
 the addition of layout option to the outputs
 (see \url{https://quarto.org/docs/authoring/figures.html}).
 However, this is intended for simplified use cases and
 complex layouts may not work. See Examples for more details.
+\item When outputting tables or figures that use JavaScript
+(such as \code{{plotly}}, \code{{leaflet}}, \code{{DT}}, \code{{reactable}}, etc.),
+it seems JavaScript dependencies need to be resolved.
+A simple solution is to wrap the output in \code{\link[htmltools:builder]{htmltools::div()}}
+and create a dummy plot in another chunk. See the demo page for details.
+\item If a column of type list contains a named vector or list,
+the values may not display well.
 }
 }
+
 \examples{
 # sample data
 df <- data.frame(
   group1 = c(rep("A", 3), rep("B", 3)),
   group2 = rep(c("X", "Y", "Z"), 2),
-  var1 = rnorm(6),
-  var2 = rnorm(6),
-  var3 = rnorm(6)
+  value1 = 1:6,
+  value2 = letters[1:6]
 )
 
 # Here are examples of the output before it is converted to tabset.
@@ -94,21 +110,35 @@ df <- data.frame(
 # write `#| results: asis` at the beginning of the chunk.
 
 # Basic usage
-qtab(df, c(group1, group2), c(var1, var2, var3))
+qtab(df, group1, value1)
 
-# Here is an example of the `layout` argument.
+# Nested tabset, two outputs side by side with a width of 1:1
 qtab(
   df,
   c(group1, group2),
-  c(var1, var2, var3),
-  layout = '::: {layout="[2, 3, 5]"}'
+  c(value1, value2),
+  layout = '::: {layout="[1, 1]"}'
 )
 
 # Use heading instead of tabset
 qtab(
   df,
   c(group1, group2),
-  c(var1, var2, var3),
+  value1,
   heading_levels = c(2, 3)
 )
+}
+\references{
+As this function is focused on quickly and dynamically generating tabsets
+and chunks, it is difficult to customize it on a chunk-by-chunk basis.
+The regular way to dynamically create chunks is to use functions such as
+\code{\link[knitr:knit]{knitr::knit()}}, \code{\link[knitr:knit_child]{knitr::knit_child()}}, \code{\link[knitr:knit_expand]{knitr::knit_expand()}}, etc.
+For more information on these, see the following links.
+\itemize{
+\item Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
+Markdown Content Programmatically with Quarto.” November 4, 2024.
+\url{https://doi.org/10.59350/pa44j-cc302}.
+\item \url{https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html#child-document}
+\item \url{https://bookdown.org/yihui/rmarkdown-cookbook/knit-expand.html}
+}
 }

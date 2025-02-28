@@ -1,9 +1,12 @@
-#' Create tabset panels in quarto markdown
+# nolint start: line_length_linter.
+
+#' Create tabset panels in quarto
 #'
+#' @description
 #' The function takes in a data frame or a tibble and produces
 #' tabset panels for each unique combination of the tabset variables.
 #' ***Only works with .qmd files in HTML format.***
-#'
+#' @details
 #' - Write `#| results: asis` at the beginning of the chunk or
 #'   `results='asis'` in the chunk options.
 #' - The `data` is sorted internally in the order of `tabset_vars`.
@@ -12,29 +15,23 @@
 #' - `output_vars` can also be figures or tables if `data` is a tibble.
 #' - If factor columns are included in output_vars, they are converted
 #'   internally to character.
-#' - When outputting tables or figures that use javascript
-#'   (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.),
-#'   it seems javascript dependencies need to be resolved.
-#'   A simple solution is to wrap the output in [`htmltools::div()`]
-#'   and create a dummy plot in another chunk. See the demo page for details.
-#' - The function has an optional argument, `layout`, which allows for
-#'   the addition of layout option to the outputs
-#'   (see \url{https://quarto.org/docs/authoring/figures.html}).
-#'   However, this is intended for simplified use cases and
-#'   complex layouts may not work. See Examples for more details.
-#'
+#' - For columns specified in output_vars, columns of type list are output with
+#'   [print()] and normal columns are output with [cat()]
 #' @param data A data frame.
 #' @param tabset_vars
-#' Variables to use as tabset labels.
+#' Columns to use as tabset labels. Internally passed to the `select` argument
+#' of [subset()]. Accepts raw column names, strings, numbers and logical values.
 #' @param output_vars
-#' Variables to display in each tabset panel.
+#' Columns to display in each tabset panel. Internally passed to the `select`
+#' argument of [subset()]. Accepts raw column names, strings, numbers and
+#' logical values.
 #' @param layout `NULL` or a character vector of length 1 for specifying layout
 #' in tabset panel. If not `NULL`, `layout` must begin with at least three
 #' or more repetitions of ":" (e.g. ":::").
-#' @param heading_levels `NULL` or a positive integer-ish numeric vector of
-#' length equal to the number of columns specified in `tabset_vars`.
-#' This controls whether it is partially (or entirely) displayed
-#' as normal header instead of tabset.
+#' @param heading_levels `NULL` or a vector consisting of natural numbers
+#' and missing values. The length is equal to the number of columns specified
+#' in `tabset_vars`. This controls whether it is partially (or entirely)
+#' displayed as normal header instead of tabset.
 #' * If `NULL`, all output is tabset.
 #' * If a positive integer-ish numeric vector, the elements of the vector
 #' correspond to the columns specified in `tabset_vars`.
@@ -45,17 +42,44 @@
 #'    text. In addition, considering the chapter format,
 #'    it is preferable to gradually increase the level, as in 1, 2 and 3.
 #'    * If the element is NA, tabset is displayed.
-#' @param pills use pills or not
-#' @param  tabset_width "default" / "fill" / "justified"
+#' @param pills Logical, use pills or not.
+#'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills>
+#'   for details. If `heading_levels` is specified, this will be ignored.
+#' @param tabset_width Character, one of "default", "fill" and "justified".
+#'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills>
+#'   for details. If `heading_levels` is specified, this will be ignored.
 #' @return `NULL` invisibly. This function is called for its side effect.
+#' @section Limitations:
+#' - The function has an optional argument, `layout`, which allows for
+#'   the addition of layout option to the outputs
+#'   (see \url{https://quarto.org/docs/authoring/figures.html}).
+#'   However, this is intended for simplified use cases and
+#'   complex layouts may not work. See Examples for more details.
+#' - When outputting tables or figures that use JavaScript
+#'   (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.),
+#'   it seems JavaScript dependencies need to be resolved.
+#'   A simple solution is to wrap the output in [`htmltools::div()`]
+#'   and create a dummy plot in another chunk. See the demo page for details.
+#' - If a column of type list contains a named vector or list,
+#'   the values may not display well.
+#' @references
+#' As this function is focused on quickly and dynamically generating tabsets
+#' and chunks, it is difficult to customize it on a chunk-by-chunk basis.
+#' The regular way to dynamically create chunks is to use functions such as
+#' [knitr::knit()], [knitr::knit_child()], [knitr::knit_expand()], etc.
+#' For more information on these, see the following links.
+#' - Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
+#'   Markdown Content Programmatically with Quarto.” November 4, 2024.
+#'   <https://doi.org/10.59350/pa44j-cc302>.
+#' - <https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html#child-document>
+#' - <https://bookdown.org/yihui/rmarkdown-cookbook/knit-expand.html>
 #' @examples
 #' # sample data
 #' df <- data.frame(
 #'   group1 = c(rep("A", 3), rep("B", 3)),
 #'   group2 = rep(c("X", "Y", "Z"), 2),
-#'   var1 = rnorm(6),
-#'   var2 = rnorm(6),
-#'   var3 = rnorm(6)
+#'   value1 = 1:6,
+#'   value2 = letters[1:6]
 #' )
 #'
 #' # Here are examples of the output before it is converted to tabset.
@@ -64,24 +88,25 @@
 #' # write `#| results: asis` at the beginning of the chunk.
 #'
 #' # Basic usage
-#' qtab(df, c(group1, group2), c(var1, var2, var3))
+#' qtab(df, group1, value1)
 #'
-#' # Here is an example of the `layout` argument.
+#' # Nested tabset, two outputs side by side with a width of 1:1
 #' qtab(
 #'   df,
 #'   c(group1, group2),
-#'   c(var1, var2, var3),
-#'   layout = '::: {layout="[2, 3, 5]"}'
+#'   c(value1, value2),
+#'   layout = '::: {layout="[1, 1]"}'
 #' )
 #'
 #' # Use heading instead of tabset
 #' qtab(
 #'   df,
 #'   c(group1, group2),
-#'   c(var1, var2, var3),
+#'   value1,
 #'   heading_levels = c(2, 3)
 #' )
 #' @export
+# nolint: end
 qtab <- function(data,
                  tabset_vars,
                  output_vars,
