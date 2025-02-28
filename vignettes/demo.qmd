@@ -921,7 +921,7 @@ tables <-
     section_tt = "#### tinytable::tt()",
     section_flex = paste(
       "#### flextable::flextable() |> knitr::knit_print()",
-      "(using map_chr())",
+      "(using map_chr())"
     ),
     section_DT = paste(
       "#### DT::datatable() |> htmltools::div()",
