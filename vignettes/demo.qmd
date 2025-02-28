@@ -15,20 +15,17 @@ knitr:
     message: false
 ---
 
-## Prerequisite 
+## Prerequisite
 
 `qtab()` works in HTML format in .qmd files (not .Rmd files). So you need to be prepared to try the code.
 
 1. Install Quarto.
 
-- In J PERP, RStudio is commonly used for analysis. 
-Recently, Quarto has been bundled with RStudio.
+- Recently, Quarto has been bundled with RStudio.
 So, if you are an RStudio user, you do not need to install Quarto separately.
 
 2. Create a new .qmd file.
     - On RStudio, _File > New File > Quarto Document_
-    - On console, run `jprep.datasets::create_qmd("path/to/new_file.qmd")`
-      - This function opens a new .qmd file containing commonly used yaml.
 
 ## Syntax
 
@@ -113,7 +110,7 @@ Write `#| results: asis` at the beginning of the chunk or `results='asis'` in th
 ``` {{r}}
 #| results: asis
 
-df1 |> 
+df1 |>
   qtab(id, var1)
 ```
 
@@ -194,7 +191,7 @@ In quarto, `layout-ncol` can be used.
 #| results: asis
 #| layout-ncol: 3
 
-df1 |> 
+df1 |>
   qtab(c(group1, group2), c(var1, var2, var3))
 ```
 
@@ -203,7 +200,7 @@ df1 |>
 #| layout-ncol: 3
 #| echo: false
 
-df1 |> 
+df1 |>
   qtab(c(group1, group2), c(var1, var2, var3))
 ```
 
@@ -214,11 +211,11 @@ This is where the `layout` argument comes in handy.
 ```{r}
 #| results: asis
 
-df1 |> 
+df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
-    layout = '::: {layout-ncol=3}'
+    c(group1, group2),
+    c(var1, var2, var3),
+    layout = "::: {layout-ncol=3}"
   )
 ```
 
@@ -246,13 +243,13 @@ For example, `group1` should be tabset and `group2` should be h4 heading.
 
 df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
+    c(group1, group2),
+    c(var1, var2, var3),
     heading_levels = c(NA, 4)
   )
 ```
 
-#### Example 2 
+#### Example 2
 
 Conversely, `group1` should be heading 4 and `group2` should be tabset.
 
@@ -261,13 +258,13 @@ Conversely, `group1` should be heading 4 and `group2` should be tabset.
 
 df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
+    c(group1, group2),
+    c(var1, var2, var3),
     heading_levels = c(4, NA)
   )
 ```
 
-#### Example 3 
+#### Example 3
 
 Set `group1` to heading 4 and `group2` to heading 5 (no tabset).
 
@@ -276,13 +273,13 @@ Set `group1` to heading 4 and `group2` to heading 5 (no tabset).
 
 df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
+    c(group1, group2),
+    c(var1, var2, var3),
     heading_levels = c(4, 5)
   )
 ```
 
-#### Example 4 
+#### Example 4
 
 Although it is preferable for the heading to be progressively larger due to the
 structure of the chapter, but can be the same or progressively smaller.
@@ -292,13 +289,13 @@ structure of the chapter, but can be the same or progressively smaller.
 
 df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
+    c(group1, group2),
+    c(var1, var2, var3),
     heading_levels = c(5, 4)
   )
 ```
 
-#### Example 5  
+#### Example 5
 
 `header_levels` can work with `layout`.
 
@@ -307,9 +304,9 @@ df1 |>
 
 df1 |>
   qtab(
-    c(group1, group2), 
-    c(var1, var2, var3), 
-    layout = '::: {layout-ncol=3}',
+    c(group1, group2),
+    c(var1, var2, var3),
+    layout = "::: {layout-ncol=3}",
     heading_levels = c(4, NA)
   )
 ```
@@ -331,9 +328,9 @@ For more information on the nest, see follows:
 
 - [23 Model basics](https://r4ds.had.co.nz/model-basics.html)
 
-- [TokyoR#108_NestedDataHandling](https://speakerdeck.com/kilometer/tokyor-number-108-nesteddatahandling)
+- [TokyoR #108 Nested Data Handling](https://speakerdeck.com/kilometer/tokyor-number-108-nesteddatahandling)
 
-- [nested dataでggplot](https://qiita.com/kilometer/items/7f99c0a9af6d7ce43485)
+- [nested data で ggplot](https://qiita.com/kilometer/items/7f99c0a9af6d7ce43485)
 
 ```{r}
 # new sample data
@@ -415,8 +412,7 @@ df2_rowwise <- mtcars |>
       data |>
         ggplot(aes(wt, mpg)) +
         geom_point() +
-        labs(title = title) 
-      
+        labs(title = title)
     ),
     # create tables
     tbl = list(
@@ -486,7 +482,7 @@ df2 |>
 <!-- dir <- "C:/Users/Yusuke Sasaki/Documents/demo" -->
 
 <!-- # new sample data -->
-<!-- df3 <- df2 |> -->
+<!-- df3 <- df2 |>-->
 <!--   mutate( -->
 <!--     fig_path = file.path( -->
 <!--       dir, -->
@@ -510,7 +506,7 @@ df2 |>
 <!--         return(str_glue("![]({path})")) -->
 <!--       } -->
 <!--     ) -->
-<!--   ) |> -->
+<!--   ) |>-->
 <!--   select(cyl, am, fig_path_md) -->
 
 <!-- df3 -->
@@ -521,7 +517,7 @@ df2 |>
 <!-- ```{r} -->
 <!-- #| results: asis -->
 
-<!-- df3 |> -->
+<!-- df3 |>-->
 <!--   qtab(c(cyl, am), fig_path_md) -->
 <!-- ``` -->
 
@@ -536,7 +532,7 @@ df2 |>
 <!-- #| error: true -->
 
 <!-- # new sample data -->
-<!-- df3_rowwise <- df2_rowwise |> -->
+<!-- df3_rowwise <- df2_rowwise |>-->
 <!--   mutate( -->
 <!--     fig_path = file.path( -->
 <!--       dir, -->
@@ -555,7 +551,7 @@ df2 |>
 <!--         # format path to markdown style -->
 <!--         str_glue("![]({fig_path})") -->
 <!--     ) -->
-<!--   ) |> -->
+<!--   ) |>-->
 <!--   select(cyl, am, fig_path_md) -->
 <!-- ``` -->
 
@@ -564,7 +560,7 @@ df2 |>
 <!-- In such cases, use `list({ <some complex code> })`. -->
 
 <!-- ```{r} -->
-<!-- df3_rowwise <- df2_rowwise |> -->
+<!-- df3_rowwise <- df2_rowwise |>-->
 <!--   mutate( -->
 <!--     fig_path = file.path( -->
 <!--       dir, -->
@@ -583,7 +579,7 @@ df2 |>
 <!--         # format path to markdown style -->
 <!--         str_glue("![]({fig_path})") -->
 <!--     }) -->
-<!--   ) |> -->
+<!--   ) |>-->
 <!--   select(cyl, am, fig_path_md) -->
 
 <!-- df3_rowwise -->
@@ -594,7 +590,7 @@ df2 |>
 <!-- ```{r} -->
 <!-- #| results: asis -->
 
-<!-- df3_rowwise |> -->
+<!-- df3_rowwise |>-->
 <!--   qtab(c(cyl, am), fig_path_md) -->
 <!-- ``` -->
 
@@ -681,15 +677,15 @@ df4 |>
 <!-- `jprep.datasets::main_buildings` contains the main school building for each period for each program. -->
 
 <!-- ```{r} -->
-<!-- sites <- main_buildings |> -->
+<!-- sites <- main_buildings |>-->
 <!--   # For demo, remaining up to the beginning of the month of March 2023. -->
-<!--   filter(start_date <= as.Date("2024-03-05")) |>  -->
-<!--   filter(program %in% c("Juku", "Kids")) |> -->
-<!--   filter(site != "Hongo") |> # Not owned by J PREP -->
+<!--   filter(start_date <= as.Date("2024-03-05")) |> -->
+<!--   filter(program %in% c("Juku", "Kids")) |>-->
+<!--   filter(site != "Hongo") |># Not owned by J PREP -->
 <!--   select(program, site, start_date, end_date, lon_site, lat_site) -->
 
 
-<!-- sites |> -->
+<!-- sites |>-->
 <!--   print(n = Inf) -->
 <!-- ``` -->
 
@@ -703,15 +699,15 @@ df4 |>
 <!-- # which will be used later. So `unname()` is important. -->
 <!-- pal <- unname(palette.colors()[2:8]) -->
 
-<!-- hexs <- sites |> -->
-<!--   distinct(site) |> -->
+<!-- hexs <- sites |>-->
+<!--   distinct(site) |>-->
 <!--   bind_cols(hex = pal) -->
 <!-- ``` -->
 
 <!-- Join to the `site` -->
 
 <!-- ```{r} -->
-<!-- sites_with_hex <- sites |> -->
+<!-- sites_with_hex <- sites |>-->
 <!--   left_join(hexs) -->
 
 <!-- sites_with_hex -->
@@ -720,8 +716,8 @@ df4 |>
 <!-- Get the first date of the academic year. -->
 
 <!-- ```{r} -->
-<!-- yr_starts <- calendar_jprep |> -->
-<!--   slice_min(date, by = c(program, year)) |> -->
+<!-- yr_starts <- calendar_jprep |>-->
+<!--   slice_min(date, by = c(program, year)) |>-->
 <!--   select(program, year, date) -->
 
 <!-- yr_starts -->
@@ -731,14 +727,14 @@ df4 |>
 
 <!-- ```{r} -->
 <!-- yr_starts_site <- -->
-<!--   yr_starts |> -->
+<!--   yr_starts |>-->
 <!--   left_join( -->
 <!--     sites_with_hex, -->
 <!--     join_by( -->
 <!--       program, -->
 <!--       between(date, start_date, end_date) -->
 <!--     ) -->
-<!--   ) |> -->
+<!--   ) |>-->
 <!--   select(program, year, site, hex, lon_site, lat_site) -->
 
 <!-- yr_starts_site -->
@@ -747,7 +743,7 @@ df4 |>
 <!-- How many sites per program each year? -->
 
 <!-- ```{r} -->
-<!-- yr_starts_site |> -->
+<!-- yr_starts_site |>-->
 <!--   count(program, year) -->
 <!-- ``` -->
 
@@ -755,7 +751,7 @@ df4 |>
 
 <!-- ```{r} -->
 <!-- dummy_students <- -->
-<!--   yr_starts_site |> -->
+<!--   yr_starts_site |>-->
 <!--   mutate( -->
 <!--     data = map2( -->
 <!--       lon_site, -->
@@ -767,7 +763,7 @@ df4 |>
 <!--         ) -->
 <!--       } -->
 <!--     ) -->
-<!--   ) |> -->
+<!--   ) |>-->
 <!--   unnest(data) -->
 
 <!-- dummy_students -->
@@ -777,22 +773,22 @@ df4 |>
 
 <!-- ```{r} -->
 <!-- p_base <- -->
-<!--   leaflet() |> -->
+<!--   leaflet() |>-->
 <!--   # In this example, make it appear large -->
-<!--   leaflet(width = 1200, height = 1600) |> -->
-<!--   setView(lng = 139.67, lat = 35.6, zoom = 11) |> -->
+<!--   leaflet(width = 1200, height = 1600) |>-->
+<!--   setView(lng = 139.67, lat = 35.6, zoom = 11) |>-->
 <!--   # group: light -->
-<!--   addProviderTiles(providers$CartoDB.Positron, group = "light") |> -->
+<!--   addProviderTiles(providers$CartoDB.Positron, group = "light") |>-->
 <!--   # group: light (Railway highlighted) -->
-<!--   addProviderTiles(providers$CartoDB.Positron, group = "light (Railway highlighted)") |> -->
+<!--   addProviderTiles(providers$CartoDB.Positron, group = "light (Railway highlighted)") |>-->
 <!--   addProviderTiles(providers$OpenRailwayMap, group = "light (Railway highlighted)") -->
 <!-- ``` -->
 
 <!-- Here is the main thing. Create a leaflet for each program and year. -->
 
 <!-- ```{r} -->
-<!-- leaflets <- dummy_students |> -->
-<!--   nest(.by = c(program, year)) |> -->
+<!-- leaflets <- dummy_students |>-->
+<!--   nest(.by = c(program, year)) |>-->
 <!--   mutate( -->
 <!--     # to display the new year first in tabset -->
 <!--     year = fct_rev(as.character(year)), -->
@@ -801,24 +797,24 @@ df4 |>
 <!--       data, -->
 <!--       \(data) { -->
 <!--         # for site ordering -->
-<!--         data <- data |> -->
+<!--         data <- data |>-->
 <!--           mutate( -->
 <!--             site = fct_sites(site) -->
-<!--           ) |> -->
+<!--           ) |>-->
 <!--           arrange(site) -->
 
 <!--         # unique sites -->
-<!--         sites <- data |> -->
+<!--         sites <- data |>-->
 <!--           distinct(site, lon_site, lat_site) -->
 
-<!--         p_base |> -->
+<!--         p_base |>-->
 <!--           # add markers to each site -->
 <!--           addMarkers( -->
 <!--             data = sites, -->
 <!--             lng = ~lon_site, -->
 <!--             lat = ~lat_site, -->
 <!--             label = ~site -->
-<!--           ) |> -->
+<!--           ) |>-->
 <!--           # each student -->
 <!--           addCircleMarkers( -->
 <!--             data = data, -->
@@ -829,14 +825,14 @@ df4 |>
 <!--             radius = 4, -->
 <!--             weight = 3, -->
 <!--             color = ~hex, -->
-<!--             label = ~paste(site, lon, lat, sep = "<br>") |> lapply(htmltools::HTML), -->
+<!--             label = ~paste(site, lon, lat, sep = "<br>") |>lapply(htmltools::HTML), -->
 <!--             group = ~site -->
-<!--           ) |> -->
+<!--           ) |>-->
 <!--           addLayersControl( -->
 <!--             baseGroups = c("light", "light (Railway highlighted)"), -->
 <!--             overlayGroups = sites$site, -->
 <!--             options = layersControlOptions(collapsed = FALSE) -->
-<!--           ) |> -->
+<!--           ) |>-->
 <!--           htmltools::div() -->
 <!--       } -->
 <!--     ) -->
@@ -868,7 +864,7 @@ df4 |>
 <!-- #| results: asis -->
 <!-- #| column: screen-inset -->
 
-<!-- leaflets |> -->
+<!-- leaflets |>-->
 <!--   qtab(c(program, year), lf) -->
 <!-- ``` -->
 
@@ -877,7 +873,7 @@ df4 |>
 <!-- #| column: screen-inset -->
 <!-- #| echo: false -->
 
-<!-- leaflets |> -->
+<!-- leaflets |>-->
 <!--   qtab(c(program, year), lf) -->
 <!-- ``` -->
 
@@ -918,11 +914,23 @@ tables <-
     ),
     section_kable = "#### knitr::kable()",
     section_gt = "#### gt::gt()",
-    section_gt_interactive = "#### gt::gt() |> gt::opt_interactive() (and run in a separate chunk)",
+    section_gt_interactive = paste(
+      "#### gt::gt() |> gt::opt_interactive()",
+      "(and run in a separate chunk)"
+    ),
     section_tt = "#### tinytable::tt()",
-    section_flex = "#### flextable::flextable() |> knitr::knit_print() (using map_chr())",
-    section_DT = "#### DT::datatable() |> htmltools::div() (and run in a separate chunk)",
-    section_reac = "#### reactable::reactable() |> htmltools::div() (and run in a separate chunk)"
+    section_flex = paste(
+      "#### flextable::flextable() |> knitr::knit_print()",
+      "(using map_chr())",
+    ),
+    section_DT = paste(
+      "#### DT::datatable() |> htmltools::div()",
+      "(and run in a separate chunk)"
+    ),
+    section_reac = paste(
+      "#### reactable::reactable() |> htmltools::div()",
+      "(and run in a separate chunk)"
+    )
   )
 
 tables
@@ -937,7 +945,7 @@ The output of `flextable::flextable()` is managed by the method `knitr::knit_pri
 ```{{r}}
 #| include: false
 
-gt::gt(mtcars) |> 
+gt::gt(mtcars) |>
   gt::opt_interactive()
 
 DT::datatable(mtcars)
@@ -949,7 +957,7 @@ reactable::reactable(mtcars)
 #| include: false
 #| echo: false
 
-gt::gt(mtcars) |> 
+gt::gt(mtcars) |>
   gt::opt_interactive()
 
 DT::datatable(mtcars)
@@ -995,7 +1003,7 @@ sess$platform$quarto <- paste(
   quarto::quarto_version(),
   "@",
   fs::path_real(quarto::quarto_path())
-  )
+)
 
 # print it out
 sess

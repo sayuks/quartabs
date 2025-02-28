@@ -1,5 +1,4 @@
-# nolint start: line_length_linter.
-
+# nolint start: line_length_linter
 #' Create tabset panels in quarto
 #'
 #' @description
@@ -106,7 +105,7 @@
 #'   heading_levels = c(2, 3)
 #' )
 #' @export
-# nolint: end
+# nolint end
 qtab <- function(data,
                  tabset_vars,
                  output_vars,

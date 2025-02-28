@@ -45,7 +45,7 @@ jobs:
           install.packages("remotes")
           remotes::install_github("etiennebacher/altdoc", ref = "61b9ab762990815e73c7217f9480f474f330755f")
           pkgload::load_all()
-          altdoc::render_docs(parallel = FALSE, freeze = FALSE)
+          altdoc::render_docs(parallel = FALSE, freeze = FALSE, verbose = TRUE)
         shell: Rscript {0}
 
       - name: Deploy to GitHub pages 🚀
