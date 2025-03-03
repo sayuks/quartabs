@@ -178,7 +178,8 @@ print(x)
 # Using `cat()` for factor results in unexpected output
 cat(x)
 
-# `render_tabset()` converts factor to string and then executes cat() as follows.
+# `render_tabset()` converts factor to string 
+# and then executes cat() as follows.
 cat(as.character(x))
 ```
 

@@ -107,12 +107,12 @@
 #' @export
 # nolint end
 render_tabset <- function(data,
-                 tabset_vars,
-                 output_vars,
-                 layout = NULL,
-                 heading_levels = NULL,
-                 pills = FALSE,
-                 tabset_width = "default") {
+                          tabset_vars,
+                          output_vars,
+                          layout = NULL,
+                          heading_levels = NULL,
+                          pills = FALSE,
+                          tabset_width = "default") {
   tabset_div <- make_tabset_div(pills, tabset_width)
 
   l <- do.call(
