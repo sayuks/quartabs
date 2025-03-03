@@ -1,5 +1,5 @@
 ---
-title: "Demo: qtab()"
+title: "Demo: render_tabset()"
 format: 
   html:
     code-tools: true
@@ -17,7 +17,7 @@ knitr:
 
 ## Prerequisite
 
-`qtab()` works in HTML format in .qmd files (not .Rmd files). So you need to be prepared to try the code.
+`render_tabset()` works in HTML format in .qmd files (not .Rmd files). So you need to be prepared to try the code.
 
 1. Install Quarto.
 
@@ -29,14 +29,14 @@ So, if you are an RStudio user, you do not need to install Quarto separately.
 
 ## Syntax
 
-`qtab()` is useful when you want to display similar results (e.g. figures and tables) for each group using tabsets.
+`render_tabset()` is useful when you want to display similar results (e.g. figures and tables) for each group using tabsets.
 
-The syntax for the `qtab()` function is as follows:
+The syntax for the `render_tabset()` function is as follows:
 
 ```{r}
 #| eval: false
 
-qtab(
+render_tabset(
   data,
   tabset_vars,
   output_vars,
@@ -69,7 +69,7 @@ Here are basic examples. First, load the libraries used in this demo and create 
 
 ```{r}
 #| message: false
-library(qtab)
+library(quartabs)
 library(tibble)
 library(dplyr)
 library(purrr)
@@ -111,7 +111,7 @@ Write `#| results: asis` at the beginning of the chunk or `results='asis'` in th
 #| results: asis
 
 df1 |>
-  qtab(id, var1)
+  render_tabset(id, var1)
 ```
 
 ```{r}
@@ -119,7 +119,7 @@ df1 |>
 #| echo: false
 
 df1 |>
-  qtab(id, var1)
+  render_tabset(id, var1)
 ```
 
 This is equal to the following.
@@ -128,7 +128,7 @@ This is equal to the following.
 #| echo: fenced
 
 df1 |>
-  qtab(id, var1)
+  render_tabset(id, var1)
 ```
 
 
@@ -146,7 +146,7 @@ Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_va
 #| results: asis
 
 df1 |>
-  qtab(c(group1, group2), c(var1, var2, var3))
+  render_tabset(c(group1, group2), c(var1, var2, var3))
 ```
 
 Characters or [tidyselect](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) can also be used for `tabset_vars` and `output_vars`.
@@ -158,12 +158,12 @@ Characters or [tidyselect](https://dplyr.tidyverse.org/reference/dplyr_tidy_sele
 vars <- c("var1", "var2", "var3")
 
 df1 |>
-  qtab(c("group1", "group2"), vars)
+  render_tabset(c("group1", "group2"), vars)
 ```
 
 ### Factor output
 
-In `qtab()`, `cat()` is used to output for columns that are not list types.
+In `render_tabset()`, `cat()` is used to output for columns that are not list types.
 However, if `cat()` is used, factor is output as an integer. 
 So, if factor is included in `output_vars`, it is converted internally to string.
 
@@ -178,7 +178,7 @@ print(x)
 # Using `cat()` for factor results in unexpected output
 cat(x)
 
-# `qtab()` converts factor to string and then executes cat() as follows.
+# `render_tabset()` converts factor to string and then executes cat() as follows.
 cat(as.character(x))
 ```
 
@@ -192,7 +192,7 @@ In quarto, `layout-ncol` can be used.
 #| layout-ncol: 3
 
 df1 |>
-  qtab(c(group1, group2), c(var1, var2, var3))
+  render_tabset(c(group1, group2), c(var1, var2, var3))
 ```
 
 ```{r}
@@ -201,7 +201,7 @@ df1 |>
 #| echo: false
 
 df1 |>
-  qtab(c(group1, group2), c(var1, var2, var3))
+  render_tabset(c(group1, group2), c(var1, var2, var3))
 ```
 
 Oops, the entire tabset is now a third of the width.
@@ -212,7 +212,7 @@ This is where the `layout` argument comes in handy.
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     layout = "::: {layout-ncol=3}"
@@ -242,7 +242,7 @@ For example, `group1` should be tabset and `group2` should be h4 heading.
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     heading_levels = c(NA, 4)
@@ -257,7 +257,7 @@ Conversely, `group1` should be heading 4 and `group2` should be tabset.
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     heading_levels = c(4, NA)
@@ -272,7 +272,7 @@ Set `group1` to heading 4 and `group2` to heading 5 (no tabset).
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     heading_levels = c(4, 5)
@@ -288,7 +288,7 @@ structure of the chapter, but can be the same or progressively smaller.
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     heading_levels = c(5, 4)
@@ -303,7 +303,7 @@ df1 |>
 #| results: asis
 
 df1 |>
-  qtab(
+  render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
     layout = "::: {layout-ncol=3}",
@@ -315,7 +315,7 @@ df1 |>
 
 This section shows more practical examples.
 Use the `mtcars` dataset, grouped by `cyl` and `am`, to create figures and tables showing the relationship between `wt` and `mpg`.
-`qtab()` was originally created to represent figures and tables as tabsets, with nested data frames as input.
+`render_tabset()` was originally created to represent figures and tables as tabsets, with nested data frames as input.
 Nesting approach is useful when the same operation is performed on each group.
 
 ### `nest() + map()`
@@ -372,7 +372,7 @@ df2
 
 Figures and tables have been created for the `fig` and `tbl` columns respectively.
 Also note that the group variables `cly` and `am` are not ordered in regular ascending order. They are arranged in order of appearance.
-In Next step, specifying `cly` and `am` in `tabset_vars` in `qtab()` automatically executes `arrange(cly, am)` internally.
+In Next step, specifying `cly` and `am` in `tabset_vars` in `render_tabset()` automatically executes `arrange(cly, am)` internally.
 So don't worry.
 
 :::{.callout-tip icon=true}
@@ -439,7 +439,7 @@ In the following, `df2` is used. (Works in the same way in `df2_rowwise`).
 #| results: asis
 
 df2 |>
-  qtab(c(cyl, am), fig)
+  render_tabset(c(cyl, am), fig)
 ```
 
 ### Tables
@@ -448,7 +448,7 @@ df2 |>
 #| results: asis
 
 df2 |>
-  qtab(c(cyl, am), tbl)
+  render_tabset(c(cyl, am), tbl)
 ```
 
 ### Figures and tables
@@ -457,7 +457,7 @@ df2 |>
 #| results: asis
 
 df2 |>
-  qtab(c(cyl, am), c(fig, tbl))
+  render_tabset(c(cyl, am), c(fig, tbl))
 ```
 
 ### layout
@@ -468,14 +468,14 @@ Use the `layout` argument to display figure and table side by side with a width 
 #| results: asis
 
 df2 |>
-  qtab(c(cyl, am), c(fig, tbl), layout = '::: {layout="[7, 3]"}')
+  render_tabset(c(cyl, am), c(fig, tbl), layout = '::: {layout="[7, 3]"}')
 ```
 
 ## Advanced examples
 
 ### Pre-saved figures
 
-<!-- Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `qtab()` as before. -->
+<!-- Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `render_tabset()` as before. -->
 
 <!-- ```{r} -->
 <!-- # directory for saving figures -->
@@ -512,13 +512,13 @@ df2 |>
 <!-- df3 -->
 <!-- ``` -->
 
-<!-- Then execute `qtab()` as in basic usage. -->
+<!-- Then execute `render_tabset()` as in basic usage. -->
 
 <!-- ```{r} -->
 <!-- #| results: asis -->
 
 <!-- df3 |>-->
-<!--   qtab(c(cyl, am), fig_path_md) -->
+<!--   render_tabset(c(cyl, am), fig_path_md) -->
 <!-- ``` -->
 
 
@@ -585,13 +585,13 @@ df2 |>
 <!-- df3_rowwise -->
 <!-- ``` -->
 
-<!-- Then execute `qtab()` as in basic usage. -->
+<!-- Then execute `render_tabset()` as in basic usage. -->
 
 <!-- ```{r} -->
 <!-- #| results: asis -->
 
 <!-- df3_rowwise |>-->
-<!--   qtab(c(cyl, am), fig_path_md) -->
+<!--   render_tabset(c(cyl, am), fig_path_md) -->
 <!-- ``` -->
 
 <!-- ::: -->
@@ -650,7 +650,7 @@ plot_ly()
 plot_ly()
 ```
 
-Then execute `qtab()` as in basic usage.
+Then execute `render_tabset()` as in basic usage.
 Add `column: page-right` chunk option to increase the size of the figure.
 
 ``` {{r}}
@@ -658,7 +658,7 @@ Add `column: page-right` chunk option to increase the size of the figure.
 #| column: page-right
 
 df4 |>
-  qtab(c(cyl, am), fig_plotly)
+  render_tabset(c(cyl, am), fig_plotly)
 ```
 
 ```{r}
@@ -667,12 +667,12 @@ df4 |>
 #| echo: false
 
 df4 |>
-  qtab(c(cyl, am), fig_plotly)
+  render_tabset(c(cyl, am), fig_plotly)
 ```
 
 ### Leaflet
 
-<!-- Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `qtab()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map. It also serves as an introduction to the functionality of `{jprep.datasets}`, let's create and visualize dummy student addresses for Juku and Kids at the beginning of March. Note that for the purposes of this demo, the period is 2016 to 2023. -->
+<!-- Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `render_tabset()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map. It also serves as an introduction to the functionality of `{jprep.datasets}`, let's create and visualize dummy student addresses for Juku and Kids at the beginning of March. Note that for the purposes of this demo, the period is 2016 to 2023. -->
 
 <!-- `jprep.datasets::main_buildings` contains the main school building for each period for each program. -->
 
@@ -857,7 +857,7 @@ df4 |>
 <!-- p_base -->
 <!-- ``` -->
 
-<!-- Then execute `qtab()` as in basic usage. -->
+<!-- Then execute `render_tabset()` as in basic usage. -->
 <!-- Add `column: screen-inset` chunk option to see larger at the width of the screen. -->
 
 <!-- ``` {{r}} -->
@@ -865,7 +865,7 @@ df4 |>
 <!-- #| column: screen-inset -->
 
 <!-- leaflets |>-->
-<!--   qtab(c(program, year), lf) -->
+<!--   render_tabset(c(program, year), lf) -->
 <!-- ``` -->
 
 <!-- ```{r} -->
@@ -874,12 +874,12 @@ df4 |>
 <!-- #| echo: false -->
 
 <!-- leaflets |>-->
-<!--   qtab(c(program, year), lf) -->
+<!--   render_tabset(c(program, year), lf) -->
 <!-- ``` -->
 
 ### Tables
 
-Here we will show you how to use `qtab()` in a popular package for rendering tables.
+Here we will show you how to use `render_tabset()` in a popular package for rendering tables.
 This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `flextable::flextable()`, `DT::datatable()`, `reactable::reactable()` and `tinytable::tt()`.
 
 ```{r}
@@ -965,13 +965,13 @@ DT::datatable(mtcars)
 reactable::reactable(mtcars)
 ```
 
-Then execute `qtab()`. To make the results easier to see, sections are also to be added.
+Then execute `render_tabset()`. To make the results easier to see, sections are also to be added.
 
 ```{r}
 #| results: asis
 
 tables |>
-  qtab(
+  render_tabset(
     c(cyl, am),
     c(
       section_kable,

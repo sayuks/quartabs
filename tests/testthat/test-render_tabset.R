@@ -6,7 +6,7 @@ df_sample <- data.frame(
   var3 = factor(letters[1:6])
 )
 
-test_that("qtab(), basic", {
+test_that("render_tabset(), basic", {
   expected <-
     c(
       "::: {.panel-tabset}",
@@ -76,7 +76,7 @@ test_that("qtab(), basic", {
     )
 
   res <- utils::capture.output(
-    qtab(df_sample, c(group1, group2), c(var1, var2, var3))
+    render_tabset(df_sample, c(group1, group2), c(var1, var2, var3))
   )
 
   expect_equal(
@@ -87,7 +87,7 @@ test_that("qtab(), basic", {
   # tibble input works
   expect_equal(
     utils::capture.output(
-      qtab(
+      render_tabset(
         tibble::as_tibble(df_sample),
         c(group1, group2),
         c(var1, var2, var3)
@@ -97,7 +97,7 @@ test_that("qtab(), basic", {
   )
 })
 
-test_that("qtab(), layout argument", {
+test_that("render_tabset(), layout argument", {
   expected <-
     c(
       "::: {.panel-tabset}",
@@ -192,7 +192,7 @@ test_that("qtab(), layout argument", {
 
   expect_equal(
     utils::capture.output(
-      qtab(
+      render_tabset(
         df_sample,
         c(group1, group2),
         c(var1, var2, var3),
@@ -203,7 +203,7 @@ test_that("qtab(), layout argument", {
   )
 })
 
-test_that("qtab(), heading_levels argument", {
+test_that("render_tabset(), heading_levels argument", {
   expected <-
     c(
       "# A",
@@ -262,7 +262,7 @@ test_that("qtab(), heading_levels argument", {
 
   expect_equal(
     utils::capture.output(
-      qtab(
+      render_tabset(
         df_sample,
         c(group1, group2),
         c(var1, var2, var3),
@@ -273,7 +273,7 @@ test_that("qtab(), heading_levels argument", {
   )
 })
 
-test_that("qtab(), heading_levels argument with NA", {
+test_that("render_tabset(), heading_levels argument with NA", {
   expected <-
     c(
       "# A",
@@ -340,7 +340,7 @@ test_that("qtab(), heading_levels argument with NA", {
 
   expect_equal(
     utils::capture.output(
-      qtab(
+      render_tabset(
         df_sample,
         c(group1, group2),
         c(var1, var2, var3),
@@ -351,7 +351,7 @@ test_that("qtab(), heading_levels argument with NA", {
   )
 })
 
-test_that("qtab(), both layout and heading_levels arguments", {
+test_that("render_tabset(), both layout and heading_levels arguments", {
   expected <-
     c(
       "# A",
@@ -442,7 +442,7 @@ test_that("qtab(), both layout and heading_levels arguments", {
 
   expect_equal(
     utils::capture.output(
-      qtab(
+      render_tabset(
         df_sample,
         c(group1, group2),
         c(var1, var2, var3),

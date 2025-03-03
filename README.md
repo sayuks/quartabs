@@ -1,26 +1,26 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# qtab
+# quartabs
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/sayuks/qtab/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/qtab/actions/workflows/R-CMD-check.yaml)
+[![R-CMD-check](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
-coverage](https://codecov.io/gh/sayuks/qtab/graph/badge.svg)](https://app.codecov.io/gh/sayuks/qtab)
-[![lint.yaml](https://github.com/sayuks/qtab/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/qtab/actions/workflows/lint.yaml)
+coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.codecov.io/gh/sayuks/quartabs)
+[![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
-The goal of qtab is to …
+The goal of quartabs is to …
 
 ## Installation
 
-You can install the development version of qtab from
+You can install the development version of quartabs from
 [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
-pak::pak("sayuks/qtab")
+pak::pak("sayuks/quartabs")
 ```
 
 ## Example
@@ -28,7 +28,7 @@ pak::pak("sayuks/qtab")
 This is a basic example which shows you how to solve a common problem:
 
 ``` r
-library(qtab)
+library(quartabs)
 ## basic example code
 ```
 

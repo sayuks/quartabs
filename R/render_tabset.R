@@ -69,7 +69,7 @@
 #' For more information on these, see the following links.
 #' - Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
 #'   Markdown Content Programmatically with Quarto.” November 4, 2024.
-#'   <https://doi.org/10.59350/pa44j-cc302>.
+#'   \doi{https://doi.org/10.59350/pa44j-cc302}.
 #' - <https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html#child-document>
 #' - <https://bookdown.org/yihui/rmarkdown-cookbook/knit-expand.html>
 #' @examples
@@ -87,10 +87,10 @@
 #' # write `#| results: asis` at the beginning of the chunk.
 #'
 #' # Basic usage
-#' qtab(df, group1, value1)
+#' render_tabset(df, group1, value1)
 #'
 #' # Nested tabset, two outputs side by side with a width of 1:1
-#' qtab(
+#' render_tabset(
 #'   df,
 #'   c(group1, group2),
 #'   c(value1, value2),
@@ -98,7 +98,7 @@
 #' )
 #'
 #' # Use heading instead of tabset
-#' qtab(
+#' render_tabset(
 #'   df,
 #'   c(group1, group2),
 #'   value1,
@@ -106,7 +106,7 @@
 #' )
 #' @export
 # nolint end
-qtab <- function(data,
+render_tabset <- function(data,
                  tabset_vars,
                  output_vars,
                  layout = NULL,
