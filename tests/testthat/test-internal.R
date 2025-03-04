@@ -5,19 +5,19 @@ test_that("make_tabset_div works correctly", {
   )
   expect_equal(
     make_tabset_div(TRUE, "default"),
-    "::: {.panel-tabset} .nav-pills"
+    "::: {.panel-tabset .nav-pills}"
   )
   expect_equal(
     make_tabset_div(TRUE, "fill"),
-    "::: {.panel-tabset} .nav-pills .nav-fill"
+    "::: {.panel-tabset .nav-pills .nav-fill}"
   )
   expect_equal(
     make_tabset_div(FALSE, "justified"),
-    "::: {.panel-tabset} .nav-justified"
+    "::: {.panel-tabset .nav-justified}"
   )
 })
 
-# Mock data for testing
+# Mock data for testingB
 mock_data <- data.frame(
   tab1 = c("A", "B"),
   tab2 = c("X", "Y"),

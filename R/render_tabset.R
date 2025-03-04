@@ -201,17 +201,17 @@ make_tabset_div <- function(pills, tabset_width) {
 
   tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
 
-  res <- "::: {.panel-tabset}"
+  div <- ".panel-tabset"
 
   if (pills) {
-    res <- paste(res, ".nav-pills")
+    div <- paste(div, ".nav-pills")
   }
 
   if (tabset_width %in% c("fill", "justified")) {
-    res <- sprintf("%s .nav-%s", res, tabset_width)
+    div <- sprintf("%s .nav-%s", div, tabset_width)
   }
 
-  res
+  paste0("::: {", div, "}")
 }
 
 # Function to print the start of a tabset

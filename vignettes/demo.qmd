@@ -7,61 +7,11 @@ format:
     toc: true
     toc-location: left
     toc-expand: true
-author: 
-  - name: Yusuke Sasaki
 date: last-modified
 knitr:
   opts_chunk:
     message: false
 ---
-
-## Prerequisite
-
-`render_tabset()` works in HTML format in .qmd files (not .Rmd files). So you need to be prepared to try the code.
-
-1. Install Quarto.
-
-- Recently, Quarto has been bundled with RStudio.
-So, if you are an RStudio user, you do not need to install Quarto separately.
-
-2. Create a new .qmd file.
-    - On RStudio, _File > New File > Quarto Document_
-
-## Syntax
-
-`render_tabset()` is useful when you want to display similar results (e.g. figures and tables) for each group using tabsets.
-
-The syntax for the `render_tabset()` function is as follows:
-
-```{r}
-#| eval: false
-
-render_tabset(
-  data,
-  tabset_vars,
-  output_vars,
-  layout = NULL,
-  heading_levels = NULL
-)
-```
-
-The parameters:
-
-- `data` - A data frame (tibble) containing the tabset variables and output variables.
-
-- `tabset_vars` - Variables to use as tabset labels.  
-Variables can be specified by [`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html).
-
-- `output_vars` - Variables to display in each tabset panel.  
-Variables can be specified by [`tidy-select`](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html).
-
-- `layout` - A character vector of length 1 for specifying layout in tabset panel.
-`layout` must begin with at least three or more repetitions of ":" (e.g. ":::"). 
-
-- `heading_levels` - `NULL` or an integer-ish vector of length equal to 
-the number of columns specified in `tabset_vars`. 
-This controls whether it is partially (or entirely) 
-displayed as normal header instead of tabset.
 
 ## Basic usage
 
@@ -223,7 +173,8 @@ df1 |>
 For more information about `layout`, see [Custom Layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts). 
 
 :::{.callout-warning}
-The `layout` argument is intended for very simple use cases, so complex layouts may not work.
+* If you are viewing on a smartphone, the layout may not be displayed correctly.
+* The `layout` argument is intended for very simple use cases, so complex layouts may not work.
 :::
 
 ### `heading_levels`
@@ -309,6 +260,51 @@ df1 |>
     c(var1, var2, var3),
     layout = "::: {layout-ncol=3}",
     heading_levels = c(4, NA)
+  )
+```
+
+### `pills`
+
+```{r}
+#| results: asis
+
+df1 |>
+  render_tabset(
+    c(group1, group2),
+    c(var1, var2, var3),
+    pills = TRUE
+  )
+```
+
+
+### `tabset_width`
+
+```{r}
+#| results: asis
+#| layout-ncol: 2
+
+df1_long_label <- df1 |> 
+  mutate(
+    group1 = paste("This is a long label for", group1)
+  )
+
+df1_long_label |>
+  render_tabset(
+    c(group1, group2),
+    c(var1, var2, var3),
+    tabset_width = "fill"
+  )
+```
+
+```{r}
+#| results: asis
+#| layout-ncol: 2
+
+df1_long_label |>
+  render_tabset(
+    c(group1, group2),
+    c(var1, var2, var3),
+    tabset_width = "justified"
   )
 ```
 
