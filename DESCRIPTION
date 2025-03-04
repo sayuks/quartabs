@@ -16,7 +16,6 @@ Suggests:
     fs,
     gt,
     htmltools,
-    janitor,
     knitr,
     leaflet,
     plotly,
