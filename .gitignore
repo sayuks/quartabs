@@ -10,3 +10,4 @@ _quarto/*
 docs/
 sandbox/
 vignettes/*.html
+vignettes/*_files/

@@ -3,9 +3,8 @@ title: "Demo: render_tabset()"
 format: 
   html:
     code-tools: true
-    embed-resources: true
     toc: true
-    toc-location: left
+    toc-location: right
     toc-expand: true
 date: last-modified
 knitr:
@@ -32,7 +31,6 @@ library(flextable)
 library(plotly)
 library(leaflet)
 library(htmltools)
-library(janitor)
 library(tinytable)
 
 set.seed(123)
@@ -283,7 +281,7 @@ df1 |>
 #| results: asis
 #| layout-ncol: 2
 
-df1_long_label <- df1 |> 
+df1_long_label <- df1 |>
   mutate(
     group1 = paste("This is a long label for", group1)
   )
@@ -472,126 +470,120 @@ df2 |>
 
 ### Pre-saved figures
 
-<!-- Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `render_tabset()` as before. -->
+Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `render_tabset()` as before.
 
-<!-- ```{r} -->
-<!-- # directory for saving figures -->
-<!-- dir <- "C:/Users/Yusuke Sasaki/Documents/demo" -->
+```{r}
+# directory for saving figures
+dir <- "."
 
-<!-- # new sample data -->
-<!-- df3 <- df2 |>-->
-<!--   mutate( -->
-<!--     fig_path = file.path( -->
-<!--       dir, -->
-<!--       paste0(janitor::make_clean_names(title), ".png") -->
-<!--       ), -->
-<!--     # To make the return value a character vector, use `map2_chr()` -->
-<!--     fig_path_md = map2_chr( -->
-<!--       fig, -->
-<!--       fig_path, -->
-<!--       \(p, path) { -->
-<!--         p <- p + -->
-<!--           labs( -->
-<!--             subtitle = path -->
-<!--           ) -->
+# new sample data
+df3 <- df2 |>
+  mutate(
+    fig_path = file.path(
+      dir,
+      paste0(janitor::make_clean_names(title), ".png")
+      ),
+    # To make the return value a character vector, use `map2_chr()`
+    fig_path_md = map2_chr(
+      fig,
+      fig_path,
+      \(p, path) {
+        p <- p +
+          labs(
+            subtitle = path
+          )
 
-<!--         # save figure -->
-<!--         ggsave(path) -->
+        # save figure
+        ggsave(path)
 
-<!--         # format path to markdown style -->
-<!--         # caption can be omitted -->
-<!--         return(str_glue("![]({path})")) -->
-<!--       } -->
-<!--     ) -->
-<!--   ) |>-->
-<!--   select(cyl, am, fig_path_md) -->
+        # format path to markdown style
+        # caption can be omitted
+        sprintf("![](%s)", path)
+      }
+    )
+  ) |>
+  select(cyl, am, fig_path_md)
 
-<!-- df3 -->
-<!-- ``` -->
+df3
+```
 
-<!-- Then execute `render_tabset()` as in basic usage. -->
+Then execute `render_tabset()` as in basic usage.
 
-<!-- ```{r} -->
-<!-- #| results: asis -->
+```{r}
+#| results: asis
 
-<!-- df3 |>-->
-<!--   render_tabset(c(cyl, am), fig_path_md) -->
-<!-- ``` -->
+df3 |>
+  render_tabset(c(cyl, am), fig_path_md)
+```
 
 
-<!-- :::{.callout-tip} -->
+:::{.callout-tip}
 
-<!-- ## `nest_by() + list({ <some complex code> })` -->
+## `nest_by() + list({ <some complex code> })`
 
-<!-- Replace the above `nest() + map()` method with `rowwise() + list()`. -->
+Replace the above `nest() + map()` method with `rowwise() + list()`.
 
-<!-- ```{r} -->
-<!-- #| error: true -->
+```{r}
+#| error: true
 
-<!-- # new sample data -->
-<!-- df3_rowwise <- df2_rowwise |>-->
-<!--   mutate( -->
-<!--     fig_path = file.path( -->
-<!--       dir, -->
-<!--       paste0(janitor::make_clean_names(title), ".png") -->
-<!--       ), -->
-<!--     # To make the return value a character vector, use `map2_chr()` -->
-<!--     fig_path_md = list( -->
-<!--         p <- fig + -->
-<!--           labs( -->
-<!--             subtitle = fig_path -->
-<!--           ) -->
+# new sample data
+df3_rowwise <- df2_rowwise |>
+  mutate(
+    fig_path = paste0("cyl_", cyl, "_am", am, ".png"),
+    # To make the return value a character vector, use `map2_chr()`
+    fig_path_md = list(
+        p <- fig +
+          labs(
+            subtitle = fig_path
+          )
 
-<!--         # save figure -->
-<!--         ggsave(fig_path) -->
+        # save figure
+        ggsave(fig_path)
 
-<!--         # format path to markdown style -->
-<!--         str_glue("![]({fig_path})") -->
-<!--     ) -->
-<!--   ) |>-->
-<!--   select(cyl, am, fig_path_md) -->
-<!-- ``` -->
+        # format path to markdown style
+        sprintf("![](%s)", fig_path)
+    )
+  ) |>
+  select(cyl, am, fig_path_md)
+```
 
-<!-- An error occurred because we tried to create an intermediate object (`p`) or excute multiple operations that are not connected by a pipe in the `list()`. -->
+An error occurred because we tried to create an intermediate object (`p`) or excute multiple operations that are not connected by a pipe in the `list()`.
 
-<!-- In such cases, use `list({ <some complex code> })`. -->
+In such cases, use `list({ <some complex code> })`.
 
-<!-- ```{r} -->
-<!-- df3_rowwise <- df2_rowwise |>-->
-<!--   mutate( -->
-<!--     fig_path = file.path( -->
-<!--       dir, -->
-<!--       paste0(janitor::make_clean_names(title), ".png") -->
-<!--       ), -->
-<!--     # To make the return value a character vector, use `map2_chr()` -->
-<!--     fig_path_md = list({ -->
-<!--         p <- fig + -->
-<!--           labs( -->
-<!--             subtitle = fig_path -->
-<!--           ) -->
+```{r}
+df3_rowwise <- df2_rowwise |>
+  mutate(
+    fig_path = paste0("cyl_", cyl, "_am", am, ".png"),
+    # To make the return value a character vector, use `map2_chr()`
+    fig_path_md = list({
+        p <- fig +
+          labs(
+            subtitle = fig_path
+          )
 
-<!--         # save figure -->
-<!--         ggsave(fig_path) -->
+        # save figure
+        ggsave(fig_path)
 
-<!--         # format path to markdown style -->
-<!--         str_glue("![]({fig_path})") -->
-<!--     }) -->
-<!--   ) |>-->
-<!--   select(cyl, am, fig_path_md) -->
+        # format path to markdown style
+        sprintf("![](%s)", fig_path)
+    })
+  ) |>
+  select(cyl, am, fig_path_md)
 
-<!-- df3_rowwise -->
-<!-- ``` -->
+df3_rowwise
+```
 
-<!-- Then execute `render_tabset()` as in basic usage. -->
+Then execute `render_tabset()` as in basic usage.
 
-<!-- ```{r} -->
-<!-- #| results: asis -->
+```{r}
+#| results: asis
 
-<!-- df3_rowwise |>-->
-<!--   render_tabset(c(cyl, am), fig_path_md) -->
-<!-- ``` -->
+df3_rowwise |>
+  render_tabset(c(cyl, am), fig_path_md)
+```
 
-<!-- ::: -->
+:::
 
 ### Plotly
 
