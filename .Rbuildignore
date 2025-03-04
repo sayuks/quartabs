@@ -9,3 +9,5 @@
 ^_quarto$
 ^vignettes$
 ^sandbox$
+^dev$
+^revdep$

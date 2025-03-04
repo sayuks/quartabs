@@ -470,7 +470,7 @@ df2 |>
 
 ### Pre-saved figures
 
-Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and excute  `render_tabset()` as before.
+Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and execute  `render_tabset()` as before.
 
 ```{r}
 # directory for saving figures
@@ -482,7 +482,7 @@ df3 <- df2 |>
     fig_path = file.path(
       dir,
       paste0(janitor::make_clean_names(title), ".png")
-      ),
+    ),
     # To make the return value a character vector, use `map2_chr()`
     fig_path_md = map2_chr(
       fig,
@@ -492,10 +492,8 @@ df3 <- df2 |>
           labs(
             subtitle = path
           )
-
         # save figure
         ggsave(path)
-
         # format path to markdown style
         # caption can be omitted
         sprintf("![](%s)", path)
@@ -524,49 +522,19 @@ df3 |>
 Replace the above `nest() + map()` method with `rowwise() + list()`.
 
 ```{r}
-#| error: true
-
-# new sample data
-df3_rowwise <- df2_rowwise |>
-  mutate(
-    fig_path = paste0("cyl_", cyl, "_am", am, ".png"),
-    # To make the return value a character vector, use `map2_chr()`
-    fig_path_md = list(
-        p <- fig +
-          labs(
-            subtitle = fig_path
-          )
-
-        # save figure
-        ggsave(fig_path)
-
-        # format path to markdown style
-        sprintf("![](%s)", fig_path)
-    )
-  ) |>
-  select(cyl, am, fig_path_md)
-```
-
-An error occurred because we tried to create an intermediate object (`p`) or excute multiple operations that are not connected by a pipe in the `list()`.
-
-In such cases, use `list({ <some complex code> })`.
-
-```{r}
 df3_rowwise <- df2_rowwise |>
   mutate(
     fig_path = paste0("cyl_", cyl, "_am", am, ".png"),
     # To make the return value a character vector, use `map2_chr()`
     fig_path_md = list({
-        p <- fig +
-          labs(
-            subtitle = fig_path
-          )
-
-        # save figure
-        ggsave(fig_path)
-
-        # format path to markdown style
-        sprintf("![](%s)", fig_path)
+      p <- fig +
+        labs(
+          subtitle = fig_path
+        )
+      # save figure
+      ggsave(fig_path)
+      # format path to markdown style
+      sprintf("![](%s)", fig_path)
     })
   ) |>
   select(cyl, am, fig_path_md)
