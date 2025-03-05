@@ -11,4 +11,5 @@ docs/
 sandbox/
 vignettes/*.html
 vignettes/*_files/
+vignettes/figures/
 revdep/

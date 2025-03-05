@@ -473,24 +473,34 @@ df2 |>
 Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and execute  `render_tabset()` as before.
 
 ```{r}
+# directory for saving figures
+dir_fig <- "figures"
+
+# delete the directory if it exists
+if (dir.exists(dir_fig)) {
+  unlink(dir_fig, recursive = TRUE)
+}
+
+# create the directory
+dir.create(dir_fig)
+
 # new sample data
 df3 <- df2 |>
   mutate(
-    fig_path = paste0("cyl_", cyl, "_am", am, "_map2_chr.png"),
+    # Create file names to save
+    fig_path = file.path(
+      dir_fig,
+      paste0(gsub("[[:punct:]]\\s", "_", title), "_map2_chr.png") 
+    ),
     # To make the return value a character vector, use `map2_chr()`
     fig_path_md = map2_chr(
       fig,
       fig_path,
       \(p, path) {
-        p <- p +
-          labs(
-            subtitle = path
-          )
         # save figure
-        ggsave(path)
+        ggsave(path, p)
         # format path to markdown style
-        # caption can be omitted
-        sprintf("![](%s)", path)
+        sprintf("![This is a caption for %s.](%s)", path, path)
       }
     )
   ) |>
@@ -518,17 +528,17 @@ Replace the above `nest() + map()` method with `rowwise() + list()`.
 ```{r}
 df3_rowwise <- df2_rowwise |>
   mutate(
-    fig_path = paste0("cyl_", cyl, "_am", am, "_rowwise.png"),
-    fig_path_md = list({
-      p <- fig +
-        labs(
-          subtitle = fig_path
-        )
+    # Create file names to save
+    fig_path = file.path(
+      dir_fig,
+      paste0(gsub("[[:punct:]]\\s", "_", title), "_rowwise.png") 
+    ),
+    fig_path_md = {
       # save figure
-      ggsave(fig_path)
+      ggsave(fig_path, fig)
       # format path to markdown style
-      sprintf("![](%s)", fig_path)
-    })
+      sprintf("![This is a caption for %s.](%s)", fig_path, fig_path)
+    }
   ) |>
   select(cyl, am, fig_path_md)
 
@@ -945,6 +955,7 @@ tables |>
 <details><summary>Session Info</summary>
 
 ```{r}
+#| warning: false
 # save the session info as an object
 sess <- sessioninfo::session_info(pkgs = "attached")
 
@@ -952,7 +963,7 @@ sess <- sessioninfo::session_info(pkgs = "attached")
 sess$platform$quarto <- paste(
   quarto::quarto_version(),
   "@",
-  fs::path_real(quarto::quarto_path())
+  normalizePath(quarto::quarto_path())
 )
 
 # print it out

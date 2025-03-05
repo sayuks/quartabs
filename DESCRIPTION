@@ -13,7 +13,6 @@ Suggests:
     dplyr,
     DT,
     flextable,
-    fs,
     gt,
     htmltools,
     knitr,
