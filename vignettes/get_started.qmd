@@ -118,12 +118,23 @@ df1 |>
   render_tabset(id, var1)
 ```
 
+繰り返しを避けるために、デフォルトのチャンクオプションを変更しておくこともできる。
+
+```` r
+knitr::opts_chunk$set(
+  results = "asis"
+)
+```` 
+
 ### `tabset_vars`, `output_vars`
+
+最初の引数は`tabset_vars`であり、tabに表示させる列名を指定する。2番目の引数は`output_vars`であり、tabの中に表示させる列を指定する。
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df1 |>
   render_tabset(c(group1, group2), c(var1, var2, var3))
@@ -132,20 +143,10 @@ df1 |>
 :::{.callout-tip appearance='default' icon=true}
 ## `cat()` or `print()`
 
-Notice that the above output is not prefixed with "[1]" as in "[1] -0.5604756". This is because `cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
+`cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
+
+例えばvar1は1と表示するが、list型のvar2は[1] 1と表示する。
 :::
-
-Characters or [tidyselect](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) can also be used for `tabset_vars` and `output_vars`.
-
-
-```{r}
-#| results: asis
-
-vars <- c("var1", "var2", "var3")
-
-df1 |>
-  render_tabset(c("group1", "group2"), vars)
-```
 
 ### Factor output
 
@@ -174,18 +175,10 @@ cat(as.character(x))
 How can I display the content in a tabset horizontally?
 In quarto, `layout-ncol` can be used.
 
-```{{r}}
-#| results: asis
-#| layout-ncol: 3
-
-df1 |>
-  render_tabset(c(group1, group2), c(var1, var2, var3))
-```
-
 ```{r}
 #| results: asis
 #| layout-ncol: 3
-#| echo: false
+#| echo: fenced
 
 df1 |>
   render_tabset(c(group1, group2), c(var1, var2, var3))
@@ -197,6 +190,7 @@ This is where the `layout` argument comes in handy.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df1 |>
   render_tabset(
@@ -228,6 +222,7 @@ For example, `group1` should be tabset and `group2` should be h4 heading.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df1 |>
   render_tabset(
@@ -243,6 +238,7 @@ Conversely, `group1` should be heading 4 and `group2` should be tabset.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df1 |>
   render_tabset(
@@ -267,42 +263,16 @@ df1 |>
   )
 ```
 
-#### Example 4
-
-Although it is preferable for the heading to be progressively larger due to the
-structure of the chapter, but can be the same or progressively smaller.
-
-```{r}
-#| results: asis
-
-df1 |>
-  render_tabset(
-    c(group1, group2),
-    c(var1, var2, var3),
-    heading_levels = c(5, 4)
-  )
-```
-
-#### Example 5
-
-`header_levels` can work with `layout`.
-
-```{r}
-#| results: asis
-
-df1 |>
-  render_tabset(
-    c(group1, group2),
-    c(var1, var2, var3),
-    layout = "::: {layout-ncol=3}",
-    heading_levels = c(4, NA)
-  )
-```
-
 ### `pills`
 
+2025-03-05時点で、Quartoの最新バージョンは1.6だが、[Quarto 1.4で導入されたBootstrap 5.2.2を使用しているようだ](https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly)。
+
+bootstrap 5.2ではいくつかのtabのカスタマイズを利用できる。その1つが[pills](https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills)である。
+
+
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df1 |>
   render_tabset(
@@ -312,12 +282,16 @@ df1 |>
   )
 ```
 
-
 ### `tabset_width`
+
+同様に[fill and justify](https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify)を3つから選ぶことができる。以下では、例のために長いラベルを作成し、半分の幅で表示する。
+
+**"default"**
 
 ```{r}
 #| results: asis
 #| layout-ncol: 2
+#| echo: fenced
 
 df1_long_label <- df1 |>
   mutate(
@@ -328,13 +302,31 @@ df1_long_label |>
   render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
-    tabset_width = "fill"
+    tabset_width = "default" # "default" is the default.
   )
 ```
+
+**"fill"**
 
 ```{r}
 #| results: asis
 #| layout-ncol: 2
+#| echo: fenced
+
+df1_long_label |>
+  render_tabset(
+    c(group1, group2),
+    c(var1, var2, var3),
+    tabset_width = "fill"
+  )
+```
+
+**"justified"**
+
+```{r}
+#| results: asis
+#| layout-ncol: 2
+#| echo: fenced
 
 df1_long_label |>
   render_tabset(
@@ -360,6 +352,8 @@ For more information on the nest, see follows:
 - [Nested data](https://tidyr.tidyverse.org/articles/nest.html)
 
 - [23 Model basics](https://r4ds.had.co.nz/model-basics.html)
+
+**Japanese**
 
 - [TokyoR #108 Nested Data Handling](https://speakerdeck.com/kilometer/tokyor-number-108-nesteddatahandling)
 
@@ -670,7 +664,7 @@ df4 |>
 
 ### Leaflet
 
-<!-- Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `render_tabset()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map. It also serves as an introduction to the functionality of `{jprep.datasets}`, let's create and visualize dummy student addresses for Juku and Kids at the beginning of March. Note that for the purposes of this demo, the period is 2016 to 2023. -->
+Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `render_tabset()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map.
 
 <!-- `jprep.datasets::main_buildings` contains the main school building for each period for each program. -->
 
