@@ -171,7 +171,7 @@ df1 |>
 For more information about `layout`, see [Custom Layouts](https://quarto.org/docs/authoring/figures.html#complex-layouts). 
 
 :::{.callout-warning}
-* If you are viewing on a smartphone, the layout may not be displayed correctly.
+* In narrower displays, such as on smartphones, the layout may not appear to work.
 * The `layout` argument is intended for very simple use cases, so complex layouts may not work.
 :::
 

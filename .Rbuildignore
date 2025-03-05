@@ -12,3 +12,4 @@
 ^dev$
 ^revdep$
 ^figures$
+^CODE_OF_CONDUCT\.md$
