@@ -53,7 +53,7 @@ Tab content for B
 data.frame(
   tab = c("A", "B"),
   value = c("Tab content for A", "Tab content for B")
-) |> 
+) |>
   quartabs::render_tabset(tab, value)
 ```
 
