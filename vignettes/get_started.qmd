@@ -1,5 +1,5 @@
 ---
-title: "Demo: render_tabset()"
+title: "Get started"
 format: 
   html:
     code-tools: true
@@ -10,7 +10,52 @@ date: last-modified
 knitr:
   opts_chunk:
     message: false
+    eval: true
 ---
+
+## What is tabset?
+
+Quartoのtabsetはhtmlドキュメントで利用できるインタラクティブなパネルの事である。
+
+<https://quarto.org/docs/output-formats/html-basics.html#tabsets>
+
+::: {.panel-tabset}
+## A
+
+Tab content for A
+
+## B
+
+Tab content for B
+:::
+
+通常は次のように記載する。
+
+```` markdown
+::: {.panel-tabset}
+## A
+
+Tab content for A
+
+## B
+
+Tab content for B
+:::
+````
+
+これをタブの数が増減するたびに、手動で書き直すのは面倒である。`quartabs::render_tabset()`は、data frameを入力とし、これを動的に出力する。
+注意として、チャンクオプションに`results: asis`を指定すること。
+
+```{r}
+#| results: asis
+#| echo: fenced
+
+data.frame(
+  tab = c("A", "B"),
+  value = c("Tab content for A", "Tab content for B")
+) |> 
+  quartabs::render_tabset(tab, value)
+```
 
 ## Basic usage
 
@@ -18,6 +63,7 @@ Here are basic examples. First, load the libraries used in this demo and create 
 
 ```{r}
 #| message: false
+
 library(quartabs)
 library(tibble)
 library(dplyr)
@@ -37,11 +83,11 @@ set.seed(123)
 
 # sample data
 df1 <- tibble(
+  id = paste0("id", 1:6),
   group1 = c(rep("A", 3), rep("B", 3)),
   group2 = rep(c("X", "Y", "Z"), 2),
-  id = paste0("id", 1:6),
-  var1 = rnorm(6),
-  var2 = 1:6,
+  var1 = 1:6,
+  var2 = c(list(1), list(2), list(3), list(4), list(5), list(6)),
   var3 = factor(letters[1:6])
 )
 
@@ -52,19 +98,12 @@ df1
 
 ::: {.callout-note icon="true"}
 ## Don't forget!
-Write `#| results: asis` at the beginning of the chunk or `results='asis'` in the chunk options.
+Write `#| results: asis` at the beginning of the chunk.
 :::
-
-``` {{r}}
-#| results: asis
-
-df1 |>
-  render_tabset(id, var1)
-```
 
 ```{r}
 #| results: asis
-#| echo: false
+#| echo: fenced
 
 df1 |>
   render_tabset(id, var1)
@@ -79,13 +118,6 @@ df1 |>
   render_tabset(id, var1)
 ```
 
-
-:::{.callout-tip appearance='default' icon=true}
-## `cat()` or `print()`
-
-Notice that the above output is not prefixed with "[1]" as in "[1] -0.5604756". This is because `cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
-:::
-
 ### `tabset_vars`, `output_vars`
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
@@ -96,6 +128,12 @@ Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_va
 df1 |>
   render_tabset(c(group1, group2), c(var1, var2, var3))
 ```
+
+:::{.callout-tip appearance='default' icon=true}
+## `cat()` or `print()`
+
+Notice that the above output is not prefixed with "[1]" as in "[1] -0.5604756". This is because `cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
+:::
 
 Characters or [tidyselect](https://dplyr.tidyverse.org/reference/dplyr_tidy_select.html) can also be used for `tabset_vars` and `output_vars`.
 
