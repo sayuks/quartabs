@@ -490,7 +490,7 @@ df3 <- df2 |>
     # Create file names to save
     fig_path = file.path(
       dir_fig,
-      paste0(gsub("[[:punct:]]\\s", "_", title), "_map2_chr.png") 
+      paste0(gsub("[[:punct:]]\\s", "_", title), "_map2_chr.png")
     ),
     # To make the return value a character vector, use `map2_chr()`
     fig_path_md = map2_chr(
@@ -531,7 +531,7 @@ df3_rowwise <- df2_rowwise |>
     # Create file names to save
     fig_path = file.path(
       dir_fig,
-      paste0(gsub("[[:punct:]]\\s", "_", title), "_rowwise.png") 
+      paste0(gsub("[[:punct:]]\\s", "_", title), "_rowwise.png")
     ),
     fig_path_md = {
       # save figure
