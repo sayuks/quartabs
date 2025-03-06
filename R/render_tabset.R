@@ -2,65 +2,70 @@
 #' Create tabset panels in quarto
 #'
 #' @description
-#' The function takes in a data frame or a tibble and produces
+#' The function takes in a data frame and produces
 #' tabset panels for each unique combination of the tabset variables.
-#' ***Only works with .qmd files in HTML format.***
+#' ***Only works with Quarto HTML documents.***
 #' @details
 #' - Write `#| results: asis` at the beginning of the chunk or
 #'   `results='asis'` in the chunk options.
 #' - The `data` is sorted internally in the order of `tabset_vars`.
 #'   Define the order beforehand, e.g. using factor.
 #' - If multiple `tabset_vars` are given, create nested tabsets.
-#' - `output_vars` can also be figures or tables if `data` is a tibble.
-#' - If factor columns are included in output_vars, they are converted
-#'   internally to character.
 #' - For columns specified in output_vars, columns of type list are output with
 #'   [print()] and normal columns are output with [cat()]
+#' - If `tabset_vars` or `output_vars` have "factor", "Date" and "POSIXt"
+#'   columns, they are converted internally to character. This is to prevent it
+#'   being displayed as numeric when [cat()] is executed.
 #' @param data A data frame.
-#' @param tabset_vars
-#' Columns to use as tabset labels. Internally passed to the `select` argument
-#' of [subset()]. Accepts raw column names, strings, numbers and logical values.
-#' @param output_vars
-#' Columns to display in each tabset panel. Internally passed to the `select`
-#' argument of [subset()]. Accepts raw column names, strings, numbers and
-#' logical values.
+#' @param tabset_vars Columns to use as tabset labels. Internally passed
+#'   to the `select` argument of [subset()]. Accepts raw column names,
+#'   strings, numbers and logical values.
+#' @param output_vars Columns to display in each tabset panel. Internally
+#'   passed to the `select` argument of [subset()]. Accepts raw column names,
+#'   strings, numbers and logical values.
 #' @param layout `NULL` or a character vector of length 1 for specifying layout
-#' in tabset panel. If not `NULL`, `layout` must begin with at least three
-#' or more repetitions of ":" (e.g. ":::").
+#'   in tabset panel. If not `NULL`, `layout` must begin with at least three
+#'   or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
+#'   inserted automatically.
+#'   See for details: \url{https://quarto.org/docs/authoring/figures.html}.
 #' @param heading_levels `NULL` or a vector consisting of natural numbers
-#' and missing values. The length is equal to the number of columns specified
-#' in `tabset_vars`. This controls whether it is partially (or entirely)
-#' displayed as normal header instead of tabset.
-#' * If `NULL`, all output is tabset.
-#' * If a positive integer-ish numeric vector, the elements of the vector
-#' correspond to the columns specified in `tabset_vars`.
-#'    * If the element is integer, the tabset column is displayed as headers
-#'    with their level, not tabset. (e.g. 2 means h2 header).
-#'    Levels 1 to 6 are recommended. The reason is that quarto supports headers
-#'    up to 6. 7 and above will also work, but they are displayed as normal
-#'    text. In addition, considering the chapter format,
-#'    it is preferable to gradually increase the level, as in 1, 2 and 3.
-#'    * If the element is NA, tabset is displayed.
+#'   and missing values. The length is equal to the number of columns specified
+#'   in `tabset_vars`. This controls whether it is partially (or entirely)
+#'   displayed as normal header instead of tabset.
+#'   - If `heading_levels` is a `NULL`, all output is tabset.
+#'   - If `heading_levels` is a vector of positive natural number, the elements
+#'     of the vector correspond to the columns specified in `tabset_vars`.
+#'      - If the element is integer, the tabset column is displayed as headers
+#'        with their level, not tabset. (e.g. 2 means h2 header).
+#'        Levels 1 to 6 are recommended. The reason is that quarto supports
+#'        headers up to 6. 7 and above will also work, but they are displayed
+#'        as normal text. In addition, considering the chapter format,
+#'        it is preferable to gradually increase the level, as in 1, 2 and 3.
+#'      - If the element is NA, tabset is displayed.
 #' @param pills Logical, use pills or not.
 #'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills>
 #'   for details. If `heading_levels` is specified, this will be ignored.
 #' @param tabset_width Character, one of "default", "fill" and "justified".
-#'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills>
+#'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify>
 #'   for details. If `heading_levels` is specified, this will be ignored.
 #' @return `NULL` invisibly. This function is called for its side effect.
 #' @section Limitations:
-#' - The function has an optional argument, `layout`, which allows for
-#'   the addition of layout option to the outputs
-#'   (see \url{https://quarto.org/docs/authoring/figures.html}).
-#'   However, this is intended for simplified use cases and
-#'   complex layouts may not work. See Examples for more details.
+#' - `layout` is intended for simplified use cases and
+#'   complex layouts may not work.
 #' - When outputting tables or figures that use JavaScript
 #'   (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.),
 #'   it seems JavaScript dependencies need to be resolved.
-#'   A simple solution is to wrap the output in [`htmltools::div()`]
-#'   and create a dummy plot in another chunk. See the demo page for details.
+#'   A simple solution is to wrap the output in [htmltools::div()]
+#'   and create a dummy plot in another chunk. See the Walk through for details.
 #' - If a column of type list contains a named vector or list,
 #'   the values may not display well.
+#' - When `tabset_vars` and `output_vars` have the following columns,
+#'   they may not display well:
+#'     - A column of type list contains a named vector or list
+#'       (This is for `output_vars`. `tabset_vars` must not contain list
+#'       columns).
+#'     - Classes with their own printing methods,
+#'       such as "difftime", "ts", .etc.
 #' @references
 #' As this function is focused on quickly and dynamically generating tabsets
 #' and chunks, it is difficult to customize it on a chunk-by-chunk basis.
@@ -94,7 +99,7 @@
 #'   df,
 #'   c(group1, group2),
 #'   c(value1, value2),
-#'   layout = '::: {layout="[1, 1]"}'
+#'   layout = "::: {layout-ncol=2}"
 #' )
 #'
 #' # Use heading instead of tabset
@@ -430,7 +435,13 @@ prep_data <- function(data, tabset_names, output_names) {
   data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
   data[] <- lapply(
     data,
-    function(x) if (is.factor(x)) as.character(x) else x
+    function(x) {
+      if (inherits(x, c("factor", "Date", "POSIXt"))) {
+        as.character(x)
+      } else {
+        x
+      }
+    }
   )
   data
 }

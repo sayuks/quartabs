@@ -17,31 +17,34 @@ render_tabset(
 \arguments{
 \item{data}{A data frame.}
 
-\item{tabset_vars}{Columns to use as tabset labels. Internally passed to the \code{select} argument
-of \code{\link[=subset]{subset()}}. Accepts raw column names, strings, numbers and logical values.}
+\item{tabset_vars}{Columns to use as tabset labels. Internally passed
+to the \code{select} argument of \code{\link[=subset]{subset()}}. Accepts raw column names,
+strings, numbers and logical values.}
 
-\item{output_vars}{Columns to display in each tabset panel. Internally passed to the \code{select}
-argument of \code{\link[=subset]{subset()}}. Accepts raw column names, strings, numbers and
-logical values.}
+\item{output_vars}{Columns to display in each tabset panel. Internally
+passed to the \code{select} argument of \code{\link[=subset]{subset()}}. Accepts raw column names,
+strings, numbers and logical values.}
 
 \item{layout}{\code{NULL} or a character vector of length 1 for specifying layout
 in tabset panel. If not \code{NULL}, \code{layout} must begin with at least three
-or more repetitions of ":" (e.g. ":::").}
+or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
+inserted automatically.
+See for details: \url{https://quarto.org/docs/authoring/figures.html}.}
 
 \item{heading_levels}{\code{NULL} or a vector consisting of natural numbers
 and missing values. The length is equal to the number of columns specified
 in \code{tabset_vars}. This controls whether it is partially (or entirely)
 displayed as normal header instead of tabset.
 \itemize{
-\item If \code{NULL}, all output is tabset.
-\item If a positive integer-ish numeric vector, the elements of the vector
-correspond to the columns specified in \code{tabset_vars}.
+\item If \code{heading_levels} is a \code{NULL}, all output is tabset.
+\item If \code{heading_levels} is a vector of positive natural number, the elements
+of the vector correspond to the columns specified in \code{tabset_vars}.
 \itemize{
 \item If the element is integer, the tabset column is displayed as headers
 with their level, not tabset. (e.g. 2 means h2 header).
-Levels 1 to 6 are recommended. The reason is that quarto supports headers
-up to 6. 7 and above will also work, but they are displayed as normal
-text. In addition, considering the chapter format,
+Levels 1 to 6 are recommended. The reason is that quarto supports
+headers up to 6. 7 and above will also work, but they are displayed
+as normal text. In addition, considering the chapter format,
 it is preferable to gradually increase the level, as in 1, 2 and 3.
 \item If the element is NA, tabset is displayed.
 }
@@ -52,16 +55,16 @@ See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills}
 for details. If \code{heading_levels} is specified, this will be ignored.}
 
 \item{tabset_width}{Character, one of "default", "fill" and "justified".
-See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills}
+See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify}
 for details. If \code{heading_levels} is specified, this will be ignored.}
 }
 \value{
 \code{NULL} invisibly. This function is called for its side effect.
 }
 \description{
-The function takes in a data frame or a tibble and produces
+The function takes in a data frame and produces
 tabset panels for each unique combination of the tabset variables.
-\emph{\strong{Only works with .qmd files in HTML format.}}
+\emph{\strong{Only works with Quarto HTML documents.}}
 }
 \details{
 \itemize{
@@ -70,28 +73,34 @@ tabset panels for each unique combination of the tabset variables.
 \item The \code{data} is sorted internally in the order of \code{tabset_vars}.
 Define the order beforehand, e.g. using factor.
 \item If multiple \code{tabset_vars} are given, create nested tabsets.
-\item \code{output_vars} can also be figures or tables if \code{data} is a tibble.
-\item If factor columns are included in output_vars, they are converted
-internally to character.
 \item For columns specified in output_vars, columns of type list are output with
 \code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}
+\item If \code{tabset_vars} or \code{output_vars} have "factor", "Date" and "POSIXt"
+columns, they are converted internally to character. This is to prevent it
+being displayed as numeric when \code{\link[=cat]{cat()}} is executed.
 }
 }
 \section{Limitations}{
 
 \itemize{
-\item The function has an optional argument, \code{layout}, which allows for
-the addition of layout option to the outputs
-(see \url{https://quarto.org/docs/authoring/figures.html}).
-However, this is intended for simplified use cases and
-complex layouts may not work. See Examples for more details.
+\item \code{layout} is intended for simplified use cases and
+complex layouts may not work.
 \item When outputting tables or figures that use JavaScript
 (such as \code{{plotly}}, \code{{leaflet}}, \code{{DT}}, \code{{reactable}}, etc.),
 it seems JavaScript dependencies need to be resolved.
 A simple solution is to wrap the output in \code{\link[htmltools:builder]{htmltools::div()}}
-and create a dummy plot in another chunk. See the demo page for details.
+and create a dummy plot in another chunk. See the Walk through for details.
 \item If a column of type list contains a named vector or list,
 the values may not display well.
+\item When \code{tabset_vars} and \code{output_vars} have the following columns,
+they may not display well:
+\itemize{
+\item A column of type list contains a named vector or list
+(This is for \code{output_vars}. \code{tabset_vars} must not contain list
+columns).
+\item Classes with their own printing methods,
+such as "difftime", "ts", .etc.
+}
 }
 }
 
@@ -117,7 +126,7 @@ render_tabset(
   df,
   c(group1, group2),
   c(value1, value2),
-  layout = '::: {layout="[1, 1]"}'
+  layout = "::: {layout-ncol=2}"
 )
 
 # Use heading instead of tabset

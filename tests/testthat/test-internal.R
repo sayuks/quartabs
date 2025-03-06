@@ -313,3 +313,26 @@ test_that("print_row_tabsets calls the required functions in order", {
     )
   )
 })
+
+test_that("Date and POSIXt are converted to character", {
+  df1 <- data.frame(
+    tab = as.POSIXct(1, tz = "UTC"),
+    out = as.Date(1)
+  )
+
+  expect_equal(
+    utils::capture.output(
+      render_tabset(df1, tab, out)
+    ),
+    c(
+      "::: {.panel-tabset}",
+      "",
+      "# 1970-01-01 00:00:01",
+      "",
+      "1970-01-02",
+      "",
+      ":::",
+      ""
+    )
+  )
+})

@@ -24,6 +24,6 @@ stackoverflow
 tabset
 tabsets
 tibble
-tidyselect
 yaml
-で
+difftime
+POSIXt
