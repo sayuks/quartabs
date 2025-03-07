@@ -15,9 +15,7 @@ knitr:
 
 ## Introduction
 
-Quartoのtabsetはhtmlドキュメントで利用できるインタラクティブなパネルの事である。
-
-<https://quarto.org/docs/output-formats/html-basics.html#tabsets>
+[tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets) is an interactive panel in Quarto html documents.
 
 ::: {.panel-tabset}
 ## A
@@ -29,7 +27,7 @@ Tab content for A
 Tab content for B
 :::
 
-通常は次のように記載する。
+This was written as follows.
 
 ```` markdown
 ::: {.panel-tabset}
@@ -43,8 +41,8 @@ Tab content for B
 :::
 ````
 
-これをタブの数が増減するたびに、手動で書き直すのは面倒である。`quartabs::render_tabset()`は、data frameを入力とし、これを動的に出力する。
-注意として、チャンクオプションに`results: asis`を指定すること。
+It would be tedious to manually rewrite this each time the number of tabs increases or decreases. The `quartabs::render_tabset()` takes a data frame as input and outputs it dynamically.
+Note that the chunk option must be `results: asis`.
 
 ```{r}
 #| results: asis
@@ -118,7 +116,7 @@ df1 |>
   render_tabset(id, var1)
 ```
 
-繰り返しを避けるために、デフォルトのチャンクオプションを変更しておくこともできる。
+To avoid repetition, the default chunk option can be changed.
 
 ```` r
 knitr::opts_chunk$set(
@@ -128,7 +126,7 @@ knitr::opts_chunk$set(
 
 ### `tabset_vars`, `output_vars`
 
-最初の引数は`tabset_vars`であり、tabに表示させる列名を指定する。2番目の引数は`output_vars`であり、tabの中に表示させる列を指定する。
+The first argument is `tabset_vars`, which specifies the column names to be displayed in the tab; the second argument is `output_vars`, which specifies the columns to be displayed in the tab.
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
@@ -140,40 +138,43 @@ df1 |>
   render_tabset(c(group1, group2), c(var1, var2, var3))
 ```
 
-:::{.callout-tip appearance='default' icon=true}
+:::{.callout-tip}
 ## `cat()` or `print()`
 
 `cat()` is used internally for non-list columns to avoid unnecessary prefixes such as "[1]" in the output. On the other hand, `print()` is used for list columns.
 
-例えばvar1は1と表示するが、list型のvar2は[1] 1と表示する。
+For example, `var1` displays "1", while `var2` of type list displays "[1] 1".
 :::
 
-### Factor output
+### Factor, Date, POSIXt display
 
 In `render_tabset()`, `cat()` is used to output for columns that are not list types.
-However, if `cat()` is used, factor is output as an integer. 
-So, if factor is included in `output_vars`, it is converted internally to string.
+However, if `cat()` is used, factor, Date, POSIXt are output as an integer. 
+So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string.
 
 ```{r}
-#| echo: true
+# define test objects
+(test_factor <- factor("a"))
+(test_date <- as.Date("2025-01-01"))
+(test_posixct <- as.POSIXct("2025-01-01 12:34:56", tz = "UTC"))
 
-x <- factor("a")
+# Using cat() results in output as a number.
+# This is not usually the expected output.
+cat(test_factor)
+cat(test_date)
+cat(test_posixct)
 
-# default factor output
-print(x)
-
-# Using `cat()` for factor results in unexpected output
-cat(x)
-
-# `render_tabset()` converts factor to string
-# and then executes cat() as follows.
-cat(as.character(x))
+# Therefore, render_tabset() uses cat()
+# after converting it internally to a string.
+cat(as.character(test_factor))
+cat(as.character(test_date))
+cat(as.character(test_posixct))
 ```
 
 ### `layout`
 
 How can I display the content in a tabset horizontally?
-In quarto, `layout-ncol` can be used.
+In Quarto, `layout-ncol` can be used.
 
 ```{r}
 #| results: asis
@@ -265,10 +266,9 @@ df1 |>
 
 ### `pills`
 
-2025-03-05時点で、Quartoの最新バージョンは1.6だが、[Quarto 1.4で導入されたBootstrap 5.2.2を使用しているようだ](https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly)。
+As of 2025-03-05, the latest version of Quarto is 1.6, but [the Bootstrap version used appears to be Bootstrap 5.2.2, which was introduced with Quarto 1.4.(https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly)
 
-bootstrap 5.2ではいくつかのtabのカスタマイズを利用できる。その1つが[pills](https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills)である。
-
+Several tab customisations are available in Bootstrap 5.2. One of these is [pills](https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills).
 
 ```{r}
 #| results: asis
@@ -284,7 +284,7 @@ df1 |>
 
 ### `tabset_width`
 
-同様に[fill and justify](https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify)を3つから選ぶことができる。以下では、例のために長いラベルを作成し、半分の幅で表示する。
+Similarly, you can choose from three [fill and justify](https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify). In the following, long labels are created for the sake of example and displayed at half width.
 
 **"default"**
 
@@ -302,7 +302,7 @@ df1_long_label |>
   render_tabset(
     c(group1, group2),
     c(var1, var2, var3),
-    tabset_width = "default" # "default" is the default.
+    tabset_width = "default"
   )
 ```
 
@@ -991,7 +991,7 @@ tables |>
 # save the session info as an object
 sess <- sessioninfo::session_info(pkgs = "attached")
 
-# inject the quarto info
+# inject the Quarto info
 sess$platform$quarto <- paste(
   quarto::quarto_version(),
   "@",
