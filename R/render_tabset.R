@@ -27,7 +27,7 @@
 #'   in tabset panel. If not `NULL`, `layout` must begin with at least three
 #'   or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
 #'   inserted automatically.
-#'   See for details: \url{https://quarto.org/docs/authoring/figures.html}.
+#'   See for details: \url{https://quarto.org/docs/authoring/figures.html#complex-layouts}.
 #' @param heading_levels `NULL` or a vector consisting of natural numbers
 #'   and missing values. The length is equal to the number of columns specified
 #'   in `tabset_vars`. This controls whether it is partially (or entirely)

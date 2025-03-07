@@ -2,7 +2,7 @@
 % Please edit documentation in R/render_tabset.R
 \name{render_tabset}
 \alias{render_tabset}
-\title{Create tabset panels in quarto}
+\title{Dynamically Generate Tabset Panels in a Quarto HTML Document}
 \usage{
 render_tabset(
   data,
@@ -29,7 +29,7 @@ strings, numbers and logical values.}
 in tabset panel. If not \code{NULL}, \code{layout} must begin with at least three
 or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
 inserted automatically.
-See for details: \url{https://quarto.org/docs/authoring/figures.html}.}
+See for details: \url{https://quarto.org/docs/authoring/figures.html#complex-layouts}.}
 
 \item{heading_levels}{\code{NULL} or a vector consisting of natural numbers
 and missing values. The length is equal to the number of columns specified
