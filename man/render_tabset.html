@@ -213,8 +213,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 
 
-<section id="create-tabset-panels-in-quarto" class="level2 unnumbered">
-<h2 class="unnumbered anchored" data-anchor-id="create-tabset-panels-in-quarto">Create tabset panels in quarto</h2>
+<section id="dynamically-generate-tabset-panels-in-a-quarto-html-document" class="level2 unnumbered">
+<h2 class="unnumbered anchored" data-anchor-id="dynamically-generate-tabset-panels-in-a-quarto-html-document">Dynamically Generate Tabset Panels in a Quarto HTML Document</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
 <p>The function takes in a data frame and produces tabset panels for each unique combination of the tabset variables. <em><strong>Only works with Quarto HTML documents.</strong></em></p>
@@ -264,7 +264,7 @@ Columns to display in each tabset panel. Internally passed to the <code>select</
 <code id="layout">layout</code>
 </td>
 <td>
-<code>NULL</code> or a character vector of length 1 for specifying layout in tabset panel. If not <code>NULL</code>, <code>layout</code> must begin with at least three or more repetitions of ":" (e.g.&nbsp;":::"). Closing div (e.g.&nbsp;":::") is inserted automatically. See for details: <a href="https://quarto.org/docs/authoring/figures.html">https://quarto.org/docs/authoring/figures.html</a>.
+<code>NULL</code> or a character vector of length 1 for specifying layout in tabset panel. If not <code>NULL</code>, <code>layout</code> must begin with at least three or more repetitions of ":" (e.g.&nbsp;":::"). Closing div (e.g.&nbsp;":::") is inserted automatically. See for details: <a href="https://quarto.org/docs/authoring/figures.html#complex-layouts">https://quarto.org/docs/authoring/figures.html#complex-layouts</a>.
 </td>
 </tr>
 <tr>
