@@ -15,7 +15,7 @@ knitr:
 
 ## Introduction
 
-[tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets) is an interactive panel in Quarto html documents.
+[Tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets) is an interactive panel in Quarto html documents.
 
 ::: {.panel-tabset}
 ## A
@@ -152,20 +152,26 @@ In `render_tabset()`, `cat()` is used to output for columns that are not list ty
 However, if `cat()` is used, factor, Date, POSIXt are output as an integer. 
 So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string.
 
+Define test objects.
+
 ```{r}
-# define test objects
 (test_factor <- factor("a"))
 (test_date <- as.Date("2025-01-01"))
 (test_posixct <- as.POSIXct("2025-01-01 12:34:56", tz = "UTC"))
 
-# Using cat() results in output as a number.
-# This is not usually the expected output.
+```
+
+Using `cat()` results in output as a number. This is not usually the expected output.
+
+```{r}
 cat(test_factor)
 cat(test_date)
 cat(test_posixct)
+```
 
-# Therefore, render_tabset() uses cat()
-# after converting it internally to a string.
+Therefore, `render_tabset()` uses `cat()` after converting it internally to a string as follows.
+
+```{r}
 cat(as.character(test_factor))
 cat(as.character(test_date))
 cat(as.character(test_posixct))
@@ -266,7 +272,7 @@ df1 |>
 
 ### `pills`
 
-As of 2025-03-05, the latest version of Quarto is 1.6, but [the Bootstrap version used appears to be Bootstrap 5.2.2, which was introduced with Quarto 1.4.(https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly)
+As of 2025-03-05, the latest version of Quarto is 1.6, but [the Bootstrap version used appears to be Bootstrap 5.2.2, which was introduced with Quarto 1.4].(https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly)
 
 Several tab customisations are available in Bootstrap 5.2. One of these is [pills](https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills).
 
