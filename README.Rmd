@@ -21,9 +21,13 @@ knitr::opts_chunk$set(
 [![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
-The goal of quartabs is to ...
+Dynamically Generate Tabset Panels in a 'Quarto' HTML Document.
 
 ## Installation
+
+``` r
+install.packages("quartabs")
+```
 
 You can install the development version of quartabs from [GitHub](https://github.com/) with:
 
@@ -32,22 +36,9 @@ You can install the development version of quartabs from [GitHub](https://github
 pak::pak("sayuks/quartabs")
 ```
 
-## Example
+## Walk through
 
-This is a basic example which shows you how to solve a common problem:
-
-```{r example}
-library(quartabs)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`? You can include R chunks like so:
-
-```{r cars}
-summary(cars)
-```
-
-You'll still need to render `README.Rmd` regularly, to keep `README.md` up-to-date. `devtools::build_readme()` is handy for this.
+See [Walk through](https://sayuks.github.io/quartabs/vignettes/walk_through.html) for details.
 
 ## Code of Conduct
 
