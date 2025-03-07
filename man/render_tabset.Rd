@@ -138,11 +138,12 @@ render_tabset(
 )
 }
 \references{
-As this function is focused on quickly and dynamically generating tabsets
-and chunks, it is difficult to customize it on a chunk-by-chunk basis.
-The regular way to dynamically create chunks is to use functions such as
-\code{\link[knitr:knit]{knitr::knit()}}, \code{\link[knitr:knit_child]{knitr::knit_child()}}, \code{\link[knitr:knit_expand]{knitr::knit_expand()}}, etc.
-For more information on these, see the following links.
+As this function is focused on quickly and dynamically
+generating tabsets and chunks, it is difficult to customize it on a
+chunk-by-chunk basis. The regular way to dynamically create chunks is
+to use functions such as \code{\link[knitr:knit]{knitr::knit()}}, \code{\link[knitr:knit_child]{knitr::knit_child()}},
+\code{\link[knitr:knit_expand]{knitr::knit_expand()}}, etc. For more information on these,
+see the following links.
 \itemize{
 \item Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
 Markdown Content Programmatically with Quarto.” November 4, 2024.
