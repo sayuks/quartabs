@@ -29,9 +29,26 @@ pak::pak("sayuks/quartabs")
 
 ## Walk through
 
-See [Walk
-through](https://sayuks.github.io/quartabs/vignettes/walk_through.html)
-for details.
+``` r
+library(quartabs)
+
+data.frame(
+  tab = c("A", "B"),
+  value = c("Tab content for A", "Tab content for B")
+) |>
+  render_tabset(tab, value)
+#> ::: {.panel-tabset}
+#> 
+#> # A
+#> 
+#> Tab content for A
+#> 
+#> # B
+#> 
+#> Tab content for B
+#> 
+#> :::
+```
 
 ## Code of Conduct
 
