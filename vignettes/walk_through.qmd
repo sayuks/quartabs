@@ -273,7 +273,7 @@ df1 |>
 
 ### `pills`
 
-As of 2025-03-05, the latest version of Quarto is 1.6, but [the Bootstrap version used appears to be Bootstrap 5.2.2, which was introduced with Quarto 1.4](https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly).
+As of 2025-03-05, the latest version of Quarto is 1.6, but the Bootstrap version used appears to be Bootstrap 5.2.2, which was [introduced with Quarto 1.4](https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly).
 
 Several tab customisations are available in Bootstrap 5.2. One of these is [pills](https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills).
 
