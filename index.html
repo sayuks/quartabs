@@ -218,7 +218,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h1>quartabs</h1>
 <!-- badges: start -->
 <p><a href="https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml"><img src="https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml/badge.svg" class="img-fluid" alt="R-CMD-check"></a> <a href="https://app.codecov.io/gh/sayuks/quartabs"><img src="https://codecov.io/gh/sayuks/quartabs/graph/badge.svg" class="img-fluid" alt="Codecov test coverage"></a> <a href="https://github.com/sayuks/quartabs/actions/workflows/lint.yaml"><img src="https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg" class="img-fluid" alt="lint.yaml"></a> <!-- badges: end --></p>
-<p>Dynamically Generate Tabset Panels in a ‘Quarto’ HTML Document.</p>
+<p>Dynamically Generate Tabset Panels in a Quarto HTML Document.</p>
 <section id="installation" class="level2">
 <h2 class="anchored" data-anchor-id="installation">Installation</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"quartabs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
@@ -226,8 +226,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># install.packages("pak")</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>pak<span class="sc">::</span><span class="fu">pak</span>(<span class="st">"sayuks/quartabs"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </section>
-<section id="walk-through" class="level2">
-<h2 class="anchored" data-anchor-id="walk-through">Walk through</h2>
+<section id="examples" class="level2">
+<h2 class="anchored" data-anchor-id="examples">Examples</h2>
+<p><code>render_tabset()</code> takes a data frame as input and outputs the markdown of the <a href="https://quarto.org/docs/output-formats/html-basics.html#tabsets">tabset</a>.</p>
+<p><strong>In the actual .qmd file, specify the chunk option <code>results: asis</code>.</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(quartabs)</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(</span>
@@ -246,6 +248,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; Tab content for B</span></span>
 <span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; </span></span>
 <span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#&gt; :::</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<p>See <a href="https://sayuks.github.io/quartabs/vignettes/walk_through.html">Walk through</a> for details.</p>
 </section>
 <section id="code-of-conduct" class="level2">
 <h2 class="anchored" data-anchor-id="code-of-conduct">Code of Conduct</h2>
