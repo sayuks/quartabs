@@ -511,6 +511,12 @@ df2 |>
 Simply format the path to the saved figure like `![<caption>](<path/to/figure.png>)` and execute  `render_tabset()` as before.
 
 ```{r}
+#| include: false
+#| echo: false
+
+# This is code to clean up the gh-pages branch.
+# So it is intentionally hidden.
+
 # directory for saving figures
 dir_fig <- "figures"
 
@@ -518,6 +524,11 @@ dir_fig <- "figures"
 if (dir.exists(dir_fig)) {
   unlink(dir_fig, recursive = TRUE)
 }
+```
+
+```{r}
+# directory for saving figures
+dir_fig <- "figures"
 
 # create the directory
 dir.create(dir_fig)
