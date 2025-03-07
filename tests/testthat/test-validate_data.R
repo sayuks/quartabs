@@ -103,7 +103,7 @@ test_that("validate_data", {
   # Test 11: tabset_vars must not contain list columns
   expect_error(
     validate_data(tibble::tibble(a = list(1), b = 2), "a", "b"),
-    "must not contain list columns"
+    "must have one of the following classes"
   )
   expect_no_error(
     validate_data(data.frame(a = 1, b = 2), "a", "b")

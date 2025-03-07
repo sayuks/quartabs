@@ -1,5 +1,5 @@
 # nolint start: line_length_linter
-#' Create tabset panels in quarto
+#' Dynamically Generate Tabset Panels in a Quarto HTML Document
 #'
 #' @description
 #' The function takes in a data frame and produces
@@ -381,20 +381,35 @@ validate_data <- function(data,
       len_tab > 0
   )
 
-  tabset_classes <- vapply(
-    data[, tabset_names, drop = FALSE],
-    typeof,
-    character(1)
+  valid_class_for_tabset_name <- c(
+    "logical",
+    "numeric",
+    "integer",
+    "character",
+    "factor",
+    "Date",
+    "POSIXt"
   )
 
-  tabset_list_cols <- tabset_classes[tabset_classes == "list"]
-
-  if (length(tabset_list_cols) > 0) {
-    stop(
-      "`tabset_vars` must not contain list columns: ",
-      toString(names(tabset_list_cols))
-    )
-  }
+  lapply(
+    tabset_names,
+    function(nm) {
+      col <- data[[nm]]
+      if (!inherits(col, valid_class_for_tabset_name)) {
+        stop(
+          "The column ",
+          sprintf("`%s`", nm),
+          " specified in `tabset_vars` ",
+          "must have one of the following classes: ",
+          toString(valid_class_for_tabset_name),
+          ".\n",
+          sprintf("But the column `%s` has the following class(es): ", nm),
+          toString(class(col)),
+          "."
+        )
+      }
+    }
+  )
 
   if (is.null(heading_levels)) {
     heading_levels <- rep(NA_integer_, len_tab)
