@@ -78,8 +78,6 @@ library(leaflet)
 library(htmltools)
 library(tinytable)
 
-set.seed(123)
-
 # sample data
 df1 <- tibble(
   id = paste0("id", 1:6),
