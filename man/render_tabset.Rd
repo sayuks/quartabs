@@ -8,6 +8,7 @@ render_tabset(
   data,
   tabset_vars,
   output_vars,
+  sort = TRUE,
   layout = NULL,
   heading_levels = NULL,
   pills = FALSE,
@@ -24,6 +25,10 @@ strings, numbers and logical values.}
 \item{output_vars}{Columns to display in each tabset panel. Internally
 passed to the \code{select} argument of \code{\link[=subset]{subset()}}. Accepts raw column names,
 strings, numbers and logical values.}
+
+\item{sort}{Logical, whether to sort the \code{data} with \code{tabset_vars}.
+The default is \code{TRUE}. If \code{FALSE}, the tabset will be output in the
+original order of the \code{data}.}
 
 \item{layout}{\code{NULL} or a character vector of length 1 for specifying layout
 in tabset panel. If not \code{NULL}, \code{layout} must begin with at least three

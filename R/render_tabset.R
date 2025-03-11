@@ -23,6 +23,9 @@
 #' @param output_vars Columns to display in each tabset panel. Internally
 #'   passed to the `select` argument of [subset()]. Accepts raw column names,
 #'   strings, numbers and logical values.
+#' @param sort Logical, whether to sort the `data` with `tabset_vars`.
+#'   The default is `TRUE`. If `FALSE`, the tabset will be output in the
+#'   original order of the `data`.
 #' @param layout `NULL` or a character vector of length 1 for specifying layout
 #'   in tabset panel. If not `NULL`, `layout` must begin with at least three
 #'   or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
@@ -115,6 +118,7 @@
 render_tabset <- function(data,
                           tabset_vars,
                           output_vars,
+                          sort = TRUE,
                           layout = NULL,
                           heading_levels = NULL,
                           pills = FALSE,
@@ -137,7 +141,7 @@ render_tabset <- function(data,
   heading_levels <- l$heading_levels
   len_tab <- length(tabset_names)
 
-  data <- prep_data(data, tabset_names, output_names)
+  data <- prep_data(data, tabset_names, output_names, sort)
   tabset_master <- get_tabset_master(data, tabset_names)
 
   # For each row of the data, print the tabset and output panels
@@ -201,9 +205,7 @@ print_row_tabsets <- function(data,
 }
 
 make_tabset_div <- function(pills, tabset_width) {
-  stopifnot(
-    "`pills` must be a `TRUE` or `FALSE`" = isTRUE(pills) || isFALSE(pills)
-  )
+  assert_logical(pills)
 
   tabset_width <- match.arg(tabset_width, c("default", "fill", "justified"))
 
@@ -446,9 +448,12 @@ validate_data <- function(data,
   )
 }
 
-prep_data <- function(data, tabset_names, output_names) {
+prep_data <- function(data, tabset_names, output_names, sort = TRUE) {
+  assert_logical(sort)
   data <- data[, c(tabset_names, output_names)]
-  data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
+  if (sort) {
+    data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
+  }
   data[] <- lapply(
     data,
     function(x) {
@@ -495,3 +500,13 @@ get_tabset_master <- function(data, tabset_names) {
   rownames(res) <- NULL
   res
 }
+
+assert_logical <- function(x) {
+  nm <- deparse(substitute(x))
+  if (!(isTRUE(x) || isFALSE(x))) {
+    stop(
+      sprintf("`%s` must be a logical scalar (`TRUE` or `FALSE`).", nm)
+    )
+  }
+}
+
