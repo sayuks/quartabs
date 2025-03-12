@@ -225,6 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   data,
   tabset_vars,
   output_vars,
+  sort = TRUE,
   layout = NULL,
   heading_levels = NULL,
   pills = FALSE,
@@ -257,6 +258,14 @@ Columns to use as tabset labels. Internally passed to the <code>select</code> ar
 </td>
 <td>
 Columns to display in each tabset panel. Internally passed to the <code>select</code> argument of <code>subset()</code>. Accepts raw column names, strings, numbers and logical values.
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="sort">sort</code>
+</td>
+<td>
+Logical, whether to sort the <code>data</code> with <code>tabset_vars</code>. The default is <code>TRUE</code>. If <code>FALSE</code>, the tabset will be output in the original order of the <code>data</code>.
 </td>
 </tr>
 <tr>
