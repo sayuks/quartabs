@@ -52,7 +52,7 @@ Note that the chunk option must be `results: asis`.
 data.frame(
   tab = c("A", "B"),
   value = c("Tab content for A", "Tab content for B")
-) |>
+) |> 
   quartabs::render_tabset(tab, value)
 ```
 
@@ -80,7 +80,8 @@ library(tinytable)
 
 # sample data
 df1 <- tibble(
-  id = paste0("id", 1:6),
+  # id: intentionally created in descending order for the examples shown later
+  id = paste0("id", 6:1),
   group1 = c(rep("A", 3), rep("B", 3)),
   group2 = rep(c("X", "Y", "Z"), 2),
   var1 = 1:6,
@@ -91,11 +92,21 @@ df1 <- tibble(
 df1
 ```
 
-### results: asis
+### `tabset_vars`, `output_vars`
+
+The first argument is `tabset_vars`, which specifies the column names to be displayed in the tab; the second argument is `output_vars`, which specifies the columns to be displayed in the tab.
 
 ::: {.callout-note icon="true"}
 ## Don't forget!
-Write `#| results: asis` at the beginning of the chunk.
+Make sure to set the chunk option to `results: asis`.
+
+Default chunk options can be changed if necessary.
+
+```` r
+knitr::opts_chunk$set(
+  results = "asis"
+)
+```` 
 :::
 
 ```{r}
@@ -106,26 +117,17 @@ df1 |>
   render_tabset(id, var1)
 ```
 
-This is equal to the following.
+The `sort` argument (defaults to `TRUE`) sorts the data by `tabsest_vars`. Therefore, the id column were displayed in ascending order.
 
-```{r, results='asis'}
+If `sort = FALSE`, the tabset will be output in the original order of the data.
+
+```{r}
+#| results: asis
 #| echo: fenced
 
 df1 |>
-  render_tabset(id, var1)
+  render_tabset(id, var1, sort = FALSE)
 ```
-
-To avoid repetition, the default chunk option can be changed.
-
-```` r
-knitr::opts_chunk$set(
-  results = "asis"
-)
-```` 
-
-### `tabset_vars`, `output_vars`
-
-The first argument is `tabset_vars`, which specifies the column names to be displayed in the tab; the second argument is `output_vars`, which specifies the columns to be displayed in the tab.
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
@@ -145,21 +147,6 @@ df1 |>
 For example, `var1` displays "1", while `var2` of type list displays "[1] 1".
 :::
 
-### `sort`
-
-The default is `TRUE` and sort data by tabsest_vars.
-
-```{r}
-data.frame(
-  tab = c("B", "A"),
-  value = c("Tab content for B", "Tab content for A")
-) |> 
-  render_tabset(tab, value)
-```
-
-
-Whether to sort the data with tabset_vars. The default is `TRUE`. If `FALSE`, the tabset will be output in the original order of the data.
-
 ### Factor, Date, POSIXt display
 
 In `render_tabset()`, `cat()` is used to output for columns that are not list types.
@@ -172,7 +159,6 @@ Define test objects.
 (test_factor <- factor("a"))
 (test_date <- as.Date("2025-01-01"))
 (test_posixct <- as.POSIXct("2025-01-01 12:34:56", tz = "UTC"))
-
 ```
 
 Using `cat()` results in output as a number. This is not usually the expected output.
@@ -218,6 +204,23 @@ df1 |>
     c(group1, group2),
     c(var1, var2, var3),
     layout = "::: {layout-ncol=3}"
+  )
+```
+
+In fact, the above `layout` is a shortcut to something like this:
+
+```{r}
+#| results: asis
+#| echo: fenced
+
+df1 |>
+  mutate(
+    layout_start = "::: {layout-ncol=3}",
+    layout_end = ":::"
+  ) |> 
+  render_tabset(
+    c(group1, group2),
+    c(layout_start, var1, var2, var3, layout_end)
   )
 ```
 
