@@ -30,7 +30,10 @@ test_that("prep_data handles multiple sorting columns", {
     tabset_names = c("group", "sub_group"),
     output_names = "output"
   )
-  expected_order <- order(as.character(data$group), as.character(data$sub_group))
+  expected_order <- order(
+    as.character(data$group),
+    as.character(data$sub_group)
+  )
   expect_equal(result$group, as.character(data$group[expected_order]))
   expect_equal(result$sub_group, data$sub_group[expected_order])
 })

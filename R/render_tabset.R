@@ -509,4 +509,3 @@ assert_logical <- function(x) {
     )
   }
 }
-

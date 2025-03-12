@@ -1,0 +1,12 @@
+test_that("assert_logical() works", {
+  expect_no_error(assert_logical(TRUE))
+  expect_no_error(assert_logical(FALSE))
+  expect_error(assert_logical())
+  expect_error(assert_logical(logical()))
+  expect_error(assert_logical(c(TRUE, TRUE)))
+  expect_error(assert_logical(list(TRUE)))
+  expect_error(assert_logical(1))
+  expect_error(assert_logical("a"))
+  expect_error(assert_logical(NULL))
+  expect_error(assert_logical(new.env()))
+})

@@ -52,7 +52,7 @@ Note that the chunk option must be `results: asis`.
 data.frame(
   tab = c("A", "B"),
   value = c("Tab content for A", "Tab content for B")
-) |> 
+) |>
   quartabs::render_tabset(tab, value)
 ```
 
@@ -68,15 +68,14 @@ library(tibble)
 library(dplyr)
 library(purrr)
 library(tidyr)
+library(plotly)
+library(htmltools)
 library(knitr)
 library(gt)
 library(DT)
+library(tinytable)
 library(reactable)
 library(flextable)
-library(plotly)
-library(leaflet)
-library(htmltools)
-library(tinytable)
 
 # sample data
 df1 <- tibble(
@@ -147,13 +146,13 @@ df1 |>
 For example, `var1` displays "1", while `var2` of type list displays "[1] 1".
 :::
 
-### Factor, Date, POSIXt display
+### Factor, Date and POSIXt displays
 
 In `render_tabset()`, `cat()` is used to output for columns that are not list types.
 However, if `cat()` is used, factor, Date, POSIXt are output as an integer. 
 So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string.
 
-Define test objects.
+Here are some simple examples. First, define test objects.
 
 ```{r}
 (test_factor <- factor("a"))
@@ -217,7 +216,7 @@ df1 |>
   mutate(
     layout_start = "::: {layout-ncol=3}",
     layout_end = ":::"
-  ) |> 
+  ) |>
   render_tabset(
     c(group1, group2),
     c(layout_start, var1, var2, var3, layout_end)
@@ -421,21 +420,6 @@ df2
 ```
 
 Figures and tables have been created for the `fig` and `tbl` columns respectively.
-Also note that the group variables `cly` and `am` are not ordered in regular ascending order. They are arranged in order of appearance.
-In Next step, specifying `cly` and `am` in `tabset_vars` in `render_tabset()` automatically executes `arrange(cly, am)` internally.
-So don't worry.
-
-:::{.callout-tip icon=true}
-
-We did not run `arrange(cly, am)` in this example for the sake of example,
-but in practice it is better to run `arrange(cly, am)` in the pipeline to make it easier to identify each group.
-
-```{r}
-df2 |>
-  arrange(cyl, am)
-```
-
-:::
 
 ### `nest_by() + list()`
 
@@ -518,7 +502,11 @@ Use the `layout` argument to display figure and table side by side with a width 
 #| results: asis
 
 df2 |>
-  render_tabset(c(cyl, am), c(fig, tbl), layout = '::: {layout="[7, 3]"}')
+  render_tabset(
+    c(cyl, am),
+    c(fig, tbl),
+    layout = '::: {layout="[7, 3]"}'
+  )
 ```
 
 ## Advanced examples
@@ -532,7 +520,7 @@ Simply format the path to the saved figure like `![<caption>](<path/to/figure.pn
 #| echo: false
 
 # This is code to clean up the gh-pages branch.
-# So it is intentionally hidden.
+# So this is intentionally hidden.
 
 # directory for saving figures
 dir_fig <- "figures"
@@ -695,213 +683,6 @@ df4 |>
 df4 |>
   render_tabset(c(cyl, am), fig_plotly)
 ```
-
-### Leaflet
-
-Another example the above flow (wrap output with `htmltools::div()` and then creating dummy plot in a separate chunk and then `render_tabset()`) is Leaflet. In R, `{leaflet}`  is useful for plotting map.
-
-<!-- `jprep.datasets::main_buildings` contains the main school building for each period for each program. -->
-
-<!-- ```{r} -->
-<!-- sites <- main_buildings |>-->
-<!--   # For demo, remaining up to the beginning of the month of March 2023. -->
-<!--   filter(start_date <= as.Date("2024-03-05")) |> -->
-<!--   filter(program %in% c("Juku", "Kids")) |>-->
-<!--   filter(site != "Hongo") |># Not owned by J PREP -->
-<!--   select(program, site, start_date, end_date, lon_site, lat_site) -->
-
-
-<!-- sites |>-->
-<!--   print(n = Inf) -->
-<!-- ``` -->
-
-<!-- The `start_date` and `end_date` indicate when the school building was used as the main location for that site. In particular, Jiyugaoka, Shibuya, and Kichijoji are shown to have moved multiple times. -->
-
-<!-- Assign a color to each site for visualization. -->
-<!-- This is an example of a maximum of 7 sites. -->
-
-<!-- ```{r} -->
-<!-- # Named vectors may not be handled correctly in addCircleMarkers(), -->
-<!-- # which will be used later. So `unname()` is important. -->
-<!-- pal <- unname(palette.colors()[2:8]) -->
-
-<!-- hexs <- sites |>-->
-<!--   distinct(site) |>-->
-<!--   bind_cols(hex = pal) -->
-<!-- ``` -->
-
-<!-- Join to the `site` -->
-
-<!-- ```{r} -->
-<!-- sites_with_hex <- sites |>-->
-<!--   left_join(hexs) -->
-
-<!-- sites_with_hex -->
-<!-- ``` -->
-
-<!-- Get the first date of the academic year. -->
-
-<!-- ```{r} -->
-<!-- yr_starts <- calendar_jprep |>-->
-<!--   slice_min(date, by = c(program, year)) |>-->
-<!--   select(program, year, date) -->
-
-<!-- yr_starts -->
-<!-- ``` -->
-
-<!-- Join main school buildings that existed at the beginning of each academic year. `dplyr::join_by()` is useful. -->
-
-<!-- ```{r} -->
-<!-- yr_starts_site <- -->
-<!--   yr_starts |>-->
-<!--   left_join( -->
-<!--     sites_with_hex, -->
-<!--     join_by( -->
-<!--       program, -->
-<!--       between(date, start_date, end_date) -->
-<!--     ) -->
-<!--   ) |>-->
-<!--   select(program, year, site, hex, lon_site, lat_site) -->
-
-<!-- yr_starts_site -->
-<!-- ``` -->
-
-<!-- How many sites per program each year? -->
-
-<!-- ```{r} -->
-<!-- yr_starts_site |>-->
-<!--   count(program, year) -->
-<!-- ``` -->
-
-<!-- Create 10 dummy student data for each program, year, and site. Let's scatter them randomly around the school building. -->
-
-<!-- ```{r} -->
-<!-- dummy_students <- -->
-<!--   yr_starts_site |>-->
-<!--   mutate( -->
-<!--     data = map2( -->
-<!--       lon_site, -->
-<!--       lat_site, -->
-<!--       \(ln, lt) { -->
-<!--         tibble( -->
-<!--           lon = ln + rnorm(n = 10, sd = .01), -->
-<!--           lat = lt + rnorm(n = 10, sd = .01) -->
-<!--         ) -->
-<!--       } -->
-<!--     ) -->
-<!--   ) |>-->
-<!--   unnest(data) -->
-
-<!-- dummy_students -->
-<!-- ``` -->
-
-<!-- Create a base leaflet. -->
-
-<!-- ```{r} -->
-<!-- p_base <- -->
-<!--   leaflet() |>-->
-<!--   # In this example, make it appear large -->
-<!--   leaflet(width = 1200, height = 1600) |>-->
-<!--   setView(lng = 139.67, lat = 35.6, zoom = 11) |>-->
-<!--   # group: light -->
-<!--   addProviderTiles(providers$CartoDB.Positron, group = "light") |>-->
-<!--   # group: light (Railway highlighted) -->
-<!--   addProviderTiles(providers$CartoDB.Positron, group = "light (Railway highlighted)") |>-->
-<!--   addProviderTiles(providers$OpenRailwayMap, group = "light (Railway highlighted)") -->
-<!-- ``` -->
-
-<!-- Here is the main thing. Create a leaflet for each program and year. -->
-
-<!-- ```{r} -->
-<!-- leaflets <- dummy_students |>-->
-<!--   nest(.by = c(program, year)) |>-->
-<!--   mutate( -->
-<!--     # to display the new year first in tabset -->
-<!--     year = fct_rev(as.character(year)), -->
-<!--     # create leaflet map -->
-<!--     lf = map( -->
-<!--       data, -->
-<!--       \(data) { -->
-<!--         # for site ordering -->
-<!--         data <- data |>-->
-<!--           mutate( -->
-<!--             site = fct_sites(site) -->
-<!--           ) |>-->
-<!--           arrange(site) -->
-
-<!--         # unique sites -->
-<!--         sites <- data |>-->
-<!--           distinct(site, lon_site, lat_site) -->
-
-<!--         p_base |>-->
-<!--           # add markers to each site -->
-<!--           addMarkers( -->
-<!--             data = sites, -->
-<!--             lng = ~lon_site, -->
-<!--             lat = ~lat_site, -->
-<!--             label = ~site -->
-<!--           ) |>-->
-<!--           # each student -->
-<!--           addCircleMarkers( -->
-<!--             data = data, -->
-<!--             lng = ~lon, -->
-<!--             lat = ~lat, -->
-<!--             opacity = 1, -->
-<!--             fillOpacity = .7, -->
-<!--             radius = 4, -->
-<!--             weight = 3, -->
-<!--             color = ~hex, -->
-<!--             label = ~paste(site, lon, lat, sep = "<br>") |>lapply(htmltools::HTML), -->
-<!--             group = ~site -->
-<!--           ) |>-->
-<!--           addLayersControl( -->
-<!--             baseGroups = c("light", "light (Railway highlighted)"), -->
-<!--             overlayGroups = sites$site, -->
-<!--             options = layersControlOptions(collapsed = FALSE) -->
-<!--           ) |>-->
-<!--           htmltools::div() -->
-<!--       } -->
-<!--     ) -->
-<!--   ) -->
-
-<!-- leaflets -->
-<!-- ``` -->
-
-<!-- As described in the plotly section, output only the leaflet in a separate chunk. We plot `p_base` (You think `leaflet()` is also good instead of `p_base`, but it does not work well) -->
-<!-- . Don't forget `#| include: false` to avoid displaying output. -->
-
-<!-- ```{{r}} -->
-<!-- #| include: false -->
-
-<!-- p_base -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- #| include: false -->
-<!-- #| echo: false -->
-
-<!-- p_base -->
-<!-- ``` -->
-
-<!-- Then execute `render_tabset()` as in basic usage. -->
-<!-- Add `column: screen-inset` chunk option to see larger at the width of the screen. -->
-
-<!-- ``` {{r}} -->
-<!-- #| results: asis -->
-<!-- #| column: screen-inset -->
-
-<!-- leaflets |>-->
-<!--   render_tabset(c(program, year), lf) -->
-<!-- ``` -->
-
-<!-- ```{r} -->
-<!-- #| results: asis -->
-<!-- #| column: screen-inset -->
-<!-- #| echo: false -->
-
-<!-- leaflets |>-->
-<!--   render_tabset(c(program, year), lf) -->
-<!-- ``` -->
 
 ### Tables
 
