@@ -1,5 +1,5 @@
 ---
-title: "Walk through"
+title: "Get started"
 format: 
   html:
     code-link: true
@@ -43,7 +43,7 @@ Tab content for B
 ````
 
 It would be tedious to manually rewrite this each time the number of tabs increases or decreases. The `quartabs::render_tabset()` takes a data frame as input and outputs it dynamically.
-Note that the chunk option must be `results: asis`.
+**Note that the chunk option must be `results: asis`**.
 
 ```{r}
 #| results: asis
@@ -610,34 +610,9 @@ df3_rowwise |>
 
 :::
 
-### Plotly
+### Resolve JavaScript dependencies
 
-You can use `{plotly}` to create interactive figures.
-
-First, let's create figures using `{plotly}`. Simply apply `plotly::ggplotly()` to the already created ggplot object. Then it is passed to `htmltools::div()`.
-
-```{r}
-df4 <- df2 |>
-  mutate(
-    fig_plotly = map(
-      fig,
-      \(p) {
-        ggplotly(
-          p,
-          height = 700 # make large figure, for example
-        ) |>
-          htmltools::div()
-      }
-    )
-  ) |>
-  select(cyl, am, fig_plotly)
-
-df4
-```
-
-:::{.callout-important  appearance='default' icon=true}
-## Resolve javascript dependencies
-When outputting tables or figures that use javascript (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.), it seems javascript dependencies need to be resolved. The easiest way seems to output them once in a separate chunk.
+When outputting tables or figures that use JavaScript (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.), it seems JavaScript dependencies need to be resolved. The easiest way seems to output them once in a separate chunk.
 
 References:
 
@@ -647,9 +622,25 @@ References:
 
 - [plotly objects are invisible in R Markdown - stackoverflow](https://stackoverflow.com/questions/75992729/plotly-objects-are-invisible-in-r-markdown)
 
-:::
+For example, we use `{plotly}` to create interactive figures. Simply apply `plotly::ggplotly()` to the already created ggplot object. **Then it is passed to `htmltools::div()`**.
 
-As above, this example prepares a chunk that executes only `plot_ly()`.  Set `#| include: false` so that this chunk and its output will not appear on the report.
+```{r}
+df4 <- df2 |>
+  mutate(
+    fig_plotly = map(
+      fig,
+      \(p) {
+        ggplotly(p) |>
+          htmltools::div()
+      }
+    )
+  ) |>
+  select(cyl, am, fig_plotly)
+
+df4
+```
+
+As mentioned above, we need a chunk that only runs `plot_ly()`. Set `#| include: false` so that this chunk and its output will not appear on the report.
 
 ```{{r}}
 #| include: false
@@ -659,26 +650,15 @@ plot_ly()
 
 ```{r}
 #| include: false
-#| echo: false
 
 plot_ly()
 ```
 
 Then execute `render_tabset()` as in basic usage.
-Add `column: page-right` chunk option to increase the size of the figure.
-
-``` {{r}}
-#| results: asis
-#| column: page-right
-
-df4 |>
-  render_tabset(c(cyl, am), fig_plotly)
-```
 
 ```{r}
 #| results: asis
-#| column: page-right
-#| echo: false
+#| echo: fenced
 
 df4 |>
   render_tabset(c(cyl, am), fig_plotly)
@@ -747,7 +727,7 @@ tables
 
 The output of `flextable::flextable()` is managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
 
-`gt::opt_interactive()`, `{DT}` and `{reactable}` use javascript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
+`gt::opt_interactive()`, `{DT}` and `{reactable}` use JavaScript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
 
 ```{{r}}
 #| include: false
@@ -762,7 +742,6 @@ reactable::reactable(mtcars)
 
 ```{r}
 #| include: false
-#| echo: false
 
 gt::gt(mtcars) |>
   gt::opt_interactive()
@@ -776,6 +755,7 @@ Then execute `render_tabset()`. To make the results easier to see, sections are 
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 tables |>
   render_tabset(

@@ -59,7 +59,7 @@
 #'   (such as `{plotly}`, `{leaflet}`, `{DT}`, `{reactable}`, etc.),
 #'   it seems JavaScript dependencies need to be resolved.
 #'   A simple solution is to wrap the output in [htmltools::div()]
-#'   and create a dummy plot in another chunk. See the Walk through for details.
+#'   and create a dummy plot in another chunk. See the Get started for details.
 #' - If a column of type list contains a named vector or list,
 #'   the values may not display well.
 #' - When `tabset_vars` and `output_vars` have the following columns,

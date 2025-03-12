@@ -52,7 +52,7 @@ data.frame(
   render_tabset(tab, value)
 ```
 
-See [Walk through](https://sayuks.github.io/quartabs/vignettes/walk_through.html) for details.
+See [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) for details.
 
 ## Code of Conduct
 

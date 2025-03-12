@@ -56,8 +56,8 @@ data.frame(
 #> :::
 ```
 
-See [Walk
-through](https://sayuks.github.io/quartabs/vignettes/walk_through.html)
+See [Get
+started](https://sayuks.github.io/quartabs/vignettes/get_started.html)
 for details.
 
 ## Code of Conduct

@@ -94,7 +94,7 @@ complex layouts may not work.
 (such as \code{{plotly}}, \code{{leaflet}}, \code{{DT}}, \code{{reactable}}, etc.),
 it seems JavaScript dependencies need to be resolved.
 A simple solution is to wrap the output in \code{\link[htmltools:builder]{htmltools::div()}}
-and create a dummy plot in another chunk. See the Walk through for details.
+and create a dummy plot in another chunk. See the Get started for details.
 \item If a column of type list contains a named vector or list,
 the values may not display well.
 \item When \code{tabset_vars} and \code{output_vars} have the following columns,
