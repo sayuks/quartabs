@@ -8,11 +8,9 @@
 #' @details
 #' - Write `#| results: asis` at the beginning of the chunk or
 #'   `results='asis'` in the chunk options.
-#' - The `data` is sorted internally in the order of `tabset_vars`.
-#'   Define the order beforehand, e.g. using factor.
 #' - If multiple `tabset_vars` are given, create nested tabsets.
-#' - For columns specified in output_vars, columns of type list are output with
-#'   [print()] and normal columns are output with [cat()]
+#' - For columns specified in `output_vars`, columns of type list are output with
+#'   [print()] and normal columns are output with [cat()].
 #' - If `tabset_vars` or `output_vars` have "factor", "Date" and "POSIXt"
 #'   columns, they are converted internally to character. This is to prevent it
 #'   being displayed as numeric when [cat()] is executed. If `sort = TRUE`,

@@ -77,11 +77,9 @@ to stdout (console). \emph{\strong{Only works with Quarto HTML documents.}}
 \itemize{
 \item Write \verb{#| results: asis} at the beginning of the chunk or
 \code{results='asis'} in the chunk options.
-\item The \code{data} is sorted internally in the order of \code{tabset_vars}.
-Define the order beforehand, e.g. using factor.
 \item If multiple \code{tabset_vars} are given, create nested tabsets.
-\item For columns specified in output_vars, columns of type list are output with
-\code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}
+\item For columns specified in \code{output_vars}, columns of type list are output with
+\code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}.
 \item If \code{tabset_vars} or \code{output_vars} have "factor", "Date" and "POSIXt"
 columns, they are converted internally to character. This is to prevent it
 being displayed as numeric when \code{\link[=cat]{cat()}} is executed. If \code{sort = TRUE},

@@ -2,11 +2,12 @@ Package: quartabs
 Title: Dynamically Generate Tabset Panels in a 'Quarto' HTML Document
 Version: 0.1.0
 Authors@R: 
-    person("Yusuke", "Sasaki", email = "sayuks.dev@gmail.com", role = c("aut", "cre"))
-Description: Dynamically generate tabset panels <https://quarto.org/docs/output-formats/html-basics.html#tabsets> 
-    in a 'Quarto' HTML document using a data frame as input.
+    person("Yusuke", "Sasaki", , "sayuks.dev@gmail.com", role = c("aut", "cre"))
+Description: Dynamically generate tabset panels
+    <https://quarto.org/docs/output-formats/html-basics.html#tabsets> in a
+    'Quarto' HTML document using a data frame as input.
 License: MIT + file LICENSE
-URL: https://sayuks.github.io/quartabs, https://github.com/sayuks/quartabs
+URL: https://sayuks.github.io/quartabs/, https://github.com/sayuks/quartabs
 BugReports: https://github.com/sayuks/quartabs/issues
 Suggests: 
     altdoc,
@@ -27,7 +28,6 @@ Suggests:
     tidyr,
     tinytable,
     utils
-Remotes: etiennebacher/altdoc@6d264b5f16fbfd54c4c25a8eca6c81b1017e20e1
 Config/testthat/edition: 3
 Encoding: UTF-8
 Language: en-US
