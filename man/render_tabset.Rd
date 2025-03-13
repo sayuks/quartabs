@@ -64,12 +64,14 @@ See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justif
 for details. If \code{heading_levels} is specified, this will be ignored.}
 }
 \value{
-\code{NULL} invisibly. This function is called for its side effect.
+\code{NULL} invisibly. This function outputs the markdown
+that generates the \href{https://quarto.org/docs/output-formats/html-basics.html#tabsets}{tabset}
+to stdout (console).
 }
 \description{
-The function takes in a data frame and produces
-tabset panels for each unique combination of the tabset variables.
-\emph{\strong{Only works with Quarto HTML documents.}}
+\code{render_tabset()} takes a data frame as input and outputs the markdown
+that generates the \href{https://quarto.org/docs/output-formats/html-basics.html#tabsets}{tabset}
+to stdout (console). \emph{\strong{Only works with Quarto HTML documents.}}
 }
 \details{
 \itemize{

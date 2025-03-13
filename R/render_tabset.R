@@ -2,9 +2,9 @@
 #' Dynamically Generate Tabset Panels in a Quarto HTML Document
 #'
 #' @description
-#' The function takes in a data frame and produces
-#' tabset panels for each unique combination of the tabset variables.
-#' ***Only works with Quarto HTML documents.***
+#' `render_tabset()` takes a data frame as input and outputs the markdown
+#' that generates the [tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
+#' to stdout (console). ***Only works with Quarto HTML documents.***
 #' @details
 #' - Write `#| results: asis` at the beginning of the chunk or
 #'   `results='asis'` in the chunk options.
@@ -52,7 +52,9 @@
 #' @param tabset_width Character, one of "default", "fill" and "justified".
 #'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#fill-and-justify>
 #'   for details. If `heading_levels` is specified, this will be ignored.
-#' @return `NULL` invisibly. This function is called for its side effect.
+#' @return `NULL` invisibly. This function outputs the markdown
+#' that generates the [tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
+#' to stdout (console).
 #' @section Limitations:
 #' - `layout` is intended for simplified use cases and
 #'   complex layouts may not work.

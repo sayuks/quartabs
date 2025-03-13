@@ -11,7 +11,9 @@ coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.co
 [![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
-Dynamically Generate Tabset Panels in a Quarto HTML Document.
+Dynamically Generate [Tabset
+Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
+in a Quarto HTML Document.
 
 ## Installation
 
@@ -30,8 +32,9 @@ pak::pak("sayuks/quartabs")
 ## Examples
 
 `render_tabset()` takes a data frame as input and outputs the markdown
-of the
-[tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets).
+that generates the
+[tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
+to stdout (console).
 
 **In the actual .qmd file, specify the chunk option `results: asis`.**
 
