@@ -226,7 +226,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 class="anchored" data-anchor-id="arguments">Arguments</h3>
 <table>
 <tbody><tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="data">data</code>
 </td>
 <td>
@@ -234,7 +234,7 @@ A data frame.
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="tabset_vars">tabset_vars</code>
 </td>
 <td>
@@ -242,7 +242,7 @@ Columns to use as tabset labels. Internally passed to the <code>select</code> ar
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="output_vars">output_vars</code>
 </td>
 <td>
@@ -250,7 +250,7 @@ Columns to display in each tabset panel. Internally passed to the <code>select</
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="sort">sort</code>
 </td>
 <td>
@@ -258,7 +258,7 @@ Logical, whether to sort the <code>data</code> with <code>tabset_vars</code>. Th
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="layout">layout</code>
 </td>
 <td>
@@ -266,7 +266,7 @@ Logical, whether to sort the <code>data</code> with <code>tabset_vars</code>. Th
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="heading_levels">heading_levels</code>
 </td>
 <td>
@@ -290,7 +290,7 @@ Logical, whether to sort the <code>data</code> with <code>tabset_vars</code>. Th
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="pills">pills</code>
 </td>
 <td>
@@ -298,7 +298,7 @@ Logical, use pills or not. See <a href="https://getbootstrap.com/docs/5.2/compon
 </td>
 </tr>
 <tr>
-<td style="white-space: collapse; font-family: monospace; vertical-align: top">
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
 <code id="tabset_width">tabset_width</code>
 </td>
 <td>
@@ -314,13 +314,10 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 <p>Write <code style="white-space: pre;">#| results: asis</code> at the beginning of the chunk or <code>results=‘asis’</code> in the chunk options.</p>
 </li>
 <li>
-<p>The <code>data</code> is sorted internally in the order of <code>tabset_vars</code>. Define the order beforehand, e.g.&nbsp;using factor.</p>
-</li>
-<li>
 <p>If multiple <code>tabset_vars</code> are given, create nested tabsets.</p>
 </li>
 <li>
-<p>For columns specified in output_vars, columns of type list are output with <code>print()</code> and normal columns are output with <code>cat()</code></p>
+<p>For columns specified in <code>output_vars</code>, columns of type list are output with <code>print()</code> and normal columns are output with <code>cat()</code>.</p>
 </li>
 <li>
 <p>If <code>tabset_vars</code> or <code>output_vars</code> have "factor", "Date" and "POSIXt" columns, they are converted internally to character. This is to prevent it being displayed as numeric when <code>cat()</code> is executed. If <code>sort = TRUE</code>, sorting is performed before conversion to string.</p>
