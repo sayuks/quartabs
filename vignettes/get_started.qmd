@@ -471,6 +471,7 @@ In the following, `df2` is used. (Works in the same way in `df2_rowwise`).
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df2 |>
   render_tabset(c(cyl, am), fig)
@@ -480,6 +481,7 @@ df2 |>
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df2 |>
   render_tabset(c(cyl, am), tbl)
@@ -489,6 +491,7 @@ df2 |>
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df2 |>
   render_tabset(c(cyl, am), c(fig, tbl))
@@ -500,6 +503,7 @@ Use the `layout` argument to display figure and table side by side with a width 
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df2 |>
   render_tabset(
@@ -567,6 +571,7 @@ Then execute `render_tabset()` as in basic usage.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df3 |>
   render_tabset(c(cyl, am), fig_path_md)
@@ -575,9 +580,9 @@ df3 |>
 
 :::{.callout-tip}
 
-## `nest_by() + list({ <some complex code> })`
+## `nest_by()`
 
-Replace the above `nest() + map()` method with `rowwise() + list()`.
+Replace the above `nest() + map()` method with `rowwise()`.
 
 ```{r}
 df3_rowwise <- df2_rowwise |>
@@ -603,6 +608,7 @@ Then execute `render_tabset()` as in basic usage.
 
 ```{r}
 #| results: asis
+#| echo: fenced
 
 df3_rowwise |>
   render_tabset(c(cyl, am), fig_path_md)
@@ -732,6 +738,8 @@ The output of `flextable::flextable()` is managed by the method `knitr::knit_pri
 ```{{r}}
 #| include: false
 
+# Here mtcars are specified as dummy data, 
+# but any data frame should be acceptable
 gt::gt(mtcars) |>
   gt::opt_interactive()
 
