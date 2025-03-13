@@ -1,5 +1,5 @@
 # nolint start: line_length_linter
-#' Dynamically Generate Tabset Panels in a Quarto HTML Document
+#' Dynamically Generate Tabset Panels in Quarto HTML Documents
 #'
 #' @description
 #' `render_tabset()` takes a data frame as input and outputs the markdown

@@ -2,7 +2,7 @@
 % Please edit documentation in R/render_tabset.R
 \name{render_tabset}
 \alias{render_tabset}
-\title{Dynamically Generate Tabset Panels in a Quarto HTML Document}
+\title{Dynamically Generate Tabset Panels in Quarto HTML Documents}
 \usage{
 render_tabset(
   data,
