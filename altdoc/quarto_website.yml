@@ -18,7 +18,7 @@ website:
         href: $ALTDOC_PACKAGE_URL_GITHUB
         aria-label: $ALTDOC_PACKAGE_NAME GitHub
   sidebar:
-    collapse-level: 1
+    collapse-level: 2
     contents:
       - vignettes/get_started.qmd
       # - text: Home
@@ -33,13 +33,16 @@ website:
         file: $ALTDOC_LICENSE
       - text: Licence
         file: $ALTDOC_LICENCE
-      - text: Code of conduct
-        file: $ALTDOC_CODE_OF_CONDUCT
+      # - text: Code of conduct
+        # file: $ALTDOC_CODE_OF_CONDUCT
       # - text: Citation
       #   file: $ALTDOC_CITATION
 
 format:
   html:
     code-link: true
-#     theme: cosmo
+    # see https://github.com/quarto-dev/quarto-cli/issues/6741
+    # theme:
+    #   light: cosmo
+    #   dark: solar
 #     number-sections: false

@@ -1,12 +1,12 @@
 Package: quartabs
 Title: Dynamically Generate Tabset Panels in a 'Quarto' HTML Document
-Version: 0.0.0.9000
+Version: 0.1.0
 Authors@R: 
     person("Yusuke", "Sasaki", email = "sayuks.dev@gmail.com", role = c("aut", "cre"))
 Description: Dynamically generate tabset panels <https://quarto.org/docs/output-formats/html-basics.html#tabsets> 
-    in a 'Quarto' HTML (HyperText Markup Language) document using a data frame as input.
+    in a 'Quarto' HTML document using a data frame as input.
 License: MIT + file LICENSE
-URL: https://github.com/sayuks/quartabs
+URL: https://sayuks.github.io/quartabs, https://github.com/sayuks/quartabs
 BugReports: https://github.com/sayuks/quartabs/issues
 Suggests: 
     altdoc,

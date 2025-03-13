@@ -1,3 +1,3 @@
-# quartabs 0.0.0.9000
+# quartabs 0.1.0
 
 * Initial CRAN submission.
