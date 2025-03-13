@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 [![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
 <!-- badges: end -->
 
-Dynamically Generate [Tabset Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets) in a Quarto HTML Document.
+Dynamically Generate [Tabset Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets) in Quarto HTML Documents.
 
 ## Installation
 

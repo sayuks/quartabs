@@ -13,7 +13,7 @@ coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.co
 
 Dynamically Generate [Tabset
 Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
-in a Quarto HTML Document.
+in Quarto HTML Documents.
 
 ## Installation
 
