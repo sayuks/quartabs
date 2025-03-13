@@ -520,9 +520,20 @@ df2 |>
 
 Use the `layout` argument to display figure and table side by side with a width of 7:3.
 
+```{{r}}
+#| results: asis
+
+df2 |>
+  render_tabset(
+    c(cyl, am),
+    c(fig, tbl),
+    layout = '::: {layout="[7, 3]"}'
+  )
+```
+
 ```{r}
 #| results: asis
-#| echo: fenced
+#| echo: false
 
 df2 |>
   render_tabset(
@@ -647,7 +658,7 @@ References:
 
 - [plotly objects are invisible in R Markdown - stackoverflow](https://stackoverflow.com/questions/75992729/plotly-objects-are-invisible-in-r-markdown)
 
-For example, we use `{plotly}` to create interactive figures. Simply apply `plotly::ggplotly()` to the already created ggplot object. **Then it is passed to `htmltools::div()`**.
+For example, we use `{plotly}` to create interactive figures. Simply apply `plotly::ggplotly()` to the already created ggplot object. **Then it needs to be passed to `htmltools::div()`**.
 
 ```{r}
 df4 <- df2 |>
