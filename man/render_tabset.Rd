@@ -82,7 +82,8 @@ Define the order beforehand, e.g. using factor.
 \code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}
 \item If \code{tabset_vars} or \code{output_vars} have "factor", "Date" and "POSIXt"
 columns, they are converted internally to character. This is to prevent it
-being displayed as numeric when \code{\link[=cat]{cat()}} is executed.
+being displayed as numeric when \code{\link[=cat]{cat()}} is executed. If \code{sort = TRUE},
+sorting is performed before conversion to string.
 }
 }
 \section{Limitations}{
@@ -95,8 +96,6 @@ complex layouts may not work.
 it seems JavaScript dependencies need to be resolved.
 A simple solution is to wrap the output in \code{\link[htmltools:builder]{htmltools::div()}}
 and create a dummy plot in another chunk. See the Get started for details.
-\item If a column of type list contains a named vector or list,
-the values may not display well.
 \item When \code{tabset_vars} and \code{output_vars} have the following columns,
 they may not display well:
 \itemize{
@@ -106,6 +105,9 @@ columns).
 \item Classes with their own printing methods,
 such as "difftime", "ts", .etc.
 }
+\item When specifying a list-type column that includes ggplot objects in
+\code{output_vars}, setting the chunk option \code{echo: fenced} may cause
+the plots to not display correctly.
 }
 }
 

@@ -15,7 +15,8 @@
 #'   [print()] and normal columns are output with [cat()]
 #' - If `tabset_vars` or `output_vars` have "factor", "Date" and "POSIXt"
 #'   columns, they are converted internally to character. This is to prevent it
-#'   being displayed as numeric when [cat()] is executed.
+#'   being displayed as numeric when [cat()] is executed. If `sort = TRUE`,
+#'   sorting is performed before conversion to string.
 #' @param data A data frame.
 #' @param tabset_vars Columns to use as tabset labels. Internally passed
 #'   to the `select` argument of [subset()]. Accepts raw column names,
@@ -60,8 +61,6 @@
 #'   it seems JavaScript dependencies need to be resolved.
 #'   A simple solution is to wrap the output in [htmltools::div()]
 #'   and create a dummy plot in another chunk. See the Get started for details.
-#' - If a column of type list contains a named vector or list,
-#'   the values may not display well.
 #' - When `tabset_vars` and `output_vars` have the following columns,
 #'   they may not display well:
 #'     - A column of type list contains a named vector or list
@@ -69,6 +68,9 @@
 #'       columns).
 #'     - Classes with their own printing methods,
 #'       such as "difftime", "ts", .etc.
+#' - When specifying a list-type column that includes ggplot objects in
+#'   `output_vars`, setting the chunk option `echo: fenced` may cause
+#'   the plots to not display correctly.
 #' @references As this function is focused on quickly and dynamically
 #'   generating tabsets and chunks, it is difficult to customize it on a
 #'   chunk-by-chunk basis. The regular way to dynamically create chunks is

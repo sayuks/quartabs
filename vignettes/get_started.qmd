@@ -93,7 +93,7 @@ df1
 
 ### `tabset_vars`, `output_vars`
 
-The first argument is `tabset_vars`, which specifies the column names to be displayed in the tab; the second argument is `output_vars`, which specifies the columns to be displayed in the tab.
+The `tabset_vars` argument specifies columns to display as tab labels. The `output_vars` argument specifies the columns to display in the tab.
 
 ::: {.callout-note icon="true"}
 ## Don't forget!
@@ -150,7 +150,7 @@ For example, `var1` displays "1", while `var2` of type list displays "[1] 1".
 
 In `render_tabset()`, `cat()` is used to output for columns that are not list types.
 However, if `cat()` is used, factor, Date, POSIXt are output as an integer. 
-So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string.
+So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string (after sorting if `sort = TRUE`).
 
 Here are some simple examples. First, define test objects.
 
@@ -463,15 +463,27 @@ This way, the values of other columns in the `list()` can be used freely.
 (In the `nest() + map()` method, it was necessary to define in advance 
 which columns to use when calling in the `map()`).
 
-The outputs are grouped rowwise and already sorted by `cly` and `am`.
+The outputs are grouped row-wise and already sorted by `cly` and `am`.
 
 ### Figures
 
-In the following, `df2` is used. (Works in the same way in `df2_rowwise`).
+In the following, `df2` is used. (Works in the same way if you use  `df2_rowwise`).
+
+::: {.callout-warning}
+When specifying a list-type column that includes ggplot objects in `output_vars`, setting the chunk option `echo: fenced` may cause the plots to not display correctly.
+:::
+
+```{{r}}
+#| results: asis
+
+df2 |>
+  render_tabset(c(cyl, am), fig)
+```
+
 
 ```{r}
 #| results: asis
-#| echo: fenced
+#| echo: false
 
 df2 |>
   render_tabset(c(cyl, am), fig)
@@ -489,9 +501,16 @@ df2 |>
 
 ### Figures and tables
 
+```{{r}}
+#| results: asis
+
+df2 |>
+  render_tabset(c(cyl, am), c(fig, tbl))
+```
+
 ```{r}
 #| results: asis
-#| echo: fenced
+#| echo: false
 
 df2 |>
   render_tabset(c(cyl, am), c(fig, tbl))
