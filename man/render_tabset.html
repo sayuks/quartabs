@@ -206,7 +206,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 class="unnumbered anchored" data-anchor-id="dynamically-generate-tabset-panels-in-a-quarto-html-document">Dynamically Generate Tabset Panels in a Quarto HTML Document</h2>
 <section id="description" class="level3">
 <h3 class="anchored" data-anchor-id="description">Description</h3>
-<p>The function takes in a data frame and produces tabset panels for each unique combination of the tabset variables. <em><strong>Only works with Quarto HTML documents.</strong></em></p>
+<p><code>render_tabset()</code> takes a data frame as input and outputs the markdown that generates the <a href="https://quarto.org/docs/output-formats/html-basics.html#tabsets">tabset</a> to stdout (console). <em><strong>Only works with Quarto HTML documents.</strong></em></p>
 </section>
 <section id="usage" class="level3">
 <h3 class="anchored" data-anchor-id="usage">Usage</h3>
@@ -323,13 +323,13 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 <p>For columns specified in output_vars, columns of type list are output with <code>print()</code> and normal columns are output with <code>cat()</code></p>
 </li>
 <li>
-<p>If <code>tabset_vars</code> or <code>output_vars</code> have "factor", "Date" and "POSIXt" columns, they are converted internally to character. This is to prevent it being displayed as numeric when <code>cat()</code> is executed.</p>
+<p>If <code>tabset_vars</code> or <code>output_vars</code> have "factor", "Date" and "POSIXt" columns, they are converted internally to character. This is to prevent it being displayed as numeric when <code>cat()</code> is executed. If <code>sort = TRUE</code>, sorting is performed before conversion to string.</p>
 </li>
 </ul>
 </section>
 <section id="value" class="level3">
 <h3 class="anchored" data-anchor-id="value">Value</h3>
-<p><code>NULL</code> invisibly. This function is called for its side effect.</p>
+<p><code>NULL</code> invisibly. This function outputs the markdown that generates the <a href="https://quarto.org/docs/output-formats/html-basics.html#tabsets">tabset</a> to stdout (console).</p>
 </section>
 <section id="limitations" class="level3">
 <h3 class="anchored" data-anchor-id="limitations">Limitations</h3>
@@ -341,9 +341,6 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 <p>When outputting tables or figures that use JavaScript (such as <code>{plotly}</code>, <code>{leaflet}</code>, <code>{DT}</code>, <code>{reactable}</code>, etc.), it seems JavaScript dependencies need to be resolved. A simple solution is to wrap the output in <code>htmltools::div()</code> and create a dummy plot in another chunk. See the Get started for details.</p>
 </li>
 <li>
-<p>If a column of type list contains a named vector or list, the values may not display well.</p>
-</li>
-<li>
 <p>When <code>tabset_vars</code> and <code>output_vars</code> have the following columns, they may not display well:</p>
 <ul>
 <li>
@@ -353,6 +350,9 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 <p>Classes with their own printing methods, such as "difftime", "ts", .etc.</p>
 </li>
 </ul>
+</li>
+<li>
+<p>When specifying a list-type column that includes ggplot objects in <code>output_vars</code>, setting the chunk option <code>echo: fenced</code> may cause the plots to not display correctly.</p>
 </li>
 </ul>
 </section>
