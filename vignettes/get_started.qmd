@@ -42,7 +42,12 @@ Tab content for B
 :::
 ````
 
-It would be tedious to manually rewrite this each time the number of tabs increases or decreases. The `quartabs::render_tabset()` takes a data frame as input and outputs it dynamically.
+It is troublesome to rewrite manually in the following cases:  
+- There are many tabs.  
+- The number of tabs increases or decreases.  
+- You want to write nested tabs.  
+
+The `quartabs::render_tabset()` takes a data frame as input and outputs it dynamically.
 **Note that the chunk option must be `results: asis`**.
 
 ```{r}

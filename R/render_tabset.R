@@ -5,6 +5,7 @@
 #' `render_tabset()` takes a data frame as input and outputs the markdown
 #' that generates the [tabset](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
 #' to stdout (console). ***Only works with Quarto HTML documents.***
+#' See [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) for details.
 #' @details
 #' - Write `#| results: asis` at the beginning of the chunk or
 #'   `results='asis'` in the chunk options.

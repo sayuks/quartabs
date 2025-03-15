@@ -72,6 +72,7 @@ to stdout (console).
 \code{render_tabset()} takes a data frame as input and outputs the markdown
 that generates the \href{https://quarto.org/docs/output-formats/html-basics.html#tabsets}{tabset}
 to stdout (console). \emph{\strong{Only works with Quarto HTML documents.}}
+See \href{https://sayuks.github.io/quartabs/vignettes/get_started.html}{Get started} for details.
 }
 \details{
 \itemize{
