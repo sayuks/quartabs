@@ -5,10 +5,12 @@
 
 <!-- badges: start -->
 
+[![CRAN](https://www.r-pkg.org/badges/version/quartabs)](https://CRAN.R-project.org/package=quartabs)
 [![R-CMD-check](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.codecov.io/gh/sayuks/quartabs)
 [![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
+![!Monthly Downloads](https://cranlogs.r-pkg.org/badges/quartabs)
 <!-- badges: end -->
 
 Dynamically Generate [Tabset
