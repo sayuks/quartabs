@@ -43,6 +43,7 @@ Tab content for B
 ````
 
 It is troublesome to rewrite manually in the following cases:  
+
 - There are many tabs.  
 - The number of tabs increases or decreases.  
 - You want to write nested tabs.  
