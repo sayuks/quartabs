@@ -119,7 +119,7 @@ knitr::opts_chunk$set(
 
 df1 |>
   render_tabset(
-    tabset_vars = id, 
+    tabset_vars = id,
     output_vars = var1
   )
 ```
