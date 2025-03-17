@@ -13,9 +13,9 @@ coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.co
 ![!Monthly Downloads](https://cranlogs.r-pkg.org/badges/quartabs)
 <!-- badges: end -->
 
-Dynamically Generate [Tabset
+The `{quartabs}` is an R package that dynamically generates [Tabset
 Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
-in Quarto HTML Documents.
+in Quarto HTML documents.
 
 ## Installation
 
