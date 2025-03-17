@@ -8,7 +8,6 @@ render_tabset(
   data,
   tabset_vars,
   output_vars,
-  sort = TRUE,
   layout = NULL,
   heading_levels = NULL,
   pills = FALSE,
@@ -25,10 +24,6 @@ strings, numbers and logical values.}
 \item{output_vars}{Columns to display in each tabset panel. Internally
 passed to the \code{select} argument of \code{\link[=subset]{subset()}}. Accepts raw column names,
 strings, numbers and logical values.}
-
-\item{sort}{Logical, whether to sort the \code{data} with \code{tabset_vars}.
-The default is \code{TRUE}. If \code{FALSE}, the tabset will be output in the
-original order of the \code{data}.}
 
 \item{layout}{\code{NULL} or a character vector of length 1 for specifying layout
 in tabset panel. If not \code{NULL}, \code{layout} must begin with at least three
@@ -81,10 +76,11 @@ See \href{https://sayuks.github.io/quartabs/vignettes/get_started.html}{Get star
 \item If multiple \code{tabset_vars} are given, create nested tabsets.
 \item For columns specified in \code{output_vars}, columns of type list are output with
 \code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}.
+\item The \code{data} is sorted internally by \code{tabset_vars}.
 \item If \code{tabset_vars} or \code{output_vars} have "factor", "Date" and "POSIXt"
 columns, they are converted internally to character. This is to prevent it
-being displayed as numeric when \code{\link[=cat]{cat()}} is executed. If \code{sort = TRUE},
-sorting is performed before conversion to string.
+being displayed as numeric when \code{\link[=cat]{cat()}} is executed.
+Sorting by \code{tabset_vars} is performed before conversion to string.
 }
 }
 \section{Limitations}{

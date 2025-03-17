@@ -118,20 +118,13 @@ knitr::opts_chunk$set(
 #| echo: fenced
 
 df1 |>
-  render_tabset(id, var1)
+  render_tabset(
+    tabset_vars = id, 
+    output_vars = var1
+  )
 ```
 
-The `sort` argument (defaults to `TRUE`) sorts the data by `tabsest_vars`. Therefore, the id column were displayed in ascending order.
-
-If `sort = FALSE`, the tabset will be output in the original order of the data.
-
-```{r}
-#| results: asis
-#| echo: fenced
-
-df1 |>
-  render_tabset(id, var1, sort = FALSE)
-```
+The data is sorted internally by `tabsest_vars`. Therefore, the id column were displayed in ascending order.
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
@@ -155,7 +148,7 @@ For example, `var1` displays "1", while `var2` of type list displays "[1] 1".
 
 In `render_tabset()`, `cat()` is used to output for columns that are not list types.
 However, if `cat()` is used, factor, Date, POSIXt are output as an integer. 
-So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string (after sorting if `sort = TRUE`).
+So, if these are included in `tabset_vars` or `output_vars`, it is converted internally to string (after sorting by `tabset_vars`).
 
 Here are some simple examples. First, define test objects.
 

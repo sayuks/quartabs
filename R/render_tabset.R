@@ -12,10 +12,11 @@
 #' - If multiple `tabset_vars` are given, create nested tabsets.
 #' - For columns specified in `output_vars`, columns of type list are output with
 #'   [print()] and normal columns are output with [cat()].
+#' - The `data` is sorted internally by `tabset_vars`.
 #' - If `tabset_vars` or `output_vars` have "factor", "Date" and "POSIXt"
 #'   columns, they are converted internally to character. This is to prevent it
-#'   being displayed as numeric when [cat()] is executed. If `sort = TRUE`,
-#'   sorting is performed before conversion to string.
+#'   being displayed as numeric when [cat()] is executed.
+#'   Sorting by `tabset_vars` is performed before conversion to string.
 #' @param data A data frame.
 #' @param tabset_vars Columns to use as tabset labels. Internally passed
 #'   to the `select` argument of [subset()]. Accepts raw column names,
@@ -23,9 +24,6 @@
 #' @param output_vars Columns to display in each tabset panel. Internally
 #'   passed to the `select` argument of [subset()]. Accepts raw column names,
 #'   strings, numbers and logical values.
-#' @param sort Logical, whether to sort the `data` with `tabset_vars`.
-#'   The default is `TRUE`. If `FALSE`, the tabset will be output in the
-#'   original order of the `data`.
 #' @param layout `NULL` or a character vector of length 1 for specifying layout
 #'   in tabset panel. If not `NULL`, `layout` must begin with at least three
 #'   or more repetitions of ":" (e.g. ":::"). Closing div (e.g. ":::") is
@@ -121,7 +119,6 @@
 render_tabset <- function(data,
                           tabset_vars,
                           output_vars,
-                          sort = TRUE,
                           layout = NULL,
                           heading_levels = NULL,
                           pills = FALSE,
@@ -144,7 +141,7 @@ render_tabset <- function(data,
   heading_levels <- l$heading_levels
   len_tab <- length(tabset_names)
 
-  data <- prep_data(data, tabset_names, output_names, sort)
+  data <- prep_data(data, tabset_names, output_names)
   tabset_master <- get_tabset_master(data, tabset_names)
 
   # For each row of the data, print the tabset and output panels
@@ -451,12 +448,9 @@ validate_data <- function(data,
   )
 }
 
-prep_data <- function(data, tabset_names, output_names, sort = TRUE) {
-  assert_logical(sort)
+prep_data <- function(data, tabset_names, output_names) {
   data <- data[, c(tabset_names, output_names)]
-  if (sort) {
-    data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
-  }
+  data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
   data[] <- lapply(
     data,
     function(x) {
@@ -470,37 +464,71 @@ prep_data <- function(data, tabset_names, output_names, sort = TRUE) {
   data
 }
 
+
 get_tabset_master <- function(data, tabset_names) {
-  len_tab <- length(tabset_names)
+  n <- nrow(data)
+  data[tabset_names] <- lapply(
+    tabset_names,
+    function(tn) {
+      x <- data[[tn]]
+      if (!anyNA(x)) {
+        return(x)
+      }
+      pf <- "__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"
+      if (pf %in% x) {
+        stop(
+          "If there are missing values in the column ",
+          sprintf("`%s` ", tn),
+          "that is specified in `tabset_vars`, ",
+          "it must not contain the string ",
+          sprintf("\"%s\". ", pf),
+          "It is an internal reserved word used ",
+          "in the temporary handling of missing values."
+        )
+      }
+      x <- as.character(x)
+      x[is.na(x)] <- pf
+      x
+    }
+  )
+
+  .flag_fn <- function(n, df, fun) {
+    as.logical(
+      ave(
+        x = seq_len(n),
+        do.call(paste, c(df, sep = "_")),
+        FUN = fun
+      )
+    )
+  }
 
   res <- lapply(
-    seq_len(len_tab),
+    seq_along(tabset_names),
     function(j) {
       gvars <- tabset_names[seq_len(j) - 1]
+      out <- data.frame(matrix(ncol = 0, nrow = n))
 
-      l <- if (length(gvars) > 0) {
-        split(data, data[gvars])
+      if (length(gvars) == 0) {
+        out[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
+        out[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
       } else {
-        list(data)
+        out[paste0("tabset", j, "_start")] <- .flag_fn(
+          n = n,
+          df = data[gvars],
+          fun = function(x) seq_along(x) == 1
+        )
+        out[paste0("tabset", j, "_end")] <- .flag_fn(
+          n = n,
+          df = data[gvars],
+          fun = function(x) seq_along(x) == length(x)
+        )
       }
 
-      a <- lapply(
-        l,
-        function(df) {
-          n <- nrow(df)
-          tmp <- data.frame(matrix(ncol = 0, nrow = n))
-          tmp[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
-          tmp[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
-          tmp
-        }
-      )
-
-      do.call(rbind, a)
+      out
     }
   )
 
   res <- do.call(cbind, res)
-  rownames(res) <- NULL
   res
 }
 
