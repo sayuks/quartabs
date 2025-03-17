@@ -4,7 +4,7 @@
     "href": "vignettes/get_started.html",
     "title": "Get started",
     "section": "",
-    "text": "Tabset is an interactive panel in Quarto html documents.\n\nAB\n\n\nTab content for A\n\n\nTab content for B\n\n\n\nThis was written as follows.\n::: {.panel-tabset}\n## A\n\nTab content for A\n\n## B\n\nTab content for B\n:::\nIt is troublesome to rewrite manually in the following cases:\n- There are many tabs.\n- The number of tabs increases or decreases.\n- You want to write nested tabs.\nThe quartabs::render_tabset() takes a data frame as input and outputs it dynamically. Note that the chunk option must be results: asis.\n```{r}\n#| results: asis\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  quartabs::render_tabset(tab, value)\n```\n\nAB\n\n\nTab content for A\n\n\nTab content for B",
+    "text": "Tabset is an interactive panel in Quarto html documents.\n\nAB\n\n\nTab content for A\n\n\nTab content for B\n\n\n\nThis was written as follows.\n::: {.panel-tabset}\n## A\n\nTab content for A\n\n## B\n\nTab content for B\n:::\nIt is troublesome to rewrite manually in the following cases:\n\nThere are many tabs.\n\nThe number of tabs increases or decreases.\n\nYou want to write nested tabs.\n\nThe quartabs::render_tabset() takes a data frame as input and outputs it dynamically. Note that the chunk option must be results: asis.\n```{r}\n#| results: asis\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  quartabs::render_tabset(tab, value)\n```\n\nAB\n\n\nTab content for A\n\n\nTab content for B",
     "crumbs": [
       "Get started"
     ]
@@ -14,7 +14,7 @@
     "href": "vignettes/get_started.html#introduction",
     "title": "Get started",
     "section": "",
-    "text": "Tabset is an interactive panel in Quarto html documents.\n\nAB\n\n\nTab content for A\n\n\nTab content for B\n\n\n\nThis was written as follows.\n::: {.panel-tabset}\n## A\n\nTab content for A\n\n## B\n\nTab content for B\n:::\nIt is troublesome to rewrite manually in the following cases:\n- There are many tabs.\n- The number of tabs increases or decreases.\n- You want to write nested tabs.\nThe quartabs::render_tabset() takes a data frame as input and outputs it dynamically. Note that the chunk option must be results: asis.\n```{r}\n#| results: asis\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  quartabs::render_tabset(tab, value)\n```\n\nAB\n\n\nTab content for A\n\n\nTab content for B",
+    "text": "Tabset is an interactive panel in Quarto html documents.\n\nAB\n\n\nTab content for A\n\n\nTab content for B\n\n\n\nThis was written as follows.\n::: {.panel-tabset}\n## A\n\nTab content for A\n\n## B\n\nTab content for B\n:::\nIt is troublesome to rewrite manually in the following cases:\n\nThere are many tabs.\n\nThe number of tabs increases or decreases.\n\nYou want to write nested tabs.\n\nThe quartabs::render_tabset() takes a data frame as input and outputs it dynamically. Note that the chunk option must be results: asis.\n```{r}\n#| results: asis\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  quartabs::render_tabset(tab, value)\n```\n\nAB\n\n\nTab content for A\n\n\nTab content for B",
     "crumbs": [
       "Get started"
     ]
