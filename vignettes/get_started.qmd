@@ -124,7 +124,7 @@ df1 |>
   )
 ```
 
-The data is sorted internally by `tabsest_vars`. Therefore, the id column were displayed in ascending order.
+The data is sorted internally by `tabsest_vars`. Therefore, the tabsets were displayed in ascending order.
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
