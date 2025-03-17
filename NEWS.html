@@ -168,18 +168,34 @@ ul.task-list li input[type="checkbox"] {
 
 
 
-<section id="quartabs-0.1.0.9001-development-version" class="level1">
-<h1>quartabs 0.1.0.9001 (development version)</h1>
+<section id="quartabs-0.1.0.9002-development-version" class="level1">
+<h1>quartabs 0.1.0.9002 (development version)</h1>
+<section id="breaking-changes" class="level2">
+<h2 class="anchored" data-anchor-id="breaking-changes">Breaking changes</h2>
 <ul>
-<li>Added a link to the Get started page in the <code>render_tabset()</code> documentation.<br>
-</li>
-<li>Minor edits to the Get Started documentation.</li>
+<li>The <code>sort</code> argument of <code>render_tabset()</code> has been removed. The data is always sorted by <code>tabset_vars</code>.</li>
 </ul>
+</section>
+<section id="minor-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="minor-improvements">Minor improvements</h2>
+<ul>
+<li>Added a link to the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a> page in the <code>render_tabset()</code> documentation.<br>
+</li>
+<li>Minor edits to the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a> documentation.</li>
+</ul>
+</section>
+<section id="bug-fixes" class="level2">
+<h2 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h2>
+<ul>
+<li><code>render_tabset()</code> now works correctly even if <code>tabset_vars</code> contains missing values (<a href="https://github.com/sayuks/quartabs/issues/3">#3</a>).</li>
+</ul>
+</section>
 </section>
 <section id="quartabs-0.1.0" class="level1">
 <h1>quartabs 0.1.0</h1>
 <ul>
 <li>Initial CRAN submission.</li>
+<li>New <code>render_tabset()</code> takes a data frame as input and outputs the markdown that generates the <a href="https://quarto.org/docs/output-formats/html-basics.html#tabsets">tabset</a> to stdout (console).</li>
 </ul>
 
 
