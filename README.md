@@ -13,11 +13,13 @@ coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.co
 <a href = "https://sayuks.github.io/quartabs/" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/quartabs"></a>
 <!-- badges: end -->
 
-The `{quartabs}` is an R package that dynamically generates [Tabset
+The `quartabs` is an R package that dynamically generates [Tabset
 Panels](https://quarto.org/docs/output-formats/html-basics.html#tabsets)
 in Quarto HTML documents.
 
 ## Installation
+
+You can install `quartabs` from CRAN:
 
 ``` r
 install.packages("quartabs")
