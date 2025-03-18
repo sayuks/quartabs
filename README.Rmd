@@ -33,7 +33,7 @@ You can install `quartabs` from CRAN:
 install.packages("quartabs")
 ```
 
-You can install the development version of quartabs from [GitHub](https://github.com/) with:
+You can install the development version of `quartabs` from [GitHub](https://github.com/) with:
 
 ``` r
 # install.packages("pak")
