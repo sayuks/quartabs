@@ -5,12 +5,12 @@
 
 <!-- badges: start -->
 
-[![CRAN](https://www.r-pkg.org/badges/version/quartabs)](https://CRAN.R-project.org/package=quartabs)
+<a href = "https://CRAN.R-project.org/package=quartabs" target = "_blank"><img src="https://www.r-pkg.org/badges/version/quartabs"></a>
 [![R-CMD-check](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.codecov.io/gh/sayuks/quartabs)
 [![lint.yaml](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/lint.yaml)
-![!Monthly Downloads](https://cranlogs.r-pkg.org/badges/quartabs)
+<a href = "https://sayuks.github.io/quartabs/" target = "_blank"><img src="https://cranlogs.r-pkg.org/badges/quartabs"></a>
 <!-- badges: end -->
 
 The `{quartabs}` is an R package that dynamically generates [Tabset
