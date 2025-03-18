@@ -181,14 +181,14 @@
     "href": "index.html",
     "title": "quartabs",
     "section": "",
-    "text": "The {quartabs} is an R package that dynamically generates Tabset Panels in Quarto HTML documents.\n\n\ninstall.packages(\"quartabs\")\nYou can install the development version of quartabs from GitHub with:\n# install.packages(\"pak\")\npak::pak(\"sayuks/quartabs\")\n\n\n\nrender_tabset() takes a data frame as input and outputs the markdown that generates the tabset to stdout (console).\nIn the actual .qmd file, specify the chunk option results: asis.\nlibrary(quartabs)\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  render_tabset(tab, value)\n#&gt; ::: {.panel-tabset}\n#&gt; \n#&gt; # A\n#&gt; \n#&gt; Tab content for A\n#&gt; \n#&gt; # B\n#&gt; \n#&gt; Tab content for B\n#&gt; \n#&gt; :::\nSee Get started for details.\n\n\n\nPlease note that the quartabs project is released with a Contributor Code of Conduct. By contributing to this project, you agree to abide by its terms."
+    "text": "The quartabs is an R package that dynamically generates Tabset Panels in Quarto HTML documents.\n\n\nYou can install quartabs from CRAN:\ninstall.packages(\"quartabs\")\nYou can install the development version of quartabs from GitHub with:\n# install.packages(\"pak\")\npak::pak(\"sayuks/quartabs\")\n\n\n\nrender_tabset() takes a data frame as input and outputs the markdown that generates the tabset to stdout (console).\nIn the actual .qmd file, specify the chunk option results: asis.\nlibrary(quartabs)\n\ndata.frame(\n  tab = c(\"A\", \"B\"),\n  value = c(\"Tab content for A\", \"Tab content for B\")\n) |&gt;\n  render_tabset(tab, value)\n#&gt; ::: {.panel-tabset}\n#&gt; \n#&gt; # A\n#&gt; \n#&gt; Tab content for A\n#&gt; \n#&gt; # B\n#&gt; \n#&gt; Tab content for B\n#&gt; \n#&gt; :::\nSee Get started for details.\n\n\n\nPlease note that the quartabs project is released with a Contributor Code of Conduct. By contributing to this project, you agree to abide by its terms."
   },
   {
     "objectID": "index.html#installation",
     "href": "index.html#installation",
     "title": "quartabs",
     "section": "",
-    "text": "install.packages(\"quartabs\")\nYou can install the development version of quartabs from GitHub with:\n# install.packages(\"pak\")\npak::pak(\"sayuks/quartabs\")"
+    "text": "You can install quartabs from CRAN:\ninstall.packages(\"quartabs\")\nYou can install the development version of quartabs from GitHub with:\n# install.packages(\"pak\")\npak::pak(\"sayuks/quartabs\")"
   },
   {
     "objectID": "index.html#examples",
