@@ -3,5 +3,6 @@ bibentry(
   title = "quartabs: Dynamically Generate Tabset Panels in 'Quarto' HTML Documents",
   author = person("Yusuke", "Sasaki", email = "sayuks.dev@gmail.com", role = c("aut", "cre")),
   year = 2025,
-  url = "https://CRAN.R-project.org/package=quartabs"
+  url = "https://CRAN.R-project.org/package=quartabs",
+  doi = "10.32614/CRAN.package.quartabs"
 )
