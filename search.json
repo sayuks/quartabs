@@ -206,7 +206,7 @@
     "href": "CITATION.html",
     "title": "Citation",
     "section": "",
-    "text": "Citation\n\nSasaki Y (2025). quartabs: Dynamically Generate Tabset Panels in ‘Quarto’ HTML Documents. https://CRAN.R-project.org/package=quartabs.",
+    "text": "Citation\n\nSasaki Y (2025). quartabs: Dynamically Generate Tabset Panels in ‘Quarto’ HTML Documents. doi:10.32614/CRAN.package.quartabs, https://CRAN.R-project.org/package=quartabs.",
     "crumbs": [
       "Get started",
       "Citation"
