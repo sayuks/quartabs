@@ -5,7 +5,7 @@
 
 <!-- badges: start -->
 
-<a href = "https://CRAN.R-project.org/package=quartabs" target = "_blank"><img src="https://www.r-pkg.org/badges/version/quartabs"></a>
+<a href = "https://cran.r-project.org/web/packages/quartabs/index.html" target = "_blank"><img src="https://www.r-pkg.org/badges/version/quartabs"></a>
 [![R-CMD-check](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml/badge.svg)](https://github.com/sayuks/quartabs/actions/workflows/R-CMD-check.yaml)
 [![Codecov test
 coverage](https://codecov.io/gh/sayuks/quartabs/graph/badge.svg)](https://app.codecov.io/gh/sayuks/quartabs)
