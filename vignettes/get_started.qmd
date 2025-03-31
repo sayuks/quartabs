@@ -609,9 +609,9 @@ df3 |>
 
 :::{.callout-tip}
 
-## `nest_by()`
+## Using row-wise data
 
-Replace the above `nest() + map()` method with `rowwise()`.
+Replace the above `nest() + map()` method with row-wise data.
 
 ```{r}
 df3_rowwise <- df2_rowwise |>
