@@ -494,7 +494,7 @@ get_tabset_master <- function(data, tabset_names) {
 
   .flag_fn <- function(n, df, fun) {
     as.logical(
-      ave(
+      stats::ave(
         x = seq_len(n),
         do.call(paste, c(df, sep = "_")),
         FUN = fun

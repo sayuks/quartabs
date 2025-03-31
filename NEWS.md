@@ -1,4 +1,4 @@
-# quartabs 0.1.0.9004 (development version)
+# quartabs 0.1.1
 
 ## Breaking changes
 
@@ -6,6 +6,7 @@
 
 ## Minor improvements
 
+* Added `{stats}` to Imports.
 * Added CITATION.
 * Added a link to the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) page in the `render_tabset()` documentation.  
 * Minor edits to the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) documentation.
