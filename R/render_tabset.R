@@ -70,6 +70,11 @@
 #' - When specifying a list-type column that includes ggplot objects in
 #'   `output_vars`, setting the chunk option `echo: fenced` may cause
 #'   the plots to not display correctly.
+#' - If the chunk label starts with `fig-` (e.g. `#| label: fig-example`),
+#'   Quarto holds all plots until the end of the chunk, so they are displayed
+#'   below the tabset instead of inside each tab panel. Use a label that does
+#'   not start with `fig-`, or no label. To make each plot a
+#'   cross-referenceable figure, see the Get started for details.
 #' @references As this function is focused on quickly and dynamically
 #'   generating tabsets and chunks, it is difficult to customize it on a
 #'   chunk-by-chunk basis. The regular way to dynamically create chunks is
@@ -159,7 +164,7 @@ render_tabset <- function(data,
     )
   })
 
-  return(invisible())
+  invisible()
 }
 
 # Function to print tabsets and outputs for a single row

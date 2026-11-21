@@ -542,6 +542,63 @@ df2 |>
   )
 ```
 
+### Cross-referenceable figures
+
+::: {.callout-warning}
+If the chunk label starts with `fig-` (e.g. `#| label: fig-example`), Quarto holds all plots until the end of the chunk.
+As a result, the plots are displayed below the tabset instead of inside each tab panel.
+Use a label that does not start with `fig-`, or no label.
+:::
+
+To make each plot a [cross-referenceable figure](https://quarto.org/docs/authoring/cross-references.html), wrap it in a figure div using character columns in `output_vars`:
+an opening div with a `fig-` id for each row, the plot, a caption (the last paragraph in the div becomes the caption) and a closing div.
+
+```{r}
+df2_xref <- df2 |>
+  mutate(
+    id = paste0(
+      "fig-cyl", gsub("\\D", "", cyl),
+      "-am", gsub("\\D", "", am)
+    ),
+    fig_open = paste0("::: {#", id, "}"),
+    caption = paste("Relationship between wt and mpg:", title),
+    fig_close = ":::"
+  )
+
+df2_xref |>
+  select(cyl, am, id)
+```
+
+Here, the chunk label is `mtcars-xref`, which does not start with `fig-`.
+
+```{{r}}
+#| label: mtcars-xref
+#| results: asis
+
+df2_xref |>
+  render_tabset(
+    c(cyl, am),
+    c(fig_open, fig, caption, fig_close)
+  )
+```
+
+```{r}
+#| label: mtcars-xref
+#| results: asis
+#| echo: false
+
+df2_xref |>
+  render_tabset(
+    c(cyl, am),
+    c(fig_open, fig, caption, fig_close)
+  )
+```
+
+Now the figures can be referenced in the text, e.g. @fig-cyl4-am0 and @fig-cyl8-am1.
+
+The `layout` argument cannot be used for this purpose,
+because the same `layout` is shared by all rows and the ids would be duplicated.
+
 ## Advanced examples
 
 ### Pre-saved figures
