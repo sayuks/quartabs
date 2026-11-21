@@ -105,6 +105,11 @@ such as "difftime", "ts", .etc.
 \item When specifying a list-type column that includes ggplot objects in
 \code{output_vars}, setting the chunk option \code{echo: fenced} may cause
 the plots to not display correctly.
+\item If the chunk label starts with \verb{fig-} (e.g. \verb{#| label: fig-example}),
+Quarto holds all plots until the end of the chunk, so they are displayed
+below the tabset instead of inside each tab panel. Use a label that does
+not start with \verb{fig-}, or no label. To make each plot a
+cross-referenceable figure, see the Get started for details.
 }
 }
 

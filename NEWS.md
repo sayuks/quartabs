@@ -1,3 +1,9 @@
+# quartabs (development version)
+
+## Minor improvements
+
+* Documented that `render_tabset()` cannot place plots inside tab panels when the chunk label starts with `fig-`, and added an example of cross-referenceable figures in each tab to the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#6).
+
 # quartabs 0.1.1
 
 ## Breaking changes
