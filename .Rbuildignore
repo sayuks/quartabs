@@ -14,3 +14,5 @@
 ^figures$
 ^CODE_OF_CONDUCT\.md$
 ^CRAN-SUBMISSION$
+^AGENTS\.md$
+^GLOSSARY\.md$
