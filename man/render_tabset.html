@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-44f7b187718e43abfea0560aa82c1a71.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -362,6 +362,9 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 </li>
 <li>
 <p>When specifying a list-type column that includes ggplot objects in <code>output_vars</code>, setting the chunk option <code>echo: fenced</code> may cause the plots to not display correctly.</p>
+</li>
+<li>
+<p>If the chunk label starts with <code style="white-space: pre;">fig-</code> (e.g.&nbsp;<code style="white-space: pre;">#| label: fig-example</code>), Quarto holds all plots until the end of the chunk, so they are displayed below the tabset instead of inside each tab panel. Use a label that does not start with <code style="white-space: pre;">fig-</code>, or no label. To make each plot a cross-referenceable figure, see the Get started for details.</p>
 </li>
 </ul>
 </section>
