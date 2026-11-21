@@ -164,7 +164,7 @@ render_tabset <- function(data,
     )
   })
 
-  return(invisible())
+  invisible()
 }
 
 # Function to print tabsets and outputs for a single row
