@@ -10,6 +10,7 @@ render_tabset(
   output_vars,
   layout = NULL,
   heading_levels = NULL,
+  active = NULL,
   pills = FALSE,
   tabset_width = "default"
 )
@@ -49,6 +50,27 @@ it is preferable to gradually increase the level, as in 1, 2 and 3.
 \item If the element is NA, tabset is displayed.
 }
 }}
+
+\item{active}{\code{NULL} or a named list that chooses the active tab, the tab
+shown by default when the page loads (Quarto's \code{.active} class, which
+requires Quarto 1.7 or later; older versions ignore it). Each name is a
+column specified in \code{tabset_vars}, and each element is either:
+\itemize{
+\item A single non-missing value: the tab with this value is active in every
+tabset of that column that contains it. It is an error if no tab of
+that column has this value.
+\item A function: it is called once per tabset of that column (that is, for
+the sibling tabs under each parent tab) with the unique tab values in
+display order, and must return one of them, or \code{NA} for no active tab.
+For example, \code{max} makes the latest tab active under each parent tab,
+and \code{function(x) x[length(x)]} the last one.
+}
+
+Values are compared, and functions are applied, before the conversion of
+factor, Date and POSIXt columns to character, so numbers are compared as
+numbers and factors keep their levels. Without an active tab, a tabset
+shows its first tab. Columns displayed as headings by \code{heading_levels}
+cannot be specified.}
 
 \item{pills}{Logical, use pills or not.
 See \url{https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills}
@@ -150,6 +172,14 @@ render_tabset(
   c(group1, group2),
   value1,
   heading_levels = c(2, 3)
+)
+
+# Show tab "B" and, under each tab, the last nested tab by default
+render_tabset(
+  df,
+  c(group1, group2),
+  value1,
+  active = list(group1 = "B", group2 = max)
 )
 }
 \references{
