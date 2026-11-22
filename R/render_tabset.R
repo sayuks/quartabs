@@ -693,16 +693,6 @@ get_tabset_master <- function(data, tabset_names) {
     }
   )
 
-  .flag_fn <- function(n, df, fun) {
-    as.logical(
-      stats::ave(
-        x = seq_len(n),
-        do.call(paste, c(df, sep = "_")),
-        FUN = fun
-      )
-    )
-  }
-
   res <- lapply(
     seq_along(tabset_names),
     function(j) {
@@ -713,16 +703,9 @@ get_tabset_master <- function(data, tabset_names) {
         out[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
         out[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
       } else {
-        out[paste0("tabset", j, "_start")] <- .flag_fn(
-          n = n,
-          df = data[gvars],
-          fun = function(x) seq_along(x) == 1
-        )
-        out[paste0("tabset", j, "_end")] <- .flag_fn(
-          n = n,
-          df = data[gvars],
-          fun = function(x) seq_along(x) == length(x)
-        )
+        key <- do.call(paste, c(data[gvars], sep = "_"))
+        out[paste0("tabset", j, "_start")] <- !duplicated(key)
+        out[paste0("tabset", j, "_end")] <- !duplicated(key, fromLast = TRUE)
       }
 
       out

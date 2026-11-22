@@ -10,8 +10,6 @@ License: MIT + file LICENSE
 URL: https://sayuks.github.io/quartabs/,
     https://github.com/sayuks/quartabs
 BugReports: https://github.com/sayuks/quartabs/issues
-Imports:
-    stats
 Suggests: 
     altdoc,
     dplyr (>= 1.0.0),
