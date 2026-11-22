@@ -10,6 +10,10 @@
 * Documented that the tab order of `render_tabset()` can be controlled by factor levels, e.g. `factor(x, levels = unique(x))` to keep the order of first appearance, with an example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#5).
 * Documented that `render_tabset()` cannot place plots inside tab panels when the chunk label starts with `fig-`, and added an example of cross-referenceable figures in each tab to the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#6).
 
+## Bug fixes
+
+* `render_tabset()` no longer merges nested tabsets whose parent tabs differ but read the same when joined with `"_"`, such as `("a", "b_c")` and `("a_b", "c")`. As a result, a tabset column with missing values may now also contain the string `"__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"`, which used to raise an error (#11).
+
 # quartabs 0.1.1
 
 ## Breaking changes

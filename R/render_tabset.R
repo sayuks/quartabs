@@ -666,54 +666,34 @@ choose_active_tab <- function(choice, tab_values, nm) {
   pos
 }
 
+# Logical columns `tabset<j>_start` / `tabset<j>_end` flagging the first and
+# last row of each tabset of tabset column j. `data` must be sorted by
+# `tabset_names`, so the rows sharing a parent tab are contiguous.
 get_tabset_master <- function(data, tabset_names) {
   n <- nrow(data)
-  data[tabset_names] <- lapply(
-    tabset_names,
-    function(tn) {
-      x <- data[[tn]]
-      if (!anyNA(x)) {
-        return(x)
-      }
-      pf <- "__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"
-      if (pf %in% x) {
-        stop(
-          "If there are missing values in the column ",
-          sprintf("`%s` ", tn),
-          "that is specified in `tabset_vars`, ",
-          "it must not contain the string ",
-          sprintf("\"%s\". ", pf),
-          "It is an internal reserved word used ",
-          "in the temporary handling of missing values."
-        )
-      }
-      x <- as.character(x)
-      x[is.na(x)] <- pf
-      x
-    }
-  )
+  # Whether row i + 1 has a different parent tab from row i
+  parent_changed <- rep(FALSE, max(n - 1, 0))
+  res <- list()
 
-  res <- lapply(
-    seq_along(tabset_names),
-    function(j) {
-      gvars <- tabset_names[seq_len(j) - 1]
-      out <- data.frame(matrix(ncol = 0, nrow = n))
+  for (j in seq_along(tabset_names)) {
+    res[[paste0("tabset", j, "_start")]] <- c(TRUE, parent_changed)
+    res[[paste0("tabset", j, "_end")]] <- c(parent_changed, TRUE)
+    parent_changed <- parent_changed |
+      differs_from_next(data[[tabset_names[j]]])
+  }
 
-      if (length(gvars) == 0) {
-        out[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
-        out[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
-      } else {
-        key <- do.call(paste, c(data[gvars], sep = "_"))
-        out[paste0("tabset", j, "_start")] <- !duplicated(key)
-        out[paste0("tabset", j, "_end")] <- !duplicated(key, fromLast = TRUE)
-      }
+  as.data.frame(res)
+}
 
-      out
-    }
-  )
-
-  res <- do.call(cbind, res)
-  res
+# Whether each element differs from the next one, treating missing values
+# as equal to each other and different from any value
+differs_from_next <- function(x) {
+  current <- x[-length(x)]
+  following <- x[-1]
+  out <- current != following
+  na <- is.na(out)
+  out[na] <- is.na(current[na]) != is.na(following[na])
+  out
 }
 
 assert_logical <- function(x) {
