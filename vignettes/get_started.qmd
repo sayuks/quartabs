@@ -812,7 +812,7 @@ df4 |>
 ### Tables
 
 Here we will show you how to use `render_tabset()` in a popular package for rendering tables.
-This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `flextable::flextable()`, `DT::datatable()`, `reactable::reactable()`, `tinytable::tt()` and `lt::lt()`.
+This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `tinytable::tt()`, `lt::lt()`, `flextable::flextable()`, `DT::datatable()` and `reactable::reactable()`.
 
 ```{r}
 tables <-
@@ -891,6 +891,8 @@ tables
 `knitr::kable()` and `gt::gt()` are the simplest.
 
 The outputs of `tinytable::tt()`, `lt::lt()` and `flextable::flextable()` are managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
+
+`lt::lt()` also uses JavaScript, but `knitr::knit_print()` embeds it only in the first table it converts, so no separate chunk is needed. Instead, make sure that table is printed: do not filter `tables` after creating the column.
 
 `gt::opt_interactive()`, `{DT}` and `{reactable}` use JavaScript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
 
