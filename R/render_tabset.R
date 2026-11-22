@@ -12,7 +12,13 @@
 #' - If multiple `tabset_vars` are given, create nested tabsets.
 #' - For columns specified in `output_vars`, columns of type list are output with
 #'   [print()] and normal columns are output with [cat()].
-#' - The `data` is sorted internally by `tabset_vars`.
+#' - The `data` is sorted internally by `tabset_vars`, so tabs are displayed
+#'   in ascending order. Factor columns are sorted by their levels (before
+#'   the conversion to character described below), so the tab order can be
+#'   controlled with the levels. For example,
+#'   `factor(x, levels = unique(x))` keeps the order of first appearance in
+#'   the data. Since levels apply to the whole column, nested tabs cannot have
+#'   a different order under each parent tab.
 #' - If `tabset_vars` or `output_vars` have "factor", "Date" and "POSIXt"
 #'   columns, they are converted internally to character. This is to prevent it
 #'   being displayed as numeric when [cat()] is executed.

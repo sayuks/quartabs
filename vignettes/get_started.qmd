@@ -125,7 +125,23 @@ df1 |>
   )
 ```
 
-The data is sorted internally by `tabsest_vars`. Therefore, the tabsets were displayed in ascending order.
+The data is sorted internally by `tabset_vars`. Therefore, the tabsets were displayed in ascending order.
+
+To control the tab order, convert the column to a factor. Factors are sorted by their levels, so `factor(x, levels = unique(x))` keeps the order of first appearance in the data (`forcats::fct_inorder()` does the same).
+
+```{r}
+#| results: asis
+#| echo: fenced
+
+df1 |>
+  mutate(id = factor(id, levels = unique(id))) |>
+  render_tabset(
+    tabset_vars = id,
+    output_vars = var1
+  )
+```
+
+Since the levels apply to the whole column, nested tabs cannot have a different order under each parent tab.
 
 Multiple `tabset_vars` and `output_vars` are acceptable. For multiple `tabset_vars`, they are displayed nested.
 
