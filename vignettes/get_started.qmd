@@ -80,6 +80,7 @@ library(knitr)
 library(gt)
 library(DT)
 library(tinytable)
+library(lt)
 library(reactable)
 library(flextable)
 
@@ -811,7 +812,7 @@ df4 |>
 ### Tables
 
 Here we will show you how to use `render_tabset()` in a popular package for rendering tables.
-This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `flextable::flextable()`, `DT::datatable()`, `reactable::reactable()` and `tinytable::tt()`.
+This example uses `knitr::kable()`, `gt::gt()`, `gt::opt_interactive()`, `flextable::flextable()`, `DT::datatable()`, `reactable::reactable()`, `tinytable::tt()` and `lt::lt()`.
 
 ```{r}
 tables <-
@@ -825,6 +826,13 @@ tables <-
       data,
       \(data) {
         tinytable::tt(data) |>
+          knitr::knit_print()
+      }
+    ),
+    lt = map_chr(
+      data,
+      \(data) {
+        lt::lt(data) |>
           knitr::knit_print()
       }
     ),
@@ -859,6 +867,10 @@ tables <-
       "#### tinytable::tt() |> knitr::knit_print()",
       "(using map_chr())"
     ),
+    section_lt = paste(
+      "#### lt::lt() |> knitr::knit_print()",
+      "(using map_chr())"
+    ),
     section_flex = paste(
       "#### flextable::flextable() |> knitr::knit_print()",
       "(using map_chr())"
@@ -878,7 +890,7 @@ tables
 
 `knitr::kable()` and `gt::gt()` are the simplest.
 
-The outputs of `tinytable::tt()` and `flextable::flextable()` are managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
+The outputs of `tinytable::tt()`, `lt::lt()` and `flextable::flextable()` are managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
 
 `gt::opt_interactive()`, `{DT}` and `{reactable}` use JavaScript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
 
@@ -924,6 +936,8 @@ tables |>
       gt_interactive,
       section_tt,
       tt,
+      section_lt,
+      lt,
       section_flex,
       flex,
       section_DT,

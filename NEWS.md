@@ -3,6 +3,7 @@
 ## Minor improvements
 
 * Fixed the `tinytable::tt()` example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html), which showed the JavaScript of `{tinytable}` as text instead of a table (#16).
+* Added an `lt::lt()` example to the tables section of the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#16).
 
 # quartabs 0.2.0
 
