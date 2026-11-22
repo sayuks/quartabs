@@ -195,7 +195,7 @@ see the following links.
 \item Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
 Markdown Content Programmatically with Quarto.” November 4, 2024.
 \doi{https://doi.org/10.59350/pa44j-cc302}.
-\item \url{https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html#child-document}
-\item \url{https://bookdown.org/yihui/rmarkdown-cookbook/knit-expand.html}
+\item \url{https://pkg.yihui.org/rmarkdown-cookbook/child-document.html#child-document}
+\item \url{https://pkg.yihui.org/rmarkdown-cookbook/knit-expand.html}
 }
 }

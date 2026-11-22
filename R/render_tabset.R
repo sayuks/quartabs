@@ -111,8 +111,8 @@
 #' - Heiss, Andrew. 2024. “Guide to Generating and Rendering Computational
 #'   Markdown Content Programmatically with Quarto.” November 4, 2024.
 #'   \doi{https://doi.org/10.59350/pa44j-cc302}.
-#' - <https://bookdown.org/yihui/rmarkdown-cookbook/child-document.html#child-document>
-#' - <https://bookdown.org/yihui/rmarkdown-cookbook/knit-expand.html>
+#' - <https://pkg.yihui.org/rmarkdown-cookbook/child-document.html#child-document>
+#' - <https://pkg.yihui.org/rmarkdown-cookbook/knit-expand.html>
 #' @examples
 #' # sample data
 #' df <- data.frame(
