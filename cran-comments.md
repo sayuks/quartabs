@@ -1,8 +1,7 @@
 ## Test environments
 
-* local: aarch64-apple-darwin, R 4.6.2
-* win-builder: windows-x86_64-devel
-* mac-builder: r-release-macosx-arm64
+* local: aarch64-apple-darwin23, R 4.6.2
+* win-builder: R-devel (2026-11-17 r90926 ucrt), R-release 4.6.2, R-oldrelease 4.5.3
 
 ## R CMD check results
 
