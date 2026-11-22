@@ -201,6 +201,12 @@ ul.task-list li input[type="checkbox"] {
 <li>Documented that <code>render_tabset()</code> cannot place plots inside tab panels when the chunk label starts with <code>fig-</code>, and added an example of cross-referenceable figures in each tab to the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a> (#6).</li>
 </ul>
 </section>
+<section id="bug-fixes" class="level2">
+<h2 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h2>
+<ul>
+<li><code>render_tabset()</code> no longer merges nested tabsets whose parent tabs differ but read the same when joined with <code>"_"</code>, such as <code>("a", "b_c")</code> and <code>("a_b", "c")</code>. As a result, a tabset column with missing values may now also contain the string <code>"__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"</code>, which used to raise an error (<a href="https://github.com/sayuks/quartabs/issues/11">#11</a>).</li>
+</ul>
+</section>
 </section>
 <section id="quartabs-0.1.1" class="level1">
 <h1>quartabs 0.1.1</h1>
@@ -221,8 +227,8 @@ ul.task-list li input[type="checkbox"] {
 <li>Added CRAN and monthly downloads badges to README.</li>
 </ul>
 </section>
-<section id="bug-fixes" class="level2">
-<h2 class="anchored" data-anchor-id="bug-fixes">Bug fixes</h2>
+<section id="bug-fixes-1" class="level2">
+<h2 class="anchored" data-anchor-id="bug-fixes-1">Bug fixes</h2>
 <ul>
 <li><code>render_tabset()</code> now works correctly even if <code>tabset_vars</code> contains missing values (<a href="https://github.com/sayuks/quartabs/issues/3">#3</a>).</li>
 </ul>
