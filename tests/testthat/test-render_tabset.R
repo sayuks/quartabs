@@ -453,3 +453,27 @@ test_that("render_tabset(), both layout and heading_levels arguments", {
     expected
   )
 })
+
+test_that("render_tabset(), tab order follows factor levels (#5)", {
+  df <- data.frame(
+    parent = c("P2", "P2", "P1", "P1"),
+    child = c("Z", "X", "Z", "X"),
+    value = 1:4
+  )
+
+  headings <- function(x) grep("^#", x, value = TRUE)
+
+  # character columns are sorted in ascending order
+  expect_equal(
+    headings(utils::capture.output(render_tabset(df, c(parent, child), value))),
+    c("# P1", "## X", "## Z", "# P2", "## X", "## Z")
+  )
+
+  # factor columns follow their level order (here, first appearance)
+  df$parent <- factor(df$parent, levels = unique(df$parent))
+  df$child <- factor(df$child, levels = unique(df$child))
+  expect_equal(
+    headings(utils::capture.output(render_tabset(df, c(parent, child), value))),
+    c("# P2", "## Z", "## X", "# P1", "## Z", "## X")
+  )
+})

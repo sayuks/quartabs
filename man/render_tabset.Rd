@@ -76,7 +76,13 @@ See \href{https://sayuks.github.io/quartabs/vignettes/get_started.html}{Get star
 \item If multiple \code{tabset_vars} are given, create nested tabsets.
 \item For columns specified in \code{output_vars}, columns of type list are output with
 \code{\link[=print]{print()}} and normal columns are output with \code{\link[=cat]{cat()}}.
-\item The \code{data} is sorted internally by \code{tabset_vars}.
+\item The \code{data} is sorted internally by \code{tabset_vars}, so tabs are displayed
+in ascending order. Factor columns are sorted by their levels (before
+the conversion to character described below), so the tab order can be
+controlled with the levels. For example,
+\code{factor(x, levels = unique(x))} keeps the order of first appearance in
+the data. Since levels apply to the whole column, nested tabs cannot have
+a different order under each parent tab.
 \item If \code{tabset_vars} or \code{output_vars} have "factor", "Date" and "POSIXt"
 columns, they are converted internally to character. This is to prevent it
 being displayed as numeric when \code{\link[=cat]{cat()}} is executed.
