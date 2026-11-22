@@ -183,9 +183,9 @@ render_tabset <- function(data,
   active <- validate_active(active, tabset_names, heading_levels)
 
   data <- sort_data(data, tabset_names, output_names)
-  active_master <- get_active_master(data, tabset_names, active)
-  data <- convert_data(data)
   tabset_master <- get_tabset_master(data, tabset_names)
+  active_master <- get_active_master(data, tabset_names, active, tabset_master)
+  data <- convert_data(data)
 
   # For each row of the data, print the tabset and output panels
   lapply(seq_len(nrow(data)), function(i) {
@@ -583,7 +583,8 @@ validate_active <- function(active, tabset_names, heading_levels) {
 # Logical matrix (rows of `data` x tabset columns) flagging the rows whose
 # tab heading gets the `.active` class. `data` must be sorted by
 # `tabset_names` and must not have been converted to character yet.
-get_active_master <- function(data, tabset_names, active) {
+# `tabset_master` is the result of `get_tabset_master()`.
+get_active_master <- function(data, tabset_names, active, tabset_master) {
   if (is.null(active)) {
     return(NULL)
   }
@@ -596,18 +597,12 @@ get_active_master <- function(data, tabset_names, active) {
     choice <- active[[nm]]
     col <- data[[nm]]
 
-    parents <- lapply(
-      data[tabset_names[seq_len(j - 1)]],
-      factor,
-      exclude = NULL
-    )
     # Row indices of each tabset of this column (the sibling tabs that
     # share a parent tab)
-    tabset_rows <- if (length(parents) == 0) {
-      list(seq_len(n))
-    } else {
-      split(seq_len(n), parents, drop = TRUE)
-    }
+    tabset_rows <- split(
+      seq_len(n),
+      cumsum(tabset_master[[paste0("tabset", j, "_start")]])
+    )
 
     any_active <- FALSE
 
@@ -666,54 +661,25 @@ choose_active_tab <- function(choice, tab_values, nm) {
   pos
 }
 
+# Logical columns `tabset<j>_start` / `tabset<j>_end` flagging the first and
+# last row of each tabset of tabset column j. `data` must be sorted by
+# `tabset_names`, so the rows sharing a parent tab are contiguous. Two values
+# are the same tab when their labels are the same; a missing value is its own
+# tab, apart from any label such as "NA" or "NaN".
 get_tabset_master <- function(data, tabset_names) {
   n <- nrow(data)
-  data[tabset_names] <- lapply(
-    tabset_names,
-    function(tn) {
-      x <- data[[tn]]
-      if (!anyNA(x)) {
-        return(x)
-      }
-      pf <- "__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"
-      if (pf %in% x) {
-        stop(
-          "If there are missing values in the column ",
-          sprintf("`%s` ", tn),
-          "that is specified in `tabset_vars`, ",
-          "it must not contain the string ",
-          sprintf("\"%s\". ", pf),
-          "It is an internal reserved word used ",
-          "in the temporary handling of missing values."
-        )
-      }
-      x <- as.character(x)
-      x[is.na(x)] <- pf
-      x
-    }
-  )
+  # Whether row i + 1 has a different parent tab from row i
+  parent_changed <- rep(FALSE, max(n - 1, 0))
+  flags <- list()
 
-  res <- lapply(
-    seq_along(tabset_names),
-    function(j) {
-      gvars <- tabset_names[seq_len(j) - 1]
-      out <- data.frame(matrix(ncol = 0, nrow = n))
+  for (j in seq_along(tabset_names)) {
+    flags[[paste0("tabset", j, "_start")]] <- c(TRUE, parent_changed)
+    flags[[paste0("tabset", j, "_end")]] <- c(parent_changed, TRUE)
+    tab <- as.integer(factor(data[[tabset_names[j]]], exclude = NULL))
+    parent_changed <- parent_changed | tab[-1] != tab[-n]
+  }
 
-      if (length(gvars) == 0) {
-        out[paste0("tabset", j, "_start")] <- c(TRUE, rep(FALSE, n - 1))
-        out[paste0("tabset", j, "_end")] <- c(rep(FALSE, n - 1), TRUE)
-      } else {
-        key <- do.call(paste, c(data[gvars], sep = "_"))
-        out[paste0("tabset", j, "_start")] <- !duplicated(key)
-        out[paste0("tabset", j, "_end")] <- !duplicated(key, fromLast = TRUE)
-      }
-
-      out
-    }
-  )
-
-  res <- do.call(cbind, res)
-  res
+  as.data.frame(flags)
 }
 
 assert_logical <- function(x) {

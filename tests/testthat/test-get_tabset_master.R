@@ -48,23 +48,3 @@ test_that("prep_data handles single grouping variable correctly", {
   )
   expect_equal(output, expected_output)
 })
-
-test_that("error if a group column contains a reserved word.", {
-  pf <- "__####_THIS_IS_A_PLACE_HOLDER_FOR_MISSING_VALUE_####__"
-  data <- data.frame(
-    group1 = c(pf, "a"),
-    group2 = c(NA, pf),
-    value = NA
-  )
-  expect_error(
-    get_tabset_master(data, c("group1", "group2")),
-    paste0(
-      "If there are missing values in the column `group2` ",
-      "that is specified in `tabset_vars`, ",
-      "it must not contain the string ",
-      sprintf("\"%s\"\\. ", pf),
-      "It is an internal reserved word used ",
-      "in the temporary handling of missing values\\."
-    )
-  )
-})
