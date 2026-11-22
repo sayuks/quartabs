@@ -62,9 +62,11 @@
 #'     For example, `max` makes the latest tab active under each parent tab,
 #'     and `function(x) x[length(x)]` the last one.
 #'
-#'   Values are compared, and functions are applied, before the conversion of
-#'   factor, Date and POSIXt columns to character, so numbers are compared as
-#'   numbers and factors keep their levels. Without an active tab, a tabset
+#'   Functions are applied before the conversion of factor, Date and POSIXt
+#'   columns to character, so numbers are compared as numbers and factors
+#'   keep their levels. A character value is compared with the tab labels
+#'   (e.g. `"2024-01-01"` for a Date tab); other values are compared with the
+#'   original column (e.g. `as.Date("2024-01-01")`). Without an active tab, a tabset
 #'   shows its first tab. Columns displayed as headings by `heading_levels`
 #'   cannot be specified.
 #' @param pills Logical, use pills or not.
@@ -511,10 +513,6 @@ validate_data <- function(data,
   )
 }
 
-prep_data <- function(data, tabset_names, output_names) {
-  convert_data(sort_data(data, tabset_names, output_names))
-}
-
 sort_data <- function(data, tabset_names, output_names) {
   data <- data[, c(tabset_names, output_names)]
   data[do.call(order, data[, tabset_names, drop = FALSE]), ]
@@ -595,7 +593,7 @@ get_active_master <- function(data, tabset_names, active) {
 
   for (nm in names(active)) {
     j <- match(nm, tabset_names)
-    spec <- active[[nm]]
+    choice <- active[[nm]]
     col <- data[[nm]]
 
     parents <- lapply(
@@ -603,49 +601,29 @@ get_active_master <- function(data, tabset_names, active) {
       factor,
       exclude = NULL
     )
-    groups <- if (length(parents) == 0) {
+    # Row indices of each tabset of this column (the sibling tabs that
+    # share a parent tab)
+    tabset_rows <- if (length(parents) == 0) {
       list(seq_len(n))
     } else {
       split(seq_len(n), parents, drop = TRUE)
     }
 
-    found <- FALSE
+    any_active <- FALSE
 
-    for (idx in groups) {
-      x <- col[idx]
-      values <- unique(x)
-
-      if (is.function(spec)) {
-        chosen <- spec(values)
-        if (length(chosen) != 1) {
-          stop(
-            sprintf("The function in `active` for `%s` ", nm),
-            "must return a single value."
-          )
-        }
-        if (is.na(chosen)) {
-          next
-        }
-        hit <- match(chosen, values)
-        if (is.na(hit)) {
-          stop(
-            sprintf("The function in `active` for `%s` ", nm),
-            "must return one of the values it was given."
-          )
-        }
-      } else {
-        hit <- match(spec, values)
-        if (is.na(hit)) {
-          next
-        }
+    for (rows in tabset_rows) {
+      tab_values <- unique(col[rows])
+      active_tab <- choose_active_tab(choice, tab_values, nm)
+      if (is.na(active_tab)) {
+        next
       }
-
-      found <- TRUE
+      any_active <- TRUE
       # Only the first row of a tab prints its heading.
-      res[idx[match(hit, match(x, values))], j] <- TRUE
+      first_row <- rows[match(active_tab, match(col[rows], tab_values))]
+      res[first_row, j] <- TRUE
     }
 
-    if (!is.function(spec) && !found) {
+    if (!is.function(choice) && !any_active) {
       stop(
         sprintf("The value of `active` for `%s` ", nm),
         sprintf("was not found in the column `%s`.", nm)
@@ -654,6 +632,38 @@ get_active_master <- function(data, tabset_names, active) {
   }
 
   res
+}
+
+# Position of the active tab among `tab_values` (the unique values of one
+# tabset in display order), or NA for none.
+choose_active_tab <- function(choice, tab_values, nm) {
+  if (!is.function(choice)) {
+    # A character value is compared with the tab labels, so it also
+    # matches Date, POSIXt and numeric tabs as they are displayed.
+    if (is.character(choice)) {
+      return(match(choice, as.character(tab_values)))
+    }
+    return(match(choice, tab_values))
+  }
+
+  chosen <- choice(tab_values)
+  if (!(is.atomic(chosen) && length(chosen) == 1)) {
+    stop(
+      sprintf("The function in `active` for `%s` ", nm),
+      "must return a single value."
+    )
+  }
+  if (is.na(chosen)) {
+    return(NA_integer_)
+  }
+  pos <- match(chosen, tab_values)
+  if (is.na(pos)) {
+    stop(
+      sprintf("The function in `active` for `%s` ", nm),
+      "must return one of the values it was given."
+    )
+  }
+  pos
 }
 
 get_tabset_master <- function(data, tabset_names) {

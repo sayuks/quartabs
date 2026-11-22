@@ -66,9 +66,11 @@ For example, \code{max} makes the latest tab active under each parent tab,
 and \code{function(x) x[length(x)]} the last one.
 }
 
-Values are compared, and functions are applied, before the conversion of
-factor, Date and POSIXt columns to character, so numbers are compared as
-numbers and factors keep their levels. Without an active tab, a tabset
+Functions are applied before the conversion of factor, Date and POSIXt
+columns to character, so numbers are compared as numbers and factors
+keep their levels. A character value is compared with the tab labels
+(e.g. \code{"2024-01-01"} for a Date tab); other values are compared with the
+original column (e.g. \code{as.Date("2024-01-01")}). Without an active tab, a tabset
 shows its first tab. Columns displayed as headings by \code{heading_levels}
 cannot be specified.}
 

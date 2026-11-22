@@ -478,11 +478,6 @@ test_that("render_tabset(), tab order follows factor levels (#5)", {
   )
 })
 
-# Headings (tab labels) printed by render_tabset()
-tab_headings <- function(...) {
-  grep("^#", utils::capture.output(render_tabset(...)), value = TRUE)
-}
-
 test_that("render_tabset(), active marks the tab given by a value (#4)", {
   df <- data.frame(
     group = c("A", "B", "C"),
@@ -600,6 +595,7 @@ test_that("render_tabset(), active function returning NA marks nothing (#4)", {
     "must return one of the values it was given"
   )
   expect_error(run(function(x) x), "must return a single value")
+  expect_error(run(function(x) list(2)), "must return a single value")
 })
 
 test_that("render_tabset(), active matches Date columns (#4)", {
@@ -621,6 +617,27 @@ test_that("render_tabset(), active matches Date columns (#4)", {
   expect_equal(
     tab_headings(df, date, value, active = list(date = max)),
     expected
+  )
+})
+
+test_that("render_tabset(), active character value matches tab labels (#4)", {
+  df <- data.frame(
+    time = as.POSIXct(c("2024-01-02 10:00:00", "2024-01-03 10:00:00")),
+    num = c(9, 10),
+    value = 1:2
+  )
+
+  expect_equal(
+    tab_headings(df, time, value, active = list(time = "2024-01-03 10:00:00")),
+    c("# 2024-01-02 10:00:00", "# 2024-01-03 10:00:00 {.active}")
+  )
+  expect_equal(
+    tab_headings(df, num, value, active = list(num = "10")),
+    c("# 9", "# 10 {.active}")
+  )
+  expect_equal(
+    tab_headings(df, num, value, active = list(num = 10)),
+    c("# 9", "# 10 {.active}")
   )
 })
 
