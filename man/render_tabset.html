@@ -234,6 +234,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   output_vars,
   layout = NULL,
   heading_levels = NULL,
+  active = NULL,
   pills = FALSE,
   tabset_width = "default"
 )
@@ -296,6 +297,23 @@ Columns to display in each tabset panel. Internally passed to the <code>select</
 </ul>
 </li>
 </ul>
+</td>
+</tr>
+<tr>
+<td style="white-space: nowrap; font-family: monospace; vertical-align: top">
+<code id="active">active</code>
+</td>
+<td>
+<p><code>NULL</code> or a named list that chooses the active tab, the tab shown by default when the page loads (Quarto’s <code>.active</code> class, which requires Quarto 1.7 or later; older versions ignore it). Each name is a column specified in <code>tabset_vars</code>, and each element is either:</p>
+<ul>
+<li>
+<p>A single non-missing value: the tab with this value is active in every tabset of that column that contains it. It is an error if no tab of that column has this value.</p>
+</li>
+<li>
+<p>A function: it is called once per tabset of that column (that is, for the sibling tabs under each parent tab) with the unique tab values in display order, and must return one of them, or <code>NA</code> for no active tab. For example, <code>max</code> makes the latest tab active under each parent tab, and <code>function(x) x[length(x)]</code> the last one.</p>
+</li>
+</ul>
+Functions are applied before the conversion of factor, Date and POSIXt columns to character, so numbers are compared as numbers and factors keep their levels. A character value is compared with the tab labels (e.g.&nbsp;<code>“2024-01-01”</code> for a Date tab); other values are compared with the original column (e.g.&nbsp;<code>as.Date(“2024-01-01”)</code>). Without an active tab, a tabset shows its first tab. Columns displayed as headings by <code>heading_levels</code> cannot be specified.
 </td>
 </tr>
 <tr>
@@ -551,6 +569,54 @@ f
 ### Z
 
 6</code></pre>
+</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Show tab "B" and, under each tab, the last nested tab by default</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">render_tabset</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  df,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">c</span>(group1, group2),</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  value1,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">active =</span> <span class="fu">list</span>(<span class="at">group1 =</span> <span class="st">"B"</span>, <span class="at">group2 =</span> max)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>::: {.panel-tabset}
+
+# A
+
+::: {.panel-tabset}
+
+## X
+
+1
+
+## Y
+
+2
+
+## Z {.active}
+
+3
+
+:::
+
+# B {.active}
+
+::: {.panel-tabset}
+
+## X
+
+4
+
+## Y
+
+5
+
+## Z {.active}
+
+6
+
+:::
+
+:::</code></pre>
 </div>
 </div>
 
