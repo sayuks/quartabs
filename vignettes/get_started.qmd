@@ -821,7 +821,13 @@ tables <-
     kable = map(data, knitr::kable),
     gt = map(data, gt::gt),
     gt_interactive = map(gt, gt::opt_interactive),
-    tt = map(data, tinytable::tt),
+    tt = map_chr(
+      data,
+      \(data) {
+        tinytable::tt(data) |>
+          knitr::knit_print()
+      }
+    ),
     flex = map_chr(
       data,
       \(data) {
@@ -849,7 +855,10 @@ tables <-
       "#### gt::gt() |> gt::opt_interactive()",
       "(and run in a separate chunk)"
     ),
-    section_tt = "#### tinytable::tt()",
+    section_tt = paste(
+      "#### tinytable::tt() |> knitr::knit_print()",
+      "(using map_chr())"
+    ),
     section_flex = paste(
       "#### flextable::flextable() |> knitr::knit_print()",
       "(using map_chr())"
@@ -867,9 +876,9 @@ tables <-
 tables
 ```
 
-`knitr::kable()`, `gt::gt()`, and `tinytable::tt()` are the simplest.
+`knitr::kable()` and `gt::gt()` are the simplest.
 
-The output of `flextable::flextable()` is managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
+The outputs of `tinytable::tt()` and `flextable::flextable()` are managed by the method `knitr::knit_print()`. After execution, raw HTML is obtained, which is turned into a character type column using `map_chr()`.
 
 `gt::opt_interactive()`, `{DT}` and `{reactable}` use JavaScript. They should be wrapped with `htmltools::div()`, except for `gt::opt_interactive()`, and run in a separate chunk to resolve javascript dependencies. Don't forget `#| include: false`.
 
