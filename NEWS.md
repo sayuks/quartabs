@@ -6,6 +6,7 @@
 
 ## Minor improvements
 
+* Removed `{stats}` from Imports; quartabs now depends only on base R.
 * Documented that the tab order of `render_tabset()` can be controlled by factor levels, e.g. `factor(x, levels = unique(x))` to keep the order of first appearance, with an example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#5).
 * Documented that `render_tabset()` cannot place plots inside tab panels when the chunk label starts with `fig-`, and added an example of cross-referenceable figures in each tab to the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#6).
 
