@@ -81,7 +81,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <link href="../site_libs/quarto-html/quarto-syntax-highlighting-63b5708e65d6cd79cd7618c58d0c21e7.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="../site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="../site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="../site_libs/bootstrap/bootstrap-ded4168630e1422961a6247c4ac5fe91.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="../site_libs/bootstrap/bootstrap-44f7b187718e43abfea0560aa82c1a71.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "navbar",
   "copy-button": false,
@@ -329,7 +329,7 @@ Character, one of "default", "fill" and "justified". See <a href="https://getboo
 <p>For columns specified in <code>output_vars</code>, columns of type list are output with <code>print()</code> and normal columns are output with <code>cat()</code>.</p>
 </li>
 <li>
-<p>The <code>data</code> is sorted internally by <code>tabset_vars</code>.</p>
+<p>The <code>data</code> is sorted internally by <code>tabset_vars</code>, so tabs are displayed in ascending order. Factor columns are sorted by their levels (before the conversion to character described below), so the tab order can be controlled with the levels. For example, <code>factor(x, levels = unique(x))</code> keeps the order of first appearance in the data. Since levels apply to the whole column, nested tabs cannot have a different order under each parent tab.</p>
 </li>
 <li>
 <p>If <code>tabset_vars</code> or <code>output_vars</code> have "factor", "Date" and "POSIXt" columns, they are converted internally to character. This is to prevent it being displayed as numeric when <code>cat()</code> is executed. Sorting by <code>tabset_vars</code> is performed before conversion to string.</p>
