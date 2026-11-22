@@ -2,7 +2,7 @@
 
 ## Minor improvements
 
-* Fixed the `tinytable::tt()` example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html), which showed the JavaScript of `{tinytable}` as text instead of a table. The tables are now converted to raw HTML with `knitr::knit_print()` and `map_chr()`, as for `flextable::flextable()`.
+* Fixed the `tinytable::tt()` example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html), which showed the JavaScript of `{tinytable}` as text instead of a table (#16).
 
 # quartabs 0.2.0
 
