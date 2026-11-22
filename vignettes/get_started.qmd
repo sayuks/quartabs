@@ -301,6 +301,42 @@ df1 |>
   )
 ```
 
+### `active`
+
+By default, each tabset shows its first tab. Use the `active` argument to choose the tab that is shown when the page loads ([`.active` class](https://quarto.org/docs/output-formats/html-basics.html#tabsets), Quarto 1.7 or later). It is a named list: each name is a column of `tabset_vars`, and each element is a value or a function.
+
+With a value, the tab with that value is active.
+
+```{r}
+#| results: asis
+#| echo: fenced
+
+df1 |>
+  render_tabset(
+    c(group1, group2),
+    c(var1, var2, var3),
+    active = list(group1 = "B", group2 = "Y")
+  )
+```
+
+With a function, it is called for each parent tab with the values of its nested tabs, in display order, and returns the value to make active. For example, `max` shows the latest year under each group. The function sees the original values before the conversion to character, so numbers are compared as numbers and factors keep their levels.
+
+```{r}
+#| results: asis
+#| echo: fenced
+
+tibble(
+  group = c("A", "A", "A", "B", "B"),
+  year = c(2023, 2024, 2025, 2023, 2024),
+  value = 1:5
+) |>
+  render_tabset(
+    c(group, year),
+    value,
+    active = list(year = max)
+  )
+```
+
 ### `pills`
 
 As of 2025-03-05, the latest version of Quarto is 1.6, but the Bootstrap version used appears to be Bootstrap 5.2.2, which was [introduced with Quarto 1.4](https://quarto.org/docs/download/changelog/1.4/#:~:text=for%20HTML%20output-,(%235210)%3A%20Update%20to%20Bootstrap%205.2.2,-(%235393)%3A%20Properly).

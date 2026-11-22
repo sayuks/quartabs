@@ -49,6 +49,26 @@
 #'        as normal text. In addition, considering the chapter format,
 #'        it is preferable to gradually increase the level, as in 1, 2 and 3.
 #'      - If the element is NA, tabset is displayed.
+#' @param active `NULL` or a named list that chooses the active tab, the tab
+#'   shown by default when the page loads (Quarto's `.active` class, which
+#'   requires Quarto 1.7 or later; older versions ignore it). Each name is a
+#'   column specified in `tabset_vars`, and each element is either:
+#'   - A single non-missing value: the tab with this value is active in every
+#'     tabset of that column that contains it. It is an error if no tab of
+#'     that column has this value.
+#'   - A function: it is called once per tabset of that column (that is, for
+#'     the sibling tabs under each parent tab) with the unique tab values in
+#'     display order, and must return one of them, or `NA` for no active tab.
+#'     For example, `max` makes the latest tab active under each parent tab,
+#'     and `function(x) x[length(x)]` the last one.
+#'
+#'   Functions are applied before the conversion of factor, Date and POSIXt
+#'   columns to character, so numbers are compared as numbers and factors
+#'   keep their levels. A character value is compared with the tab labels
+#'   (e.g. `"2024-01-01"` for a Date tab); other values are compared with the
+#'   original column (e.g. `as.Date("2024-01-01")`). Without an active tab, a tabset
+#'   shows its first tab. Columns displayed as headings by `heading_levels`
+#'   cannot be specified.
 #' @param pills Logical, use pills or not.
 #'   See <https://getbootstrap.com/docs/5.2/components/navs-tabs/#pills>
 #'   for details. If `heading_levels` is specified, this will be ignored.
@@ -125,6 +145,14 @@
 #'   value1,
 #'   heading_levels = c(2, 3)
 #' )
+#'
+#' # Show tab "B" and, under each tab, the last nested tab by default
+#' render_tabset(
+#'   df,
+#'   c(group1, group2),
+#'   value1,
+#'   active = list(group1 = "B", group2 = max)
+#' )
 #' @export
 # nolint end
 render_tabset <- function(data,
@@ -132,6 +160,7 @@ render_tabset <- function(data,
                           output_vars,
                           layout = NULL,
                           heading_levels = NULL,
+                          active = NULL,
                           pills = FALSE,
                           tabset_width = "default") {
   tabset_div <- make_tabset_div(pills, tabset_width)
@@ -151,8 +180,11 @@ render_tabset <- function(data,
   output_names <- l$output_names
   heading_levels <- l$heading_levels
   len_tab <- length(tabset_names)
+  active <- validate_active(active, tabset_names, heading_levels)
 
-  data <- prep_data(data, tabset_names, output_names)
+  data <- sort_data(data, tabset_names, output_names)
+  active_master <- get_active_master(data, tabset_names, active)
+  data <- convert_data(data)
   tabset_master <- get_tabset_master(data, tabset_names)
 
   # For each row of the data, print the tabset and output panels
@@ -166,7 +198,8 @@ render_tabset <- function(data,
       len_tab = len_tab,
       output_names = output_names,
       tabset_master = tabset_master,
-      tabset_div = tabset_div
+      tabset_div = tabset_div,
+      active_master = active_master
     )
   })
 
@@ -182,7 +215,8 @@ print_row_tabsets <- function(data,
                               len_tab,
                               output_names,
                               tabset_master,
-                              tabset_div) {
+                              tabset_div,
+                              active_master = NULL) {
   print_tabset_start(
     heading_levels = heading_levels,
     i = i,
@@ -196,7 +230,8 @@ print_row_tabsets <- function(data,
     tabset_names = tabset_names,
     len_tab = len_tab,
     tabset_master = tabset_master,
-    tabset_div = tabset_div
+    tabset_div = tabset_div,
+    active_master = active_master
   )
   print_outputs(
     data = data,
@@ -205,7 +240,8 @@ print_row_tabsets <- function(data,
     i = i,
     tabset_names = tabset_names,
     len_tab = len_tab,
-    output_names = output_names
+    output_names = output_names,
+    active_master = active_master
   )
   print_tabset_end(
     heading_levels = heading_levels,
@@ -252,7 +288,8 @@ print_nested_tabsets <- function(data,
                                  tabset_names,
                                  len_tab,
                                  tabset_master,
-                                 tabset_div) {
+                                 tabset_div,
+                                 active_master = NULL) {
   if (len_tab >= 2) {
     lapply(2:len_tab, function(j) {
       if (tabset_master[[i, paste0("tabset", j, "_start")]]) {
@@ -261,8 +298,11 @@ print_nested_tabsets <- function(data,
           j - 1,
           heading_levels[j - 1]
         )
-        cat(strrep("#", heading_level), data[[i, tabset_names[j - 1]]])
-        cat("\n\n")
+        print_heading(
+          heading_level,
+          data[[i, tabset_names[j - 1]]],
+          is_active(active_master, i, j - 1)
+        )
         if (is.na(heading_levels[j])) {
           cat(tabset_div)
           cat("\n\n")
@@ -280,15 +320,19 @@ print_outputs <- function(data,
                           i,
                           tabset_names,
                           len_tab,
-                          output_names) {
+                          output_names,
+                          active_master = NULL) {
   heading_level <- ifelse(
     is.na(heading_levels[len_tab]),
     len_tab,
     heading_levels[len_tab]
   )
 
-  cat(strrep("#", heading_level), data[[i, tabset_names[len_tab]]])
-  cat("\n\n")
+  print_heading(
+    heading_level,
+    data[[i, tabset_names[len_tab]]],
+    is_active(active_master, i, len_tab)
+  )
 
   if (!is.null(layout)) {
     cat(layout)
@@ -315,6 +359,16 @@ print_outputs <- function(data,
     cat(sub("^(:+).*", "\\1", layout))
     cat("\n\n")
   }
+}
+
+# Function to print a tab heading, with the `.active` class if needed
+print_heading <- function(heading_level, label, active = FALSE) {
+  cat(strrep("#", heading_level), label, if (active) "{.active}")
+  cat("\n\n")
+}
+
+is_active <- function(active_master, i, j) {
+  !is.null(active_master) && active_master[i, j]
 }
 
 # Function to print the end of tabsets
@@ -459,9 +513,12 @@ validate_data <- function(data,
   )
 }
 
-prep_data <- function(data, tabset_names, output_names) {
+sort_data <- function(data, tabset_names, output_names) {
   data <- data[, c(tabset_names, output_names)]
-  data <- data[do.call(order, data[, tabset_names, drop = FALSE]), ]
+  data[do.call(order, data[, tabset_names, drop = FALSE]), ]
+}
+
+convert_data <- function(data) {
   data[] <- lapply(
     data,
     function(x) {
@@ -475,6 +532,139 @@ prep_data <- function(data, tabset_names, output_names) {
   data
 }
 
+validate_active <- function(active, tabset_names, heading_levels) {
+  if (is.null(active)) {
+    return(NULL)
+  }
+
+  stopifnot(
+    "`active` must be `NULL` or a list." =
+      is.list(active) && !is.data.frame(active)
+  )
+
+  if (length(active) == 0) {
+    return(NULL)
+  }
+
+  nms <- names(active)
+
+  stopifnot(
+    "All elements of `active` must be named." =
+      !is.null(nms) && !anyNA(nms) && all(nzchar(nms)),
+    "The names of `active` must be unique." =
+      !anyDuplicated(nms)
+  )
+
+  lapply(nms, function(nm) {
+    if (!nm %in% tabset_names) {
+      stop(
+        sprintf("The name `%s` in `active` ", nm),
+        "is not a column specified in `tabset_vars`."
+      )
+    }
+    if (!is.na(heading_levels[match(nm, tabset_names)])) {
+      stop(
+        sprintf("The column `%s` in `active` ", nm),
+        "is displayed as headings by `heading_levels`, not as a tabset."
+      )
+    }
+    x <- active[[nm]]
+    if (!(is.function(x) || (is.atomic(x) && length(x) == 1 && !is.na(x)))) {
+      stop(
+        sprintf("The element `%s` of `active` ", nm),
+        "must be a function or a single non-missing value."
+      )
+    }
+  })
+
+  active
+}
+
+# Logical matrix (rows of `data` x tabset columns) flagging the rows whose
+# tab heading gets the `.active` class. `data` must be sorted by
+# `tabset_names` and must not have been converted to character yet.
+get_active_master <- function(data, tabset_names, active) {
+  if (is.null(active)) {
+    return(NULL)
+  }
+
+  n <- nrow(data)
+  res <- matrix(FALSE, nrow = n, ncol = length(tabset_names))
+
+  for (nm in names(active)) {
+    j <- match(nm, tabset_names)
+    choice <- active[[nm]]
+    col <- data[[nm]]
+
+    parents <- lapply(
+      data[tabset_names[seq_len(j - 1)]],
+      factor,
+      exclude = NULL
+    )
+    # Row indices of each tabset of this column (the sibling tabs that
+    # share a parent tab)
+    tabset_rows <- if (length(parents) == 0) {
+      list(seq_len(n))
+    } else {
+      split(seq_len(n), parents, drop = TRUE)
+    }
+
+    any_active <- FALSE
+
+    for (rows in tabset_rows) {
+      tab_values <- unique(col[rows])
+      active_tab <- choose_active_tab(choice, tab_values, nm)
+      if (is.na(active_tab)) {
+        next
+      }
+      any_active <- TRUE
+      # Only the first row of a tab prints its heading.
+      first_row <- rows[match(active_tab, match(col[rows], tab_values))]
+      res[first_row, j] <- TRUE
+    }
+
+    if (!is.function(choice) && !any_active) {
+      stop(
+        sprintf("The value of `active` for `%s` ", nm),
+        sprintf("was not found in the column `%s`.", nm)
+      )
+    }
+  }
+
+  res
+}
+
+# Position of the active tab among `tab_values` (the unique values of one
+# tabset in display order), or NA for none.
+choose_active_tab <- function(choice, tab_values, nm) {
+  if (!is.function(choice)) {
+    # A character value is compared with the tab labels, so it also
+    # matches Date, POSIXt and numeric tabs as they are displayed.
+    if (is.character(choice)) {
+      return(match(choice, as.character(tab_values)))
+    }
+    return(match(choice, tab_values))
+  }
+
+  chosen <- choice(tab_values)
+  if (!(is.atomic(chosen) && length(chosen) == 1)) {
+    stop(
+      sprintf("The function in `active` for `%s` ", nm),
+      "must return a single value."
+    )
+  }
+  if (is.na(chosen)) {
+    return(NA_integer_)
+  }
+  pos <- match(chosen, tab_values)
+  if (is.na(pos)) {
+    stop(
+      sprintf("The function in `active` for `%s` ", nm),
+      "must return one of the values it was given."
+    )
+  }
+  pos
+}
 
 get_tabset_master <- function(data, tabset_names) {
   n <- nrow(data)

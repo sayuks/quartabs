@@ -9,10 +9,12 @@ data <- data.frame(
 )
 
 test_that("select, order, converts factor, Date and POSIXt to characters", {
-  result <- prep_data(
-    data,
-    tabset_names = c("g1", "g2", "g3", "g4", "g5"),
-    output_names = "output"
+  result <- convert_data(
+    sort_data(
+      data,
+      tabset_names = c("g1", "g2", "g3", "g4", "g5"),
+      output_names = "output"
+    )
   )
 
   expect_equal(
@@ -29,9 +31,9 @@ test_that("select, order, converts factor, Date and POSIXt to characters", {
   )
 })
 
-test_that("prep_data returns error when columns are missing", {
+test_that("sort_data returns error when columns are missing", {
   expect_error(
-    prep_data(
+    sort_data(
       data,
       tabset_names = "non_existent",
       output_names = "output"

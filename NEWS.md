@@ -1,5 +1,9 @@
 # quartabs (development version)
 
+## New features
+
+* `render_tabset()` gains an `active` argument to choose the tab shown by default (Quarto's `.active` class, Quarto 1.7 or later). Each tabset column takes a value, or a function such as `max` that picks the active tab under each parent tab (#4).
+
 ## Minor improvements
 
 * Documented that the tab order of `render_tabset()` can be controlled by factor levels, e.g. `factor(x, levels = unique(x))` to keep the order of first appearance, with an example in the [Get started](https://sayuks.github.io/quartabs/vignettes/get_started.html) (#5).
