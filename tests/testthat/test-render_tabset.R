@@ -701,7 +701,7 @@ test_that("render_tabset(), active validation (#4)", {
   )
 })
 
-test_that("render_tabset(), parent tabs joining alike stay apart (#11)", {
+test_that("render_tabset(), parent tabs equal once joined stay apart (#11)", {
   # ("a", "b_c") and ("a_b", "c") both read "a_b_c" when joined with "_"
   df <- data.frame(
     group1 = c("a", "a_b"),
@@ -780,5 +780,40 @@ test_that("render_tabset(), missing parent tab differs from labels (#11)", {
       "## NA",
       "### y"
     )
+  )
+})
+
+test_that("render_tabset(), NA and NaN are different parent tabs (#11)", {
+  df <- data.frame(
+    group1 = c(NA, NaN),
+    group2 = c("x", "y"),
+    value = 1:2
+  )
+
+  # each parent tab holds its own tabset, with one active tab each
+  expect_equal(
+    tab_headings(df, c(group1, group2), value, active = list(group2 = max)),
+    c("# NA", "## x {.active}", "# NaN", "## y {.active}")
+  )
+  expect_equal(
+    sum(
+      utils::capture.output(render_tabset(df, c(group1, group2), value)) ==
+        "::: {.panel-tabset}"
+    ),
+    3
+  )
+})
+
+test_that("render_tabset(), numbers shown alike are one parent tab (#11)", {
+  # 0.1 + 0.2 is not exactly 0.3, but both are labelled "0.3"
+  df <- data.frame(
+    group1 = c(0.3, 0.1 + 0.2),
+    group2 = c("x", "y"),
+    value = 1:2
+  )
+
+  expect_equal(
+    tab_headings(df, c(group1, group2), value),
+    c("# 0.3", "## x", "## y")
   )
 })
