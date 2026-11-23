@@ -187,6 +187,13 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="quartabs-development-version" class="level1">
 <h1>quartabs (development version)</h1>
+<section id="minor-improvements" class="level2">
+<h2 class="anchored" data-anchor-id="minor-improvements">Minor improvements</h2>
+<ul>
+<li>Fixed the <code>tinytable::tt()</code> example in the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a>, which showed the JavaScript of <code>{tinytable}</code> as text instead of a table (#16).</li>
+<li>Added an <code>lt::lt()</code> example to the tables section of the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a> (#16).</li>
+</ul>
+</section>
 </section>
 <section id="quartabs-0.2.0" class="level1">
 <h1>quartabs 0.2.0</h1>
@@ -196,8 +203,8 @@ ul.task-list li input[type="checkbox"] {
 <li><code>render_tabset()</code> gains an <code>active</code> argument to choose the tab shown by default (Quarto’s <code>.active</code> class, Quarto 1.7 or later). Each tabset column takes a value, or a function such as <code>max</code> that picks the active tab under each parent tab (<a href="https://github.com/sayuks/quartabs/issues/4">#4</a>).</li>
 </ul>
 </section>
-<section id="minor-improvements" class="level2">
-<h2 class="anchored" data-anchor-id="minor-improvements">Minor improvements</h2>
+<section id="minor-improvements-1" class="level2">
+<h2 class="anchored" data-anchor-id="minor-improvements-1">Minor improvements</h2>
 <ul>
 <li>Removed <code>{stats}</code> from Imports; quartabs no longer imports any packages.</li>
 <li>Documented that the tab order of <code>render_tabset()</code> can be controlled by factor levels, e.g.&nbsp;<code>factor(x, levels = unique(x))</code> to keep the order of first appearance, with an example in the <a href="https://sayuks.github.io/quartabs/vignettes/get_started.html">Get started</a> (#5).</li>
@@ -219,8 +226,8 @@ ul.task-list li input[type="checkbox"] {
 <li>The <code>sort</code> argument of <code>render_tabset()</code> has been removed. The data is always sorted by <code>tabset_vars</code>.</li>
 </ul>
 </section>
-<section id="minor-improvements-1" class="level2">
-<h2 class="anchored" data-anchor-id="minor-improvements-1">Minor improvements</h2>
+<section id="minor-improvements-2" class="level2">
+<h2 class="anchored" data-anchor-id="minor-improvements-2">Minor improvements</h2>
 <ul>
 <li>Added <code>{stats}</code> to Imports.</li>
 <li>Added CITATION.</li>
